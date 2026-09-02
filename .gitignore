@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# salidas de auditoría (scripts de verificación, no forman parte del sitio)
+/*.json
+!package.json
+!package-lock.json
+!tsconfig.json
