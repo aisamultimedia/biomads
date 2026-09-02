@@ -171,6 +171,7 @@ versionados, así que un clon nuevo compila sin ejecutarlos.
 
 ```bash
 node scripts/preparar-fotos.mjs           # PNG de 3,5 MB → JPEG servibles (24 de las 29 entregadas)
+node scripts/preparar-favicon.mjs         # favicon.ico (16/32/48), icon.png y apple-icon.png desde el isotipo
 node scripts/preparar-video.mjs           # 21,6 MB → 0,9 MB + póster
 node scripts/preparar-logo.mjs            # recorta guías y arma las variantes
 node scripts/preparar-logos-clientes.mjs  # iguala por área los tres logos de cliente
