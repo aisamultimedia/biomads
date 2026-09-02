@@ -230,8 +230,9 @@ En orden de urgencia:
 5. **Fecha exacta de constitución.** El hero publica los años de experiencia
    como diferencia de años contra 2017. Con el mes, la cifra deja de poder
    adelantarse en uno.
-6. **Constancias de ejecución** en PDF con texto seleccionable: las ranuras
-   ya están dimensionadas en la sección de proyectos.
+6. **Constancias de ejecución** en PDF con texto seleccionable. Se
+   publicarán en la ficha de cada proyecto; el sitio ya no las ofrece «a
+   quien las pida», por decisión del cliente.
 7. **Datos operativos:** dirección, NIT, redes, horario. La política de
    datos los necesita: la ley pide identificar al responsable con NIT y
    dirección, y hoy solo van la ciudad, el correo y el teléfono.

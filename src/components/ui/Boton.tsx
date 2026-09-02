@@ -15,7 +15,7 @@ const base = [
   // `transform`: hay que nombrarlas para que el hover transicione de verdad.
   "transition-[translate,scale,color,background-color,border-color]",
   "duration-[var(--duracion-micro)] ease-base",
-  "hover:-translate-y-px active:translate-y-0 active:scale-[0.98]",
+  "hover:-translate-y-[2px] active:translate-y-0 active:scale-[0.98]",
   "disabled:pointer-events-none disabled:opacity-60",
 ].join(" ");
 

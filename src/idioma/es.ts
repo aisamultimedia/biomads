@@ -258,11 +258,6 @@ export const es: Diccionario = {
     abrirFicha: "Ver la ficha de {cliente}",
     cerrar: "Cerrar",
     verPaginaCompleta: "Ver la página completa",
-    certificadosRotulo: "Certificados y constancias",
-    certificadosTexto:
-      "Se publican aquí en PDF. Mientras tanto las enviamos por correo a quien las pida.",
-    certificadoPendiente: "Constancia pendiente de cargar",
-    pedirCertificados: "Pedir las constancias",
     detalle: {
       cliente: "Cliente",
       encargoRotulo: "El encargo",
@@ -364,6 +359,8 @@ export const es: Diccionario = {
         "Autorizo a BIOMADS S.A.S a tratar los datos de este formulario para responder a mi solicitud, según su",
       datosEnlace: "política de tratamiento de datos personales",
       datosDespues: ".",
+      grupoQuien: "Quién escribe",
+      grupoQue: "Qué necesita",
       asuntoRespaldo: "Solicitud de propuesta — {empresa}",
       enviar: "Enviar mensaje",
       enviando: "Enviando",

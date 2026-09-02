@@ -269,11 +269,6 @@ export const en: Diccionario = {
     abrirFicha: "Open the {cliente} project",
     cerrar: "Close",
     verPaginaCompleta: "See the full page",
-    certificadosRotulo: "Certificates and references",
-    certificadosTexto:
-      "They will be published here as PDF. Until then we send them by email on request.",
-    certificadoPendiente: "Certificate pending upload",
-    pedirCertificados: "Request the certificates",
     detalle: {
       cliente: "Client",
       encargoRotulo: "The assignment",
@@ -375,6 +370,8 @@ export const en: Diccionario = {
         "I authorise BIOMADS S.A.S to process the data in this form in order to respond to my request, under its",
       datosEnlace: "personal data policy",
       datosDespues: ".",
+      grupoQuien: "Who is writing",
+      grupoQue: "What you need",
       asuntoRespaldo: "Proposal request — {empresa}",
       enviar: "Send message",
       enviando: "Sending",

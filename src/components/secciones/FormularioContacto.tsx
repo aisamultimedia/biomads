@@ -21,6 +21,9 @@ import { empresa, mailto, whatsapp } from "@/lib/site";
 
 type Estado = "reposo" | "enviando" | "exito" | "error";
 
+/** Techo del mensaje; el mismo que valida `mensajeLargo`. */
+const MAXIMO_MENSAJE = 4000;
+
 type Props = {
   idioma: Idioma;
   /** Es componente de cliente: el texto llega resuelto por props. */
@@ -32,15 +35,16 @@ type Props = {
 /**
  * Formulario de contacto.
  *
- * Siete campos, ni uno de adorno: nombre, empresa, correo, teléfono
- * (opcional), tipo de servicio, mensaje y la autorización de tratamiento
- * de datos, que la Ley 1581 de 2012 exige antes de usar el correo de
- * alguien aunque sea para responderle. Los cortos van de dos en dos para
- * que el conjunto no parezca más largo de lo que es.
+ * Siete campos, ni uno de adorno, en dos grupos numerados: quién escribe
+ * (nombre, empresa, correo, teléfono opcional) y qué necesita (tipo de
+ * servicio, mensaje). La autorización de tratamiento de datos cierra el
+ * segundo: la Ley 1581 de 2012 la exige antes de usar el correo de alguien
+ * aunque sea para responderle.
  *
  * **Validación.** En vivo, pero solo después del primer blur de cada
- * campo: no se regaña a quien todavía está escribiendo. Al enviar se
- * valida todo y el foco va al primer campo con problema, en orden visual.
+ * campo: no se regaña a quien todavía está escribiendo. Un campo tocado y
+ * correcto enseña su marca de válido. Al enviar se valida todo y el foco
+ * va al primer campo con problema, en orden visual.
  *
  * **Robots.** Un campo escondido —"sitio web"— que ninguna persona ve ni
  * puede tabular hasta él. Si llega relleno, el servidor contesta "enviado"
@@ -77,6 +81,10 @@ export function FormularioContacto({ idioma, textos, opcionesServicio }: Props) 
   }, []);
 
   const id = (campo: keyof CamposContacto | "sitioWeb") => `${prefijo}-${campo}`;
+
+  /** Tocado, con algo escrito y sin error: la marca de válido. */
+  const valido = (campo: keyof CamposContacto) =>
+    Boolean(tocados[campo]) && !errores[campo] && String(campos[campo]).trim() !== "";
 
   /** Valida en vivo solo después del primer blur: no se regaña mientras escribe. */
   function alCambiar<K extends keyof CamposContacto>(campo: K, valor: CamposContacto[K]) {
@@ -151,16 +159,15 @@ export function FormularioContacto({ idioma, textos, opcionesServicio }: Props) 
   const politica = rutaEnIdioma("/privacidad", idioma);
 
   return (
-    <>
+    <div className="formulario" data-estado={estado}>
       {estado === "exito" ? (
-        <div
-          ref={enfocarAlMontar}
-          tabIndex={-1}
-          role="status"
-          data-entrada="panel"
-          className="con-regla con-regla--acento pt-8"
-        >
-          <p className="etiqueta text-accent-deep">{textos.exitoRotulo}</p>
+        <div ref={enfocarAlMontar} tabIndex={-1} role="status" data-entrada="panel">
+          {/* Sello: el círculo entra y la marca se dibuja después. Solo
+              transform y opacidad; con menos movimiento aparece quieto. */}
+          <span className="sello-exito" aria-hidden="true">
+            <span className="sello-exito-marca" />
+          </span>
+          <p className="etiqueta mt-6 text-accent-deep">{textos.exitoRotulo}</p>
           <h3 className="mt-4 text-xl">
             {interpolar(textos.exitoGracias, { nombre: campos.nombre.trim() })}
           </h3>
@@ -188,137 +195,157 @@ export function FormularioContacto({ idioma, textos, opcionesServicio }: Props) 
           </div>
         </div>
       ) : (
-        <form onSubmit={alEnviar} noValidate className="flex flex-col gap-8">
-          <div className="grid gap-8 sm:grid-cols-2">
-            <Campo
-              id={id("nombre")}
-              etiqueta={textos.nombre}
-              name="nombre"
-              autoComplete="name"
-              maxLength={200}
-              value={campos.nombre}
-              error={mensajeDe(errores.nombre)}
-              disabled={enviando}
-              onChange={(e) => alCambiar("nombre", e.target.value)}
-              onBlur={() => alSalir("nombre")}
-            />
+        <form onSubmit={alEnviar} noValidate className="flex flex-col gap-12">
+          <fieldset className="formulario-grupo">
+            <legend className="formulario-grupo-rotulo">
+              <span className="dato">01</span>
+              <span className="etiqueta">{textos.grupoQuien}</span>
+            </legend>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <Campo
+                id={id("nombre")}
+                etiqueta={textos.nombre}
+                name="nombre"
+                autoComplete="name"
+                maxLength={200}
+                value={campos.nombre}
+                error={mensajeDe(errores.nombre)}
+                valido={valido("nombre")}
+                disabled={enviando}
+                onChange={(e) => alCambiar("nombre", e.target.value)}
+                onBlur={() => alSalir("nombre")}
+              />
+              <Campo
+                id={id("empresa")}
+                etiqueta={textos.empresa}
+                name="empresa"
+                autoComplete="organization"
+                maxLength={200}
+                value={campos.empresa}
+                error={mensajeDe(errores.empresa)}
+                valido={valido("empresa")}
+                disabled={enviando}
+                onChange={(e) => alCambiar("empresa", e.target.value)}
+                onBlur={() => alSalir("empresa")}
+              />
+              <Campo
+                id={id("correo")}
+                etiqueta={textos.correo}
+                name="correo"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                maxLength={200}
+                value={campos.correo}
+                error={mensajeDe(errores.correo)}
+                valido={valido("correo")}
+                disabled={enviando}
+                onChange={(e) => alCambiar("correo", e.target.value)}
+                onBlur={() => alSalir("correo")}
+              />
+              <Campo
+                id={id("telefono")}
+                etiqueta={textos.telefono}
+                ayuda={textos.telefonoAyuda}
+                name="telefono"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                maxLength={30}
+                value={campos.telefono}
+                error={mensajeDe(errores.telefono)}
+                valido={valido("telefono")}
+                disabled={enviando}
+                onChange={(e) => alCambiar("telefono", e.target.value)}
+                onBlur={() => alSalir("telefono")}
+              />
+            </div>
+          </fieldset>
 
-            <Campo
-              id={id("empresa")}
-              etiqueta={textos.empresa}
-              name="empresa"
-              autoComplete="organization"
-              maxLength={200}
-              value={campos.empresa}
-              error={mensajeDe(errores.empresa)}
-              disabled={enviando}
-              onChange={(e) => alCambiar("empresa", e.target.value)}
-              onBlur={() => alSalir("empresa")}
-            />
-          </div>
+          <fieldset className="formulario-grupo">
+            <legend className="formulario-grupo-rotulo">
+              <span className="dato">02</span>
+              <span className="etiqueta">{textos.grupoQue}</span>
+            </legend>
+            <div className="flex flex-col gap-6">
+              <Campo
+                id={id("servicio")}
+                etiqueta={textos.servicio}
+                name="servicio"
+                opciones={opcionesServicio}
+                vacio={textos.servicioElegir}
+                value={campos.servicio}
+                error={mensajeDe(errores.servicio)}
+                valido={valido("servicio")}
+                disabled={enviando}
+                onChange={(e) => alCambiar("servicio", e.target.value)}
+                onBlur={() => alSalir("servicio")}
+              />
 
-          <div className="grid gap-8 sm:grid-cols-2">
-            <Campo
-              id={id("correo")}
-              etiqueta={textos.correo}
-              name="correo"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              maxLength={200}
-              value={campos.correo}
-              error={mensajeDe(errores.correo)}
-              disabled={enviando}
-              onChange={(e) => alCambiar("correo", e.target.value)}
-              onBlur={() => alSalir("correo")}
-            />
+              <div>
+                <Campo
+                  id={id("mensaje")}
+                  etiqueta={textos.mensaje}
+                  ayuda={textos.mensajeAyuda}
+                  name="mensaje"
+                  multilinea
+                  maxLength={MAXIMO_MENSAJE}
+                  value={campos.mensaje}
+                  error={mensajeDe(errores.mensaje)}
+                  valido={valido("mensaje")}
+                  disabled={enviando}
+                  onChange={(e) => alCambiar("mensaje", e.target.value)}
+                  onBlur={() => alSalir("mensaje")}
+                />
+                <p className="campo-contador dato" aria-hidden="true">
+                  {campos.mensaje.length} / {MAXIMO_MENSAJE}
+                </p>
+              </div>
 
-            <Campo
-              id={id("telefono")}
-              etiqueta={textos.telefono}
-              ayuda={textos.telefonoAyuda}
-              name="telefono"
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel"
-              maxLength={30}
-              value={campos.telefono}
-              error={mensajeDe(errores.telefono)}
-              disabled={enviando}
-              onChange={(e) => alCambiar("telefono", e.target.value)}
-              onBlur={() => alSalir("telefono")}
-            />
-          </div>
+              {/* Trampa para robots. Fuera del flujo visual y del árbol de
+                  accesibilidad, fuera del orden de tabulación y sin
+                  autocompletar, para que ningún navegador la rellene solo.
+                  El rótulo no pasa por el diccionario: no lo lee nadie. */}
+              <div className="sr-only" aria-hidden="true">
+                <label htmlFor={id("sitioWeb")}>Sitio web</label>
+                <input
+                  id={id("sitioWeb")}
+                  name="sitio_web"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={trampa}
+                  onChange={(e) => setTrampa(e.target.value)}
+                />
+              </div>
 
-          <Campo
-            id={id("servicio")}
-            etiqueta={textos.servicio}
-            name="servicio"
-            opciones={opcionesServicio}
-            vacio={textos.servicioElegir}
-            value={campos.servicio}
-            error={mensajeDe(errores.servicio)}
-            disabled={enviando}
-            onChange={(e) => alCambiar("servicio", e.target.value)}
-            onBlur={() => alSalir("servicio")}
-          />
-
-          <Campo
-            id={id("mensaje")}
-            etiqueta={textos.mensaje}
-            ayuda={textos.mensajeAyuda}
-            name="mensaje"
-            multilinea
-            maxLength={4000}
-            value={campos.mensaje}
-            error={mensajeDe(errores.mensaje)}
-            disabled={enviando}
-            onChange={(e) => alCambiar("mensaje", e.target.value)}
-            onBlur={() => alSalir("mensaje")}
-          />
-
-          {/* Trampa para robots. Fuera del flujo visual y del árbol de
-              accesibilidad, fuera del orden de tabulación y sin
-              autocompletar, para que ningún navegador la rellene solo. El
-              rótulo no pasa por el diccionario: no lo lee nadie. */}
-          <div className="sr-only" aria-hidden="true">
-            <label htmlFor={id("sitioWeb")}>Sitio web</label>
-            <input
-              id={id("sitioWeb")}
-              name="sitio_web"
-              type="text"
-              tabIndex={-1}
-              autoComplete="off"
-              value={trampa}
-              onChange={(e) => setTrampa(e.target.value)}
-            />
-          </div>
-
-          <Casilla
-            id={id("aceptaDatos")}
-            name="aceptaDatos"
-            checked={campos.aceptaDatos}
-            disabled={enviando}
-            error={mensajeDe(errores.aceptaDatos)}
-            onChange={(e) => {
-              alCambiar("aceptaDatos", e.target.checked);
-              /* Una casilla se valida al tocarla: no hay "mientras escribe". */
-              setTocados((previos) => ({ ...previos, aceptaDatos: true }));
-              setErrores((previos) => ({
-                ...previos,
-                aceptaDatos: validarCampo("aceptaDatos", e.target.checked),
-              }));
-            }}
-            etiqueta={
-              <>
-                {textos.datosAntes}{" "}
-                <Enlace href={politica} externo>
-                  {textos.datosEnlace}
-                </Enlace>
-                {textos.datosDespues}
-              </>
-            }
-          />
+              <Casilla
+                id={id("aceptaDatos")}
+                name="aceptaDatos"
+                checked={campos.aceptaDatos}
+                disabled={enviando}
+                error={mensajeDe(errores.aceptaDatos)}
+                onChange={(e) => {
+                  alCambiar("aceptaDatos", e.target.checked);
+                  /* Una casilla se valida al tocarla: no hay "mientras escribe". */
+                  setTocados((previos) => ({ ...previos, aceptaDatos: true }));
+                  setErrores((previos) => ({
+                    ...previos,
+                    aceptaDatos: validarCampo("aceptaDatos", e.target.checked),
+                  }));
+                }}
+                etiqueta={
+                  <>
+                    {textos.datosAntes}{" "}
+                    <Enlace href={politica} externo>
+                      {textos.datosEnlace}
+                    </Enlace>
+                    {textos.datosDespues}
+                  </>
+                }
+              />
+            </div>
+          </fieldset>
 
           {/* --- Error de envío: no deja al visitante sin salida --- */}
           {estado === "error" && (
@@ -345,8 +372,13 @@ export function FormularioContacto({ idioma, textos, opcionesServicio }: Props) 
           )}
 
           <div className="flex flex-wrap items-center gap-6">
-            <Boton type="submit" cargando={enviando}>
+            <Boton type="submit" cargando={enviando} className="boton-enviar">
               {enviando ? textos.enviando : textos.enviar}
+              {!enviando && (
+                <span aria-hidden="true" className="boton-flecha">
+                  →
+                </span>
+              )}
             </Boton>
             <p className="text-sm text-ink-muted">
               {textos.oEscribanos}{" "}
@@ -358,6 +390,6 @@ export function FormularioContacto({ idioma, textos, opcionesServicio }: Props) 
           </div>
         </form>
       )}
-    </>
+    </div>
   );
 }

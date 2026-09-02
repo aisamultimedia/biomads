@@ -51,11 +51,11 @@ export function MarcoInstitucional({ idioma }: { idioma: Idioma }) {
         /* Hueco vertical generoso a propósito: la regla es el techo de cada
            valor, y con poco aire se leía como el subrayado del de arriba. */
         className="mt-8 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3"
-        itemClassName="border-t border-line pt-6"
+        itemClassName="valor"
       >
         {valores.map((valor) => (
           <span key={valor.clave} className="flex flex-col gap-4">
-            <Icono nombre={valor.icono} tamano={26} className="text-accent-deep" />
+            <Icono nombre={valor.icono} tamano={26} className="valor-icono" />
             <span className="text-lg text-ink">{t.valores[valor.clave].nombre}</span>
             <span className="text-sm text-ink-muted">{t.valores[valor.clave].texto}</span>
           </span>

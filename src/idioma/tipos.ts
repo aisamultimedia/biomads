@@ -254,10 +254,6 @@ export type Diccionario = {
     abrirFicha: string;
     cerrar: string;
     verPaginaCompleta: string;
-    certificadosRotulo: string;
-    certificadosTexto: string;
-    certificadoPendiente: string;
-    pedirCertificados: string;
     /** Rótulos de la página de detalle de un proyecto. */
     detalle: PorClave<
       | "cliente"
@@ -348,6 +344,9 @@ export type Diccionario = {
       datosAntes: string;
       datosEnlace: string;
       datosDespues: string;
+      /** Rótulos de los dos grupos de campos. */
+      grupoQuien: string;
+      grupoQue: string;
       /** Asunto del correo de respaldo cuando el envío falla. Lleva {empresa}. */
       asuntoRespaldo: string;
       enviar: string;

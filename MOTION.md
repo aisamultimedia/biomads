@@ -38,6 +38,10 @@ tiempo de scroll del navegador. Donde no está soportada —hoy Firefox— la fo
 se queda quieta, que es exactamente lo que pide "parallax sutil" cuando hay
 dudas.
 
+**Todo lo que se puede tocar responde al cursor** (petición del cliente, 2 de septiembre de 2026), y siempre con la misma gramática: se levanta (tarjetas de servicio y proyecto, misión/visión: −4/−5 px), se enciende (círculo de etapa: relleno de acento y escala 1,1; baldosa de cargo: acento suave y −6°), o se adelanta (icono de valor −4 px y −8°, icono de vía directa 3 px y escala 1,15, flecha del botón de envío 5 px). Solo transform y color, una curva, y todo apagado con `prefers-reduced-motion`.
+
+**El formulario** (misma fecha) tiene etiquetas que flotan con `translate`/`scale` sobre `:placeholder-shown` —sin JavaScript—, un subrayado que crece desde el centro al enfocar, una marca de válido que aparece con escala cuando el campo se tocó y está bien, y un sello de éxito en dos tiempos (círculo, luego marca). Las transiciones de esos tres se anulan con menos movimiento.
+
 **La galería avanza sola desde el 2 de septiembre de 2026**, a petición del cliente, y con estas condiciones: solo cuando está al menos a la mitad en pantalla, sin cursor encima ni foco dentro, sin visor abierto, con la pestaña visible y sin `prefers-reduced-motion`. El tramo activo del indicador se rellena en el mismo tiempo (`--duracion-galeria`), así que se ve venir. Un fallo que costó encontrar: el token dice `5000ms` y el compilador lo minifica a `5s`; `parseFloat` daba 5 y la galería recorría las doce fotos en un segundo. Ahora se lee la unidad.
 
 **La promesa se enciende del 28 al 50 % del recorrido**, no del 14 al 34: medido, con el tramo anterior las palabras terminaban de encenderse en el tercio inferior de la pantalla, antes de que nadie las leyera. Y arrancan casi en papel (18 % de tinta), no en tinta atenuada: de `--ink-muted` a `--ink` el cambio no se notaba.

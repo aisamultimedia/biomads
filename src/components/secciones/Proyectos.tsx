@@ -332,11 +332,10 @@ function FichaProyecto({
           {d.razonSocial}: {caso.cliente}
         </p>
 
+        {/* El botón de pedir constancias se retiró por decisión del
+            cliente: los PDF se publicarán aquí cuando lleguen. */}
         <div className="mt-12 flex flex-wrap gap-4">
-          <Boton href="#contacto" variante="acento">
-            {textos.pedirCertificados}
-          </Boton>
-          <Boton href={`/${idioma}/proyectos/${proyecto.slug}`} variante="secundario">
+          <Boton href={`/${idioma}/proyectos/${proyecto.slug}`} variante="primario">
             {textos.verPaginaCompleta}
           </Boton>
         </div>

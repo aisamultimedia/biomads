@@ -163,7 +163,8 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
       </Seccion>
 
       {/* ================================================================
-          Proyectos, con el espacio reservado para las constancias.
+          Proyectos. Las constancias en PDF, cuando lleguen, se publican
+          en la ficha de cada proyecto; no se piden desde el sitio.
           ================================================================ */}
       <Seccion id="proyectos" rotulo={t.proyectos.rotulo} titulo={t.proyectos.titulo}>
         <Proyectos
@@ -173,32 +174,6 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
           fotos={t.fotos}
         />
 
-        {/* Espacio reservado para los certificados. Cuando lleguen los PDF
-            entran en estas ranuras sin mover nada del layout. */}
-        <Reveal regla className="mt-24 pt-8">
-          <p className="etiqueta text-ink-muted">{t.proyectos.certificadosRotulo}</p>
-          <p className="medida mt-4 text-ink-muted">{t.proyectos.certificadosTexto}</p>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {proyectos.map((proyecto) => (
-              <div key={proyecto.slug} className="ranura-certificado">
-                <p className="etiqueta text-ink-muted">
-                  {t.proyectos.casos[proyecto.slug].clienteCorto}
-                </p>
-                <p className="dato mt-2 text-sm text-ink">{proyecto.anio}</p>
-                <p className="mt-6 text-xs text-ink-muted">
-                  {t.proyectos.certificadoPendiente}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8">
-            <Boton href="#contacto" variante="secundario">
-              {t.proyectos.pedirCertificados}
-            </Boton>
-          </div>
-        </Reveal>
       </Seccion>
 
       {/* ================================================================
@@ -230,8 +205,8 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
               {/* El icono va fuera del enlace: dentro ampliaría el área
                   pulsable con una zona que no parece parte del enlace. */}
               <ul className="mt-6 flex flex-col gap-6">
-                <li className="flex items-start gap-4">
-                  <Icono nombre="telefono" className="mt-1 text-accent-deep" />
+                <li className="via-directa flex items-start gap-4">
+                  <Icono nombre="telefono" className="via-directa-icono mt-1 text-accent-deep" />
                   <span>
                     <Enlace href={whatsapp} externo className="dato text-xl">
                       {empresa.telefono}
@@ -241,8 +216,8 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
                     </span>
                   </span>
                 </li>
-                <li className="flex items-start gap-4">
-                  <Icono nombre="correo" className="mt-1 text-accent-deep" />
+                <li className="via-directa flex items-start gap-4">
+                  <Icono nombre="correo" className="via-directa-icono mt-1 text-accent-deep" />
                   <span>
                     <Enlace href={mailto} externo className="text-xl">
                       {empresa.correo}
