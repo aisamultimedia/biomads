@@ -1,19 +1,13 @@
+import { en } from "./en";
 import { es } from "./es";
 import { IDIOMAS, type Diccionario, type Idioma } from "./tipos";
+import { POR_DEFECTO, esIdioma, idiomaPreferido } from "./negociar";
 
-export { IDIOMAS };
+export { IDIOMAS, POR_DEFECTO, esIdioma, idiomaPreferido };
 export type { Diccionario, Idioma };
 export type * from "./tipos";
 
-/** El que se sirve cuando no hay elección previa ni preferencia del navegador. */
-export const POR_DEFECTO: Idioma = IDIOMAS[0];
-
-const DICCIONARIOS: Readonly<Record<Idioma, Diccionario>> = { es };
-
-/** ¿Es un idioma que el sitio sirve? Estrecha el tipo, no solo comprueba. */
-export function esIdioma(valor: string | undefined): valor is Idioma {
-  return IDIOMAS.includes(valor as Idioma);
-}
+const DICCIONARIOS: Readonly<Record<Idioma, Diccionario>> = { es, en };
 
 /**
  * Estrecha el parámetro de ruta a `Idioma`.
@@ -34,21 +28,6 @@ export function diccionario(idioma: string | undefined): Diccionario {
 
 /** ¿Hace falta ofrecer un selector? Con un solo idioma, no. */
 export const HAY_VARIOS_IDIOMAS = IDIOMAS.length > 1;
-
-/**
- * Elige idioma a partir de las preferencias del navegador.
- *
- * Compara solo la subetiqueta primaria: quien tiene "es-419" o "en-GB"
- * quiere español o inglés, y exigir la coincidencia exacta lo mandaría al
- * idioma por defecto sin motivo.
- */
-export function idiomaPreferido(preferencias: readonly string[]): Idioma {
-  for (const preferencia of preferencias) {
-    const primaria = preferencia.toLowerCase().split("-")[0];
-    if (esIdioma(primaria)) return primaria;
-  }
-  return POR_DEFECTO;
-}
 
 /** Clave de localStorage donde se recuerda la elección. */
 export const CLAVE_IDIOMA = "biomads:idioma";

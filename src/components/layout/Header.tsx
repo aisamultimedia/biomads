@@ -97,26 +97,34 @@ export function Header({ idioma }: { idioma: Idioma }) {
               <nav aria-label={t.nav.principal} className="hidden lg:block">
                 <NavBarra textos={t.nav.secciones} />
               </nav>
-              {/* Mismo alto que el del centro a propósito: solo uno de los
-                  dos se ve, pero con altos distintos el optimizador genera
-                  dos URL y el navegador baja las dos. */}
+              {/* Los dos se sirven con el mismo archivo: solo uno se ve,
+                  pero con altos distintos el optimizador generaría dos URL y
+                  el navegador bajaría las dos. */}
               <div className="lg:hidden">
-                <Logotipo idioma={idioma} alto={28} />
+                <Logotipo idioma={idioma} />
               </div>
             </div>
 
             {/* Centro: el logo, como en una marca de producto */}
             <div className="hidden justify-center lg:flex">
-              <Logotipo idioma={idioma} alto={28} />
+              <Logotipo idioma={idioma} />
             </div>
 
             {/* Derecha: el paso siguiente, siempre visible */}
             <div className="flex items-center justify-end gap-4">
               <SelectorIdioma idioma={idioma} />
 
-              <Boton href="#contacto" variante="acento" className="hidden sm:inline-flex">
-                {t.nav.secciones.contacto}
-              </Boton>
+              {/* El envoltorio es el que oculta, no una clase en el botón:
+                  `Boton` ya trae `inline-flex` en su base, y entre dos
+                  utilidades de display gana la que Tailwind emite después,
+                  no la que va después en el atributo. Con `hidden
+                  sm:inline-flex` encima, el botón nunca llegó a ocultarse y
+                  aplastaba el logo en móvil. */}
+              <div className="hidden sm:block">
+                <Boton href="#contacto" variante="acento">
+                  {t.nav.secciones.contacto}
+                </Boton>
+              </div>
 
               <button
                 ref={conmutadorRef}

@@ -16,8 +16,11 @@ import { useEffect, useRef } from "react";
  *    salta a él de golpe; Lenis pelearía con ese salto. Se escucha `focusin`
  *    y se lleva el desplazamiento al elemento sin animar.
  * 3. Los anclas. Lenis toma el control de `scroll-behavior`, así que los
- *    enlaces internos se resuelven con `scrollTo`, respetando el hueco de
- *    la cabecera fija.
+ *    enlaces internos se resuelven con `scrollTo`. El hueco de la cabecera
+ *    fija no se le pasa: Lenis (desde 1.3) lee el `scroll-padding-top` del
+ *    documento y lo descuenta él. Se le pasaba además como `offset` y la
+ *    cabecera se descontaba dos veces: cada ancla aterrizaba 96 px más
+ *    abajo de donde debía, en todas las páginas. Se midió y se quitó.
  *
  * No pinta nada: solo instala el comportamiento.
  */
@@ -46,14 +49,6 @@ export function DesplazamientoSuave() {
     };
     cuadro = requestAnimationFrame(avanzar);
 
-    /* La cabecera es fija: al saltar a un ancla hay que descontar su alto. */
-    const hueco = () => {
-      const valor = getComputedStyle(document.documentElement).getPropertyValue(
-        "--altura-cabecera",
-      );
-      return -(parseInt(valor, 10) || 96);
-    };
-
     function alPulsar(evento: MouseEvent) {
       const enlace = (evento.target as HTMLElement | null)?.closest("a");
       const href = enlace?.getAttribute("href");
@@ -61,7 +56,7 @@ export function DesplazamientoSuave() {
       const destino = document.querySelector(href);
       if (!destino) return;
       evento.preventDefault();
-      lenis.scrollTo(destino as HTMLElement, { offset: hueco() });
+      lenis.scrollTo(destino as HTMLElement);
     }
 
     /* Si el foco se va a algo que no está en pantalla, ir sin animación:
@@ -71,7 +66,7 @@ export function DesplazamientoSuave() {
       if (!objetivo) return;
       const caja = objetivo.getBoundingClientRect();
       const fuera = caja.top < 0 || caja.bottom > window.innerHeight;
-      if (fuera) lenis.scrollTo(objetivo, { offset: hueco(), immediate: true });
+      if (fuera) lenis.scrollTo(objetivo, { immediate: true });
     }
 
     document.addEventListener("click", alPulsar);

@@ -11,17 +11,7 @@ import { TituloPorLineas } from "@/components/motion/TituloPorLineas";
 import { SiguientePaso } from "@/components/secciones/SiguientePaso";
 import { proyectos } from "@/content/proyectos";
 import { serviciosDetallados } from "@/content/servicios";
-import { diccionario, type ClaveFoto, comoIdioma } from "@/idioma";
-import siembraLadera from "@/fotos/siembra-ladera.jpg";
-import trasladoMaterial from "@/fotos/traslado-material.jpg";
-
-/* Fotografía de campo por proyecto. El texto alternativo vive en el
-   diccionario y describe lo que se ve en la imagen, no el servicio: el set
-   entregado no incluye tomas de monitoreo de fauna ni de flora epífita. */
-const fotoPorProyecto: Record<string, { imagen: typeof siembraLadera; clave: ClaveFoto }> = {
-  "solinter-2017": { imagen: siembraLadera, clave: "siembra-ladera" },
-  "ges-2018": { imagen: trasladoMaterial, clave: "traslado-material" },
-};
+import { diccionario, comoIdioma } from "@/idioma";
 
 export function generateStaticParams() {
   return proyectos.map((p) => ({ slug: p.slug }));
@@ -55,7 +45,6 @@ export default async function Pagina({ params }: PageProps<"/[idioma]/proyectos/
 
   const servicio = serviciosDetallados.find((s) => s.slug === proyecto.servicio);
   const otro = proyectos.find((p) => p.slug !== proyecto.slug);
-  const foto = fotoPorProyecto[proyecto.slug];
 
   return (
     <>
@@ -77,8 +66,8 @@ export default async function Pagina({ params }: PageProps<"/[idioma]/proyectos/
 
         <div className="mt-16">
           <Foto
-            imagen={foto.imagen}
-            alt={t.fotos[foto.clave]}
+            imagen={proyecto.imagen}
+            alt={t.fotos[proyecto.claveFoto]}
             proporcion="16/9"
             sizes="(min-width: 1200px) 1200px, 100vw"
             inmediata

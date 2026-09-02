@@ -1,4 +1,5 @@
 import type { Diccionario } from "./tipos";
+import { privacidadEs } from "./es.privacidad";
 
 /**
  * Diccionario en español.
@@ -21,6 +22,9 @@ export const es: Diccionario = {
     descripcionPortada:
       "BIOMADS S.A.S — estudios y gestión ambiental desde Ibagué. Monitoreo de biodiversidad de fauna y seguimiento de flora epífita reubicada, con registros verificables.",
     tituloProyectos: "Proyectos",
+    tituloPrivacidad: "Política de tratamiento de datos personales",
+    descripcionPrivacidad:
+      "Qué datos recoge el sitio de BIOMADS, para qué los usa, cuánto tiempo los guarda y cómo ejercer sus derechos según la Ley 1581 de 2012.",
     descripcionProyectos:
       "Proyectos ejecutados por BIOMADS en Huila: monitoreo de fauna para EIA de vías terciarias (SOLINTER, 2017) y seguimiento de flora epífita en El Quimbo (GES, 2018).",
   },
@@ -33,6 +37,7 @@ export const es: Diccionario = {
     menuNavegacion: "Menú de navegación",
     irAlInicio: "BIOMADS — ir al inicio",
     pieDePagina: "Pie de página",
+    volverArriba: "Volver arriba",
     secciones: {
       nosotros: "Nosotros",
       servicios: "Servicios",
@@ -56,6 +61,7 @@ export const es: Diccionario = {
       regiones: "Proyectos ejecutados en",
     },
     anios: "años",
+    indicadorScroll: "Ir a la siguiente sección",
     pausarVideo: "Pausar el video de fondo",
     reanudarVideo: "Reanudar el video de fondo",
   },
@@ -141,6 +147,12 @@ export const es: Diccionario = {
       "Promover la mejora continua.",
       "Garantizar la satisfacción de nuestros clientes.",
     ],
+  },
+
+  promesa: {
+    rotulo: "Nuestra promesa",
+    enunciado:
+      "Un estudio ambiental se mide por lo que resiste cuando alguien lo revisa.",
   },
 
   etapas: {
@@ -262,6 +274,9 @@ export const es: Diccionario = {
       ubicacion: "Ubicación",
       servicio: "Servicio",
     },
+    abrirFicha: "Ver la ficha de {cliente}",
+    cerrar: "Cerrar",
+    verPaginaCompleta: "Ver la página completa",
     certificadosRotulo: "Certificados y constancias",
     certificadosTexto:
       "Se publican aquí en PDF. Mientras tanto las enviamos por correo a quien las pida.",
@@ -318,6 +333,21 @@ export const es: Diccionario = {
     },
   },
 
+  galeria: {
+    rotulo: "En campo",
+    titulo: "Así se ve el trabajo",
+    texto:
+      "Jornadas de siembra, mantenimiento y control fitosanitario, fotografiadas en los frentes donde se ejecutaron.",
+    carrusel: "Fotografías de campo",
+    anterior: "Fotografía anterior",
+    siguiente: "Fotografía siguiente",
+    posicion: "{n} de {total}",
+    irA: "Ir a la fotografía {n}",
+    ampliar: "Ampliar la fotografía {n}",
+    visor: "Visor de fotografías",
+    cerrar: "Cerrar el visor",
+  },
+
   clientes: {
     rotulo: "Han confiado en nosotros",
     nombres: {
@@ -341,9 +371,19 @@ export const es: Diccionario = {
       nombre: "Nombre",
       empresa: "Empresa o entidad",
       correo: "Correo",
+      telefono: "Teléfono",
+      telefonoAyuda: "Opcional. Con indicativo si escribe desde fuera de Colombia.",
+      servicio: "Tipo de servicio",
+      servicioElegir: "Elija una opción",
+      servicioOtro: "Otro o no estoy seguro",
       mensaje: "Mensaje",
       mensajeAyuda:
         "El alcance y la autoridad ante la que responde nos bastan para empezar.",
+      datosAntes:
+        "Autorizo a BIOMADS S.A.S a tratar los datos de este formulario para responder a mi solicitud, según su",
+      datosEnlace: "política de tratamiento de datos personales",
+      datosDespues: ".",
+      asuntoRespaldo: "Solicitud de propuesta — {empresa}",
       enviar: "Enviar mensaje",
       enviando: "Enviando",
       exitoRotulo: "Mensaje enviado",
@@ -369,8 +409,13 @@ export const es: Diccionario = {
         correoDominioSinPunto: "Al dominio le falta un punto — por ejemplo, empresa.com.",
         correoDominioConPuntoSuelto: "El dominio no puede empezar ni terminar en punto.",
         correoConEspacios: "El correo no puede llevar espacios.",
+        telefonoInvalido: "El teléfono debe tener entre 7 y 15 dígitos.",
+        servicioVacio: "Elija el tipo de servicio. Si no está seguro, marque «Otro».",
+        servicioDesconocido: "Elija una de las opciones de la lista.",
         mensajeVacio: "Cuéntenos qué necesita radicar o ejecutar.",
         mensajeCorto: "Con un poco más de detalle podemos responderle mejor.",
+        mensajeLargo: "Es demasiado largo para este formulario. Resuma aquí y adjunte el resto por correo.",
+        datosSinAutorizar: "Necesitamos su autorización para tratar los datos y poder responderle.",
       },
       respuestas: {
         envioIlegible: "No entendimos el envío.",
@@ -401,9 +446,11 @@ export const es: Diccionario = {
     llamadaOWhatsapp: "llamada o WhatsApp",
     constituidaEn: "Constituida en",
     notaCookies: "No usamos cookies de seguimiento; solo se guarda su respuesta al aviso.",
+    politicaDatos: "Política de tratamiento de datos personales",
     lema: "Dejando huella",
   },
 
+  privacidad: privacidadEs,
   cookies: {
     region: "Aviso sobre cookies",
     texto: "No usamos cookies de seguimiento.",
@@ -431,6 +478,30 @@ export const es: Diccionario = {
       "Operario traslada un bulto de material por un frente de trabajo cubierto de vegetación, junto a helechos y arbustos.",
     "siembra-via":
       "Individuos vegetales jóvenes plantados en hileras regulares sobre terreno cubierto de material vegetal seco, listos para seguimiento.",
+    "aspersion-ladera":
+      "Operario de espaldas, con aspersor al hombro, avanza por una ladera de vegetación densa aplicando producto.",
+    "siembra-manual":
+      "Operario agachado planta con las manos un individuo joven de hojas anchas, junto a una bolsa de sustrato.",
+    "ahoyado-pradera":
+      "Operario agachado abre un hoyo con herramienta manual en una pradera abierta bajo el sol.",
+    "aplicacion-fitosanitaria":
+      "Operario con traje de protección, careta y aspersor de mano aplica producto sobre plántulas; la nube de aspersión es visible.",
+    "riego-arbol-potrero":
+      "Operario con chaleco reflectivo y bomba de espalda junto a un árbol maduro en un potrero cercado.",
+    "ahoyadora-via":
+      "Operario con casco maneja una ahoyadora mecánica en un terreno de tierra junto a una vía, con señalización y un remolque al fondo.",
+    "ahoyadora-detalle":
+      "Primer plano de una ahoyadora mecánica perforando el suelo junto a un acopio de piedra y plántulas recién sembradas.",
+    "estaca-tutor":
+      "Operario con casco y uniforme reflectivo clava una estaca tutora con una barra junto a un individuo joven en ladera.",
+    "plateo-individuo":
+      "Operario limpia con azadón el contorno de un individuo joven en una ladera de pasto, dejando el suelo despejado a su alrededor.",
+    "guadana-despeje":
+      "Operario con guadaña y protección facial despeja vegetación alta entre árboles jóvenes.",
+    "fertilizacion-individuo":
+      "Operario con una bolsa aplica material al pie de un individuo joven sobre terreno cubierto de hojarasca seca.",
+    "cuadrilla-aspersion":
+      "Tres operarios con equipos de aspersión trabajan separados a lo largo de una ladera de pasto alto.",
   },
 
   unidades: {

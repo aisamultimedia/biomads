@@ -1,9 +1,11 @@
 import { Boton } from "@/components/ui/Boton";
+import { Cifra } from "@/components/ui/Cifra";
 import { Enlace } from "@/components/ui/Enlace";
 import { Entrada } from "@/components/motion/Entrada";
 import { TituloPorLineas } from "@/components/motion/TituloPorLineas";
 import { VideoFondo } from "./VideoFondo";
 import { regiones } from "@/content/respaldo";
+import type { CSSProperties } from "react";
 import { diccionario, type Idioma } from "@/idioma";
 import { aniosDesdeConstitucion, empresa } from "@/lib/site";
 
@@ -40,7 +42,8 @@ export function Hero({ idioma }: { idioma: Idioma }) {
   const ficha = [
     {
       rotulo: t.hero.ficha.experiencia,
-      valor: `${aniosDesdeConstitucion()} ${t.hero.anios}`,
+      /* La única cantidad de la ficha, y la única que cuenta. */
+      valor: <Cifra valor={aniosDesdeConstitucion()} sufijo={t.hero.anios} />,
       mono: true,
     },
     { rotulo: t.hero.ficha.constituida, valor: String(empresa.constitucion), mono: true },
@@ -98,22 +101,33 @@ export function Hero({ idioma }: { idioma: Idioma }) {
             </Enlace>
           </Entrada>
 
-          <Entrada
-            as="dl"
-            indice={PASO.ficha}
-            className="mt-16 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-line-invert pt-8 md:grid-cols-4"
-          >
-            {ficha.map((dato) => (
-              <div key={dato.rotulo}>
+          {/* El contenedor no anima: si lo hiciera, cada bloque entraría dos
+              veces —una con la lista y otra por su cuenta— y el escalonado
+              se leería como un retardo, no como una secuencia. */}
+          <dl className="mt-16 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-line-invert pt-8 md:grid-cols-4">
+            {ficha.map((dato, i) => (
+              <div
+                key={dato.rotulo}
+                data-entrada="texto"
+                style={{ "--indice": PASO.ficha + i } as CSSProperties}
+              >
                 <dt className="etiqueta text-ink-invert-muted">{dato.rotulo}</dt>
                 <dd className={`mt-2 text-lg text-ink-invert ${dato.mono ? "dato" : ""}`}>
                   {dato.valor}
                 </dd>
               </div>
             ))}
-          </Entrada>
+          </dl>
         </div>
       </div>
+
+      {/* Enlace, no adorno: dice que hay más abajo y además lleva. */}
+      {/* El rótulo va solo para lectores: escrito se leía como una fila
+          más de la ficha de datos que tiene justo encima. El riel ya dice
+          "hay más abajo" sin necesidad de nombrarlo. */}
+      <a href="#nosotros" className="indicador-scroll">
+        <span className="sr-only">{t.hero.indicadorScroll}</span>
+      </a>
     </section>
   );
 }

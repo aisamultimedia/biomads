@@ -151,6 +151,10 @@
     max-width: var(--container-medida);
   }
 
+  .medida-documento {
+    max-width: var(--container-documento);
+  }
+
   /* Enlace de salto al contenido */
   .salto-contenido {
     position: absolute;
@@ -549,10 +553,6 @@
     gap: var(--spacing-6);
     padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) var(--spacing-6);
     border-radius: var(--radius-lg);
-    background-color: var(--color-dark);
-    /* Color heredado explícito: cualquier texto dentro de la barra nace
-       claro, incluido el que solo leen los lectores de pantalla. */
-    color: var(--color-ink-invert);
     transition: padding var(--duracion-corta) var(--ease-base);
   }
 
@@ -570,6 +570,18 @@
 
   .cabecera[data-compacto] .barra {
     padding-block: var(--spacing-2);
+  }
+
+  /* El logo de la barra. El alto lo pone el token, no el atributo, para que
+     pueda encoger al compactar sin que el navegador tenga que recalcular la
+     caja: el ancho es `auto` sobre una proporción ya reservada. */
+  .barra .logo-imagen {
+    height: var(--alto-logo);
+    transition: height var(--duracion-corta) var(--ease-base);
+  }
+
+  .cabecera[data-compacto] .barra .logo-imagen {
+    height: var(--alto-logo-compacto);
   }
 
   /* -----------------------------------------------------------------------
@@ -844,6 +856,16 @@
    un velo. Es neutro —oscurece sin teñir de verde— y funcional: sin él el
    blanco no alcanza 4.5:1 sobre el pasto, y con video el fondo cambia en
    cada fotograma.
+
+   **Es direccional, no uniforme.** Antes había una capa plana al 42 % sobre
+   todo el encuadre más un degradado encima: el video quedaba apagado
+   también donde no hay nada escrito. Ahora solo hay dos degradados que
+   oscurecen donde se apoya el texto —abajo y a la izquierda— y sueltan el
+   resto del cuadro, que es donde se ve el movimiento.
+
+   Los topes no se eligieron a ojo: salen de muestrear los píxeles reales
+   del video detrás de cada línea de texto en varios fotogramas del bucle
+   (scripts/contraste-hero.mjs).
    ========================================================================= */
 
 @layer components {
@@ -852,7 +874,7 @@
     isolation: isolate;
     display: flex;
     align-items: flex-end;
-    min-height: 90svh;
+    min-height: 100svh;
     overflow: hidden;
     /* Se mete debajo de la cabecera flotante, que va sobre el video. */
     margin-top: calc(var(--altura-cabecera) * -1);
@@ -873,20 +895,37 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    background-color: color-mix(in srgb, var(--color-velo) 42%, transparent);
+    background-image:
+      /* Vertical: sostiene el texto, que se apoya en la mitad inferior. */
+      linear-gradient(
+        to top,
+        color-mix(in srgb, var(--color-velo) 76%, transparent) 0%,
+        color-mix(in srgb, var(--color-velo) 62%, transparent) 34%,
+        color-mix(in srgb, var(--color-velo) 22%, transparent) 66%,
+        transparent 100%
+      ),
+      /* Horizontal: la columna de texto va a la izquierda, así que el lado
+         derecho del encuadre se deja casi limpio. */
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-velo) 32%, transparent) 0%,
+        color-mix(in srgb, var(--color-velo) 12%, transparent) 42%,
+        transparent 68%
+      );
   }
 
-  .hero-velo::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: linear-gradient(
-      to top,
-      color-mix(in srgb, var(--color-velo) 92%, transparent) 0%,
-      color-mix(in srgb, var(--color-velo) 82%, transparent) 44%,
-      color-mix(in srgb, var(--color-velo) 42%, transparent) 74%,
-      transparent 100%
-    );
+  /* En móvil la columna de texto ocupa todo el ancho, así que el degradado
+     horizontal no tiene a qué soltar: sobra y solo restaría contraste. */
+  @media (max-width: 767px) {
+    .hero-velo {
+      background-image: linear-gradient(
+        to top,
+        color-mix(in srgb, var(--color-velo) 78%, transparent) 0%,
+        color-mix(in srgb, var(--color-velo) 66%, transparent) 46%,
+        color-mix(in srgb, var(--color-velo) 32%, transparent) 78%,
+        color-mix(in srgb, var(--color-velo) 8%, transparent) 100%
+      );
+    }
   }
 
   .hero-contenido {
@@ -1313,23 +1352,80 @@
   /* El hilo une un círculo con el siguiente. En columna baja por el eje de
      los círculos; en fila va de borde a borde, no solo por el hueco entre
      columnas: los rótulos son más anchos que los círculos y cruzar
-     únicamente el `gap` dejaba un guión suelto en mitad de la nada. */
+     únicamente el `gap` dejaba un guión suelto en mitad de la nada.
+
+     Son dos capas: el riel apagado, siempre dibujado, y encima el tramo
+     encendido que avanza con el scroll. Sin la capa apagada el hilo
+     aparecería de la nada; con ella se ve el recorrido entero y por dónde
+     va. Donde `animation-timeline` no existe —hoy Firefox— el tramo
+     encendido está completo desde el principio, que es como estaba antes. */
+  .etapa-estudio:not(:last-child)::before,
   .etapa-estudio:not(:last-child)::after {
     content: "";
     position: absolute;
     inset-block-start: var(--spacing-12);
-    inset-block-end: calc(var(--spacing-6) * -1);
+    inset-block-end: calc(var(--spacing-8) * -1);
     inset-inline-start: calc(var(--spacing-12) / 2);
-    border-inline-start: 1px solid var(--color-line-invert);
+    width: 1px;
+    transform-origin: top center;
+  }
+
+  .etapa-estudio:not(:last-child)::before {
+    background-color: var(--color-line-invert);
+  }
+
+  .etapa-estudio:not(:last-child)::after {
+    background-color: var(--color-accent);
   }
 
   @media (min-width: 768px) {
+    .etapa-estudio:not(:last-child)::before,
     .etapa-estudio:not(:last-child)::after {
       inset-block: calc(var(--spacing-12) / 2) auto;
       inset-inline: calc(var(--spacing-12) + var(--spacing-4)) calc(var(--spacing-4) * -1);
-      border-inline-start: 0;
-      border-block-start: 1px solid var(--color-line-invert);
+      width: auto;
+      height: 1px;
+      transform-origin: left center;
     }
+  }
+
+  /* El tramo encendido se dibuja según avanza la banda por la pantalla.
+     Cada etapa tiene su tramo de la línea de tiempo, así que el hilo se
+     completa de la primera a la última. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .etapa-estudio:not(:last-child)::after {
+        --paso-etapa: 8%;
+        animation: trazar-hilo linear both;
+        animation-timeline: view();
+        animation-range-start: cover calc(22% + var(--indice) * var(--paso-etapa));
+        animation-range-end: cover calc(38% + var(--indice) * var(--paso-etapa));
+      }
+    }
+  }
+
+  /* Numeral: ordena la secuencia. No es decoración —el orden es el mensaje
+     de esta sección— y por eso va delante del nombre, no debajo. */
+  .etapa-estudio-numero {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+
+  .etapa-estudio-descripcion {
+    margin-block-start: var(--spacing-3);
+    font-size: var(--text-sm);
+    color: var(--color-ink-invert-muted);
+  }
+
+  /* El círculo reacciona al puntero: el icono no es un enlace, pero la
+     etapa entera sí responde, que es lo que dice que hay algo ahí. */
+  .etapa-estudio:hover .etapa-estudio-icono {
+    border-color: var(--color-accent);
+  }
+
+  .etapa-estudio-icono {
+    transition: border-color var(--duracion-micro) var(--ease-base);
   }
 }
 
@@ -1549,5 +1645,839 @@
     .menu-movil {
       opacity: 0;
     }
+  }
+}
+
+/* =========================================================================
+   Botón de volver arriba
+
+   Abajo a la derecha, aparece pasados 600px. Es un enlace de ancla: el
+   desplazamiento lo hace Lenis y sin JavaScript sigue siendo un salto al
+   principio, así que el botón nunca queda muerto.
+
+   En móvil sube por encima del aviso de cookies cuando lo hay. Lo resuelve
+   `:has()` en el CSS, sin que un componente tenga que saber del otro.
+   ========================================================================= */
+
+@layer components {
+  .boton-subir {
+    position: fixed;
+    inset-block-end: var(--spacing-6);
+    inset-inline-end: var(--spacing-6);
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--area-tactil);
+    height: var(--area-tactil);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    transition:
+      opacity var(--duracion-corta) var(--ease-base),
+      translate var(--duracion-corta) var(--ease-base),
+      border-color var(--duracion-micro) var(--ease-base),
+      color var(--duracion-micro) var(--ease-base);
+  }
+
+  .boton-subir:hover {
+    border-color: var(--color-accent-deep);
+    color: var(--color-accent-deep);
+  }
+
+  /* Oculto solo donde alguien puede mostrarlo. Sin JavaScript el botón se
+     queda visible y funciona igual: es un enlace. */
+  @media (scripting: enabled) {
+    .boton-subir {
+      opacity: 0;
+      translate: 0 var(--spacing-2);
+      pointer-events: none;
+    }
+
+    .boton-subir[data-visible] {
+      opacity: 1;
+      translate: 0 0;
+      pointer-events: auto;
+    }
+  }
+
+  /* Móvil: el aviso de cookies ocupa el borde inferior a lo ancho. */
+  @media (max-width: 639px) {
+    body:has(.aviso-cookies) .boton-subir {
+      inset-block-end: calc(var(--spacing-6) + 5rem);
+    }
+  }
+}
+
+/* =========================================================================
+   Indicador de desplazamiento del hero
+
+   No es un adorno: es un enlace a la primera sección, así que sirve con el
+   teclado y funciona sin JavaScript. La animación solo dice "hay más
+   abajo"; el enlace es lo que lo hace útil.
+   ========================================================================= */
+
+@layer components {
+  .indicador-scroll {
+    position: absolute;
+    inset-block-end: var(--spacing-6);
+    inset-inline-start: 50%;
+    translate: -50% 0;
+    z-index: 2;
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: var(--area-tactil);
+    min-height: var(--area-tactil);
+    color: var(--color-ink-invert-muted);
+    transition: color var(--duracion-micro) var(--ease-base);
+  }
+
+  .indicador-scroll:hover {
+    color: var(--color-ink-invert);
+  }
+
+  /* El riel: una línea tenue fija y un trazo que la recorre. Dos capas y
+     no un degradado animado: con una sola, el trazo ocupaba un 11 % de la
+     altura en cada instante y no llegaba a verse sobre el fondo oscuro. */
+  .indicador-scroll::before,
+  .indicador-scroll::after {
+    content: "";
+    position: absolute;
+    inset-block-end: 0;
+    width: 1px;
+    background-color: currentColor;
+  }
+
+  .indicador-scroll::before {
+    height: var(--spacing-8);
+    opacity: 0.3;
+  }
+
+  .indicador-scroll::after {
+    height: var(--spacing-3);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .indicador-scroll::after {
+      animation: bajar-indicador 2.2s var(--ease-base) infinite;
+    }
+  }
+
+  /* Sin movimiento el trazo se queda arriba del riel, que sigue leyéndose
+     como "hacia abajo" sin necesidad de animarlo. */
+  @media (prefers-reduced-motion: reduce) {
+    .indicador-scroll::after {
+      translate: 0 calc(var(--spacing-8) * -1 + var(--spacing-3));
+    }
+  }
+
+  /* Por debajo de md el hero ya no cabe en una pantalla y el indicador
+     sobra: lo que hay debajo se ve sin necesidad de anunciarlo. */
+  @media (max-width: 767px) {
+    .indicador-scroll {
+      display: none;
+    }
+  }
+}
+
+@keyframes bajar-indicador {
+  from {
+    translate: 0 calc(var(--spacing-8) * -1 + var(--spacing-3));
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    translate: 0 0;
+    opacity: 0;
+  }
+}
+
+/* =========================================================================
+   Promesa de marca
+
+   La pausa del recorrido: una frase grande y ligera con mucho aire. Ocupa
+   buena parte del viewport a propósito —es lo único que hace de respiro
+   entre los dos bloques más densos del sitio—.
+
+   El peso es ligero y el interlineado ancho: a este tamaño el peso del
+   cuerpo se vuelve macizo y las líneas se pegan.
+   ========================================================================= */
+
+@layer components {
+  .promesa {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 72svh;
+    /* El min-height ya da el aire; con 160px arriba y abajo encima, la
+       sección abría un hueco muerto de media pantalla antes de la frase. */
+    padding-block: var(--spacing-24);
+    background-color: var(--color-paper);
+  }
+
+  .promesa-frase {
+    margin-block-start: var(--spacing-12);
+    margin-inline: auto;
+    max-width: 22ch;
+    font-family: var(--font-titulo);
+    font-size: var(--text-3xl);
+    font-weight: 400;
+    line-height: 1.28;
+    letter-spacing: var(--tracking-titulo);
+    text-align: center;
+    /* Iguala el largo de las líneas moviendo los cortes. Es lo que da el
+       bloque equilibrado que se buscaba pidiendo "justificado", sin los
+       ríos que produce justificar un texto centrado de pocas líneas. */
+    text-wrap: balance;
+    color: var(--color-ink);
+  }
+
+  @media (min-width: 768px) {
+    .promesa-frase {
+      font-size: var(--text-4xl);
+      max-width: 20ch;
+    }
+  }
+
+  /* --- Variante «palabras»: encendido ligado al progreso del scroll ---
+     Sin JavaScript ni observador: cada palabra tiene su propio tramo de la
+     línea de tiempo de la sección, y al recorrerla se encienden en orden.
+     Donde `animation-timeline` no existe, la frase nace en su color final. */
+
+  .promesa-frase--palabras .promesa-palabra {
+    color: var(--color-ink);
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .promesa-frase--palabras .promesa-palabra {
+        /* Cada palabra arranca un poco después que la anterior. */
+        --paso-palabra: 0.9%;
+        color: var(--color-ink-muted);
+        animation: encender-palabra linear both;
+        animation-timeline: view();
+        animation-range-start: cover calc(18% + var(--indice) * var(--paso-palabra));
+        animation-range-end: cover calc(30% + var(--indice) * var(--paso-palabra));
+      }
+    }
+  }
+
+}
+
+@keyframes encender-palabra {
+  to {
+    color: var(--color-ink);
+  }
+}
+
+/* =========================================================================
+   Cards de misión y visión
+
+   Sobre el ocre del logo. Es el único color de marca que aguanta como fondo
+   de bloque: --ink-invert encima da 7.78:1 y el rótulo en ocre claro, 5.19.
+   El verde de marca no vale aquí —2.52:1 sobre el ocre, verde sobre oliva
+   es barro— y por eso el rótulo es tonal en vez de acentuado.
+   ========================================================================= */
+
+@layer components {
+  .tarjeta-institucional {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-8);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-ocre-superficie);
+    /* La superficie es oscura: el anillo de foco conmuta con ella. */
+    --anillo-foco: var(--color-ocre-claro);
+  }
+
+  @media (min-width: 768px) {
+    .tarjeta-institucional {
+      padding: var(--spacing-12);
+    }
+  }
+}
+
+@keyframes trazar-hilo {
+  from {
+    scale: 1 0;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+@media (min-width: 768px) {
+  @keyframes trazar-hilo {
+    from {
+      scale: 0 1;
+    }
+    to {
+      scale: 1 1;
+    }
+  }
+}
+
+/* =========================================================================
+   Tarjeta de proyecto y su ficha
+
+   La tarjeta entera es el disparador, igual que la de servicio: si hay que
+   hacer clic, el objetivo debe ser todo lo que se está mirando.
+
+   La ficha se abre encima, en la misma página. Donde el navegador tiene
+   View Transitions, la imagen de la tarjeta se transforma en la del panel;
+   donde no, el panel entra con su propia animación y el resultado sigue
+   siendo correcto.
+   ========================================================================= */
+
+@layer components {
+  .tarjeta-proyecto {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    text-align: start;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-paper);
+    transition:
+      border-color var(--duracion-micro) var(--ease-base),
+      translate var(--duracion-micro) var(--ease-base);
+  }
+
+  .tarjeta-proyecto:hover {
+    border-color: var(--color-line-strong);
+    translate: 0 -2px;
+  }
+
+  .tarjeta-proyecto-marco {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+    background-color: var(--color-paper-alt);
+  }
+
+  .tarjeta-proyecto-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* La foto se acerca al pasar el cursor. Solo escala: nada que dispare
+     layout, y el marco ya recorta. */
+  .tarjeta-proyecto-imagen {
+    transition: scale var(--duracion-imagen) var(--ease-base);
+  }
+
+  .tarjeta-proyecto:hover .tarjeta-proyecto-imagen {
+    scale: var(--escala-imagen);
+  }
+
+  .tarjeta-proyecto-cuerpo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: var(--spacing-6);
+  }
+
+  @media (min-width: 768px) {
+    .tarjeta-proyecto-cuerpo {
+      padding: var(--spacing-8);
+    }
+  }
+
+  /* Tag de servicio: dice de qué frente es el proyecto antes de leer nada
+     más, que es lo que permite compararlos de un vistazo. */
+  .tarjeta-proyecto-tag {
+    align-self: flex-start;
+    padding: var(--spacing-1) var(--spacing-3);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-cuerpo);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-etiqueta);
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .tarjeta-proyecto-pie {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-4);
+    margin-block-start: auto;
+    padding-block-start: var(--spacing-8);
+  }
+
+  .tarjeta-proyecto:hover .tarjeta-servicio-mas {
+    border-color: var(--color-accent-deep);
+    color: var(--color-accent-deep);
+  }
+
+  /* --- El panel --- */
+
+  .panel-proyecto {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: var(--container-angosto);
+    max-height: 88vh;
+    max-height: 88dvh;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-paper);
+    overflow: hidden;
+  }
+
+  .panel-proyecto-cabecera {
+    display: flex;
+    flex: none;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-6);
+    padding: var(--spacing-8) var(--spacing-8) var(--spacing-6);
+  }
+
+  .panel-proyecto-cuerpo {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 var(--spacing-8) var(--spacing-8);
+  }
+
+  @media (min-width: 768px) {
+    .panel-proyecto-cabecera {
+      padding: var(--spacing-12) var(--spacing-12) var(--spacing-6);
+    }
+
+    .panel-proyecto-cuerpo {
+      padding: 0 var(--spacing-12) var(--spacing-12);
+    }
+  }
+
+  .panel-proyecto-marco {
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+    background-color: var(--color-paper-alt);
+  }
+
+  /* El velo entra y sale por transición: la salida tiene que terminar antes
+     de que React desmonte el panel (ver src/hooks/usePresencia.ts). */
+  .velo-panel[data-estado] {
+    opacity: 1;
+    transition: opacity var(--duracion-corta) var(--ease-base);
+  }
+
+  .velo-panel[data-estado="saliendo"] {
+    opacity: 0;
+    transition-duration: var(--duracion-micro);
+    transition-timing-function: var(--ease-salida);
+  }
+
+  @starting-style {
+    .velo-panel[data-estado] {
+      opacity: 0;
+    }
+  }
+}
+
+/* Donde hay View Transitions, la imagen manda y el resto se funde. La
+   duración es la del sistema, no la que trae el navegador por defecto. */
+::view-transition-old(proyecto-imagen),
+::view-transition-new(proyecto-imagen) {
+  animation-duration: var(--duracion-entrada);
+  animation-timing-function: var(--ease-base);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* =========================================================================
+   Galería de campo
+
+   Pista con scroll-snap: el gesto táctil y el encaje son del sistema. Las
+   diapositivas no llenan el ancho a propósito —la siguiente asoma— para que
+   se vea que hay más sin necesidad de flechas. El indicador es una barra
+   segmentada, no puntos: dialoga con las reglas de 1px del resto del sitio.
+   ========================================================================= */
+
+@layer components {
+  .galeria-controles {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-6);
+    margin-block-end: var(--spacing-8);
+  }
+
+  .galeria-flecha {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--area-tactil);
+    height: var(--area-tactil);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--color-ink);
+    transition:
+      border-color var(--duracion-micro) var(--ease-base),
+      color var(--duracion-micro) var(--ease-base),
+      opacity var(--duracion-micro) var(--ease-base);
+  }
+
+  .galeria-flecha:hover {
+    border-color: var(--color-accent-deep);
+    color: var(--color-accent-deep);
+  }
+
+  /* Sigue en el orden de tabulación —no desaparece— pero avisa que ahí no
+     hay más. */
+  .galeria-flecha[aria-disabled] {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .galeria-flechas {
+    display: flex;
+    gap: var(--spacing-2);
+  }
+
+  /* Las flechas necesitan JavaScript; sin él la pista se desplaza igual.
+     La regla vive aquí y no en una utilidad: una utilidad de Tailwind está
+     en la capa de arriba y le ganaría a este display:none. */
+  @media (scripting: none) {
+    .galeria-flechas {
+      display: none;
+    }
+  }
+
+  .galeria-pista {
+    display: flex;
+    gap: var(--spacing-4);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    /* Que la primera y la última puedan encajar al principio y al final. */
+    scroll-padding-inline: 0;
+    /* Sin barra visible: los controles y el indicador ya dicen dónde se
+       está, y la barra rompía la altura de la pista. */
+    scrollbar-width: none;
+    cursor: grab;
+    /* El foco de la pista entera, para el teclado. */
+    border-radius: var(--radius-md);
+  }
+
+  .galeria-pista::-webkit-scrollbar {
+    display: none;
+  }
+
+  .galeria-pista[data-arrastrando] {
+    scroll-snap-type: none;
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  .galeria-diapositiva {
+    flex: 0 0 88%;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 768px) {
+    .galeria-diapositiva {
+      flex-basis: 72%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .galeria-diapositiva {
+      flex-basis: 60%;
+    }
+  }
+
+  .galeria-marco {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--radius-md);
+    background-color: var(--color-paper-alt);
+  }
+
+  .galeria-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale var(--duracion-imagen) var(--ease-base);
+  }
+
+  .galeria-marco:hover .galeria-imagen {
+    scale: var(--escala-imagen);
+  }
+
+  .galeria-pie {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-3);
+    margin-block-start: var(--spacing-3);
+    font-size: var(--text-sm);
+  }
+
+  .galeria-pie .dato {
+    flex: none;
+    color: var(--color-accent-deep);
+  }
+
+  /* --- Indicador segmentado --- */
+
+  .galeria-indicador {
+    display: flex;
+    gap: var(--spacing-1);
+    margin-block-start: var(--spacing-8);
+  }
+
+  .galeria-indicador li {
+    flex: 1;
+  }
+
+  /* Cada tramo es un botón de 44px de alto con una línea de 2px dentro.
+     A lo ancho miden lo que toque —unos 25px en móvil con doce fotos—:
+     cumplen los 24px de WCAG 2.5.8 y no se pueden llevar a 44 sin que doce
+     tramos desborden la pantalla. Para saltar de foto en móvil están las
+     flechas y el gesto; el tramo dice dónde se está. */
+  .galeria-tramo {
+    display: block;
+    width: 100%;
+    height: var(--area-tactil);
+    background-image: linear-gradient(var(--color-line), var(--color-line));
+    background-repeat: no-repeat;
+    background-size: 100% 2px;
+    background-position: center;
+    transition: background-image var(--duracion-micro) var(--ease-base);
+  }
+
+  .galeria-tramo:hover {
+    background-image: linear-gradient(var(--color-line-strong), var(--color-line-strong));
+  }
+
+  .galeria-tramo[aria-current] {
+    background-image: linear-gradient(var(--color-accent-deep), var(--color-accent-deep));
+  }
+
+  /* --- Visor --- */
+
+  /* Más cerrado que el velo de los paneles (72 %). Se midió: al 94 % el
+     papel queda en ~29 y el titular en ~15 sobre 255, y esa diferencia
+     basta para leer «Así se ve el trabajo» detrás de la foto en móvil,
+     donde el titular ocupa media pantalla. Al 98 % la página sigue
+     insinuándose —hay algo detrás— pero deja de competir con la imagen. */
+  .velo-visor {
+    background-color: color-mix(in srgb, var(--color-velo) 98%, transparent);
+    padding: var(--spacing-4);
+  }
+
+  .visor {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 1400px);
+    max-height: 100%;
+    color: var(--color-ink-invert);
+    /* Superficie oscura: el anillo de foco conmuta. */
+    --anillo-foco: var(--color-accent);
+  }
+
+  .visor-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-6);
+    margin-block-end: var(--spacing-4);
+  }
+
+  .visor-figura {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    min-height: 0;
+  }
+
+  .visor-imagen {
+    width: 100%;
+    height: auto;
+    max-height: 78svh;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+  }
+
+  .visor-pie {
+    font-size: var(--text-sm);
+    color: var(--color-ink-invert-muted);
+    text-wrap: pretty;
+  }
+
+  .visor-boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--area-tactil);
+    height: var(--area-tactil);
+    border: 1px solid var(--color-line-invert);
+    border-radius: var(--radius-pill);
+    color: var(--color-ink-invert);
+    background-color: color-mix(in srgb, var(--color-velo) 70%, transparent);
+    transition: border-color var(--duracion-micro) var(--ease-base);
+  }
+
+  .visor-boton:hover {
+    border-color: var(--color-accent);
+  }
+
+  .visor-boton .icono-menu > span {
+    background-color: currentColor;
+  }
+
+  .visor-flecha {
+    position: absolute;
+    inset-block-start: 50%;
+    translate: 0 -50%;
+  }
+
+  .visor-flecha--izquierda {
+    inset-inline-start: var(--spacing-2);
+  }
+
+  .visor-flecha--derecha {
+    inset-inline-end: var(--spacing-2);
+  }
+
+  /* En móvil las flechas del visor irían sobre la foto: van debajo. */
+  @media (max-width: 639px) {
+    .visor-flecha {
+      position: static;
+      translate: none;
+    }
+
+    .visor {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-4);
+    }
+
+    .visor-cabecera,
+    .visor-figura {
+      grid-column: 1 / -1;
+    }
+
+    .visor-flecha--derecha {
+      justify-self: end;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Formulario: desplegable y casilla                                    */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  /* El `select` nativo, sin la flecha del navegador y con una coherente
+     con el trazo de los iconos del sitio. El control sigue siendo el del
+     sistema: en móvil abre la rueda, con teclado se recorre con flechas. */
+  .selector {
+    position: relative;
+    display: block;
+  }
+
+  .selector > select {
+    appearance: none;
+    padding-right: var(--spacing-12);
+    cursor: pointer;
+  }
+
+  .selector::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: var(--spacing-4);
+    width: var(--spacing-2);
+    height: var(--spacing-2);
+    border-right: calc(var(--trazo-icono) * 1px) solid var(--color-ink-muted);
+    border-bottom: calc(var(--trazo-icono) * 1px) solid var(--color-ink-muted);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  /* Casilla dibujada: 20 px, borde con significado (--line-strong) y
+     relleno de acento profundo al marcar. La marca es un ángulo de dos
+     bordes girado, el mismo trazo que la flecha del desplegable. */
+  .casilla {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    cursor: pointer;
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  .casilla-control {
+    appearance: none;
+    flex: none;
+    display: grid;
+    place-content: center;
+    width: 20px;
+    height: 20px;
+    margin-top: 0.1em;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-paper);
+    cursor: pointer;
+    transition:
+      background-color var(--duracion-micro) var(--ease-base),
+      border-color var(--duracion-micro) var(--ease-base);
+  }
+
+  .casilla-control::before {
+    content: "";
+    width: 10px;
+    height: 6px;
+    border-left: 2px solid var(--color-paper);
+    border-bottom: 2px solid var(--color-paper);
+    transform: translateY(-1px) rotate(-45deg) scale(0);
+    transition: transform var(--duracion-micro) var(--ease-base);
+  }
+
+  .casilla-control:checked {
+    background-color: var(--color-accent-deep);
+    border-color: var(--color-accent-deep);
+  }
+
+  .casilla-control:checked::before {
+    transform: translateY(-1px) rotate(-45deg) scale(1);
+  }
+
+  .casilla-control:hover:not(:disabled) {
+    border-color: var(--color-ink-muted);
+  }
+
+  .casilla-control[aria-invalid="true"] {
+    border-color: var(--color-accent-deep);
+  }
+
+  .casilla-control:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .casilla-texto {
+    /* El enlace de la política hereda el subrayado del sitio. */
+    max-width: var(--container-medida);
   }
 }

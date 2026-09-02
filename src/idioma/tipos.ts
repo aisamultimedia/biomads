@@ -21,12 +21,11 @@ import type { CodigoError, CodigoRespuesta } from "@/lib/validacion";
 /**
  * Idiomas del sitio. El primero es el que se sirve por defecto.
  *
- * Hoy solo hay uno: el andamiaje está montado y el inglés se escribe en su
- * fase. Añadirlo es crear `en.ts` y añadir `"en"` a esta lista; el resto
- * —rutas estáticas, `lang`, `hreflang`, selector, persistencia— ya está y
- * se enciende solo.
+ * Español e inglés desde el 2 de septiembre de 2026. Añadir otro es crear
+ * su archivo y añadirlo a esta lista; el resto —rutas estáticas, `lang`,
+ * `hreflang`, selector, negociación de la raíz— ya está y se enciende solo.
  */
-export const IDIOMAS = ["es"] as const;
+export const IDIOMAS = ["es", "en"] as const;
 
 export type Idioma = (typeof IDIOMAS)[number];
 
@@ -75,7 +74,20 @@ export type ClaveFoto =
   | "area-estudio"
   | "siembra-via"
   | "siembra-ladera"
-  | "traslado-material";
+  | "traslado-material"
+  /* Galería */
+  | "aspersion-ladera"
+  | "siembra-manual"
+  | "ahoyado-pradera"
+  | "aplicacion-fitosanitaria"
+  | "riego-arbol-potrero"
+  | "ahoyadora-via"
+  | "ahoyadora-detalle"
+  | "estaca-tutor"
+  | "plateo-individuo"
+  | "guadana-despeje"
+  | "fertilizacion-individuo"
+  | "cuadrilla-aspersion";
 
 export type Diccionario = {
   /** Nombre del idioma en su propia lengua, para el selector. */
@@ -91,6 +103,8 @@ export type Diccionario = {
     descripcionPortada: string;
     descripcionProyectos: string;
     tituloProyectos: string;
+    tituloPrivacidad: string;
+    descripcionPrivacidad: string;
   };
 
   nav: {
@@ -101,6 +115,7 @@ export type Diccionario = {
     menuNavegacion: string;
     irAlInicio: string;
     pieDePagina: string;
+    volverArriba: string;
     secciones: PorClave<"nosotros" | "servicios" | "proyectos" | "contacto">;
     /** Rótulo del selector de idioma. */
     idioma: string;
@@ -115,6 +130,7 @@ export type Diccionario = {
     ctaSecundario: string;
     ficha: PorClave<"experiencia" | "constituida" | "sede" | "regiones">;
     anios: string;
+    indicadorScroll: string;
     pausarVideo: string;
     reanudarVideo: string;
   };
@@ -144,9 +160,23 @@ export type Diccionario = {
     objetivos: readonly string[];
   };
 
+  /** La pausa del recorrido. Una sola frase. */
+  promesa: {
+    rotulo: string;
+    /** La frase entera. Se parte en palabras al pintar. */
+    enunciado: string;
+  };
+
   etapas: {
     rotulo: string;
     nombres: PorClave<ClaveEtapa>;
+    /**
+     * Una línea por etapa. Opcional a propósito: CONTENIDO.md marca
+     * `[FALTA]` las cinco, y una etapa sin descripción se pinta solo con su
+     * nombre en vez de abrir un panel vacío. Cuando BIOMADS las entregue,
+     * añadirlas aquí es lo único que hay que hacer.
+     */
+    descripciones?: Partial<Record<ClaveEtapa, string>>;
   };
 
   servicios: {
@@ -217,6 +247,10 @@ export type Diccionario = {
     dificultadRotulo: string;
     resolucionRotulo: string;
     ficha: PorClave<"anio" | "duracion" | "ubicacion" | "servicio">;
+    /** Nombre accesible del disparador de cada tarjeta. Lleva {cliente}. */
+    abrirFicha: string;
+    cerrar: string;
+    verPaginaCompleta: string;
     certificadosRotulo: string;
     certificadosTexto: string;
     certificadoPendiente: string;
@@ -258,6 +292,25 @@ export type Diccionario = {
     >;
   };
 
+  galeria: {
+    rotulo: string;
+    titulo: string;
+    texto: string;
+    /** Nombre accesible del carrusel entero. */
+    carrusel: string;
+    anterior: string;
+    siguiente: string;
+    /** Lleva {n} y {total}. */
+    posicion: string;
+    /** Lleva {n}. Nombre accesible de cada indicador. */
+    irA: string;
+    /** Lleva {n}. Nombre accesible del enlace que amplía cada foto. */
+    ampliar: string;
+    /** Nombre accesible del visor a pantalla completa. */
+    visor: string;
+    cerrar: string;
+  };
+
   clientes: {
     rotulo: string;
     nombres: PorClave<ClaveCliente>;
@@ -276,8 +329,24 @@ export type Diccionario = {
       nombre: string;
       empresa: string;
       correo: string;
+      telefono: string;
+      telefonoAyuda: string;
+      servicio: string;
+      /** Primera opción del desplegable, sin valor. */
+      servicioElegir: string;
+      /** Última opción: para quien no sabe cuál es su servicio. */
+      servicioOtro: string;
       mensaje: string;
       mensajeAyuda: string;
+      /**
+       * Autorización de tratamiento de datos, en tres trozos porque el
+       * enlace a la política va en medio de la frase.
+       */
+      datosAntes: string;
+      datosEnlace: string;
+      datosDespues: string;
+      /** Asunto del correo de respaldo cuando el envío falla. Lleva {empresa}. */
+      asuntoRespaldo: string;
       enviar: string;
       enviando: string;
       exitoRotulo: string;
@@ -322,9 +391,39 @@ export type Diccionario = {
     llamadaOWhatsapp: string;
     constituidaEn: string;
     notaCookies: string;
+    /** Enlace a /privacidad, junto a la nota de cookies. */
+    politicaDatos: string;
     lema: string;
   };
 
+  /**
+   * Política de tratamiento de datos personales. Texto largo y por
+   * secciones; en español vive en es.privacidad.ts. Los párrafos admiten
+   * {razonSocial}, {sede}, {correo}, {telefono} y {vigencia}, que la página
+   * rellena desde src/lib/site.ts.
+   */
+  privacidad: {
+    rotulo: string;
+    lineasTitulo: readonly string[];
+    entradilla: string;
+    vigenciaRotulo: string;
+    /** Fecha en prosa, en el idioma del diccionario. */
+    vigencia: string;
+    indiceRotulo: string;
+    secciones: readonly {
+      /** Ancla y clave estable entre idiomas. */
+      id: string;
+      titulo: string;
+      parrafos: readonly string[];
+      lista?: readonly string[];
+      parrafosFinales?: readonly string[];
+      enlace?: { texto: string; url: string };
+    }[];
+    dudasRotulo: string;
+    /** Termina justo antes del enlace al correo. */
+    dudasTexto: string;
+    volver: string;
+  };
   cookies: {
     region: string;
     texto: string;

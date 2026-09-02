@@ -47,6 +47,24 @@ const seleccion = [
   { de: "IMG_7413.PNG", a: "siembra-ladera.jpg" },
   { de: "IMG_7450.PNG", a: "traslado-material.jpg" },
   { de: "IMG_7435.PNG", a: "parcela-estacas.jpg" },
+
+  /* Galería. Doce más, elegidas sobre una hoja de contactos de las dieciséis
+     que quedaban sin usar: se descartaron las que repetían encuadre con una
+     ya publicada. Siguen siendo siembra, mantenimiento y control
+     fitosanitario —no hay tomas de fauna ni de epífitas— y el nombre lo
+     dice tal cual. */
+  { de: "IMG_7412.PNG", a: "aspersion-ladera.jpg" },
+  { de: "IMG_7415.PNG", a: "siembra-manual.jpg" },
+  { de: "IMG_7416.PNG", a: "ahoyado-pradera.jpg" },
+  { de: "IMG_7417.PNG", a: "aplicacion-fitosanitaria.jpg" },
+  { de: "IMG_7421.PNG", a: "riego-arbol-potrero.jpg" },
+  { de: "IMG_7430.PNG", a: "ahoyadora-via.jpg" },
+  { de: "IMG_7432.PNG", a: "ahoyadora-detalle.jpg" },
+  { de: "IMG_7451.PNG", a: "estaca-tutor.jpg" },
+  { de: "IMG_7453.PNG", a: "plateo-individuo.jpg" },
+  { de: "IMG_7463.PNG", a: "guadana-despeje.jpg" },
+  { de: "IMG_7465.PNG", a: "fertilizacion-individuo.jpg" },
+  { de: "IMG_7467.PNG", a: "cuadrilla-aspersion.jpg" },
 ];
 
 mkdirSync(destino, { recursive: true });

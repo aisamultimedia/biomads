@@ -18,18 +18,22 @@ type ConexionAhorro = { saveData?: boolean };
 /**
  * ¿Hay que evitar bajar los 0,9 MB del video?
  *
- * Dos motivos, misma respuesta. Con el ahorro de datos activado, gastarlos
- * en un fondo decorativo es exactamente lo que el visitante pidió no hacer.
- * Y con `prefers-reduced-motion`, el video arrancaría detenido: bajarlo para
- * dejarlo quieto es tráfico tirado.
+ * Tres motivos, misma respuesta:
  *
- * En los dos casos queda el póster —que es lo que se ve igualmente— y el
- * botón pasa a decir "reanudar": quien quiera el video lo pide y entonces
- * se baja.
+ * - **Móvil.** Por decisión del cliente: el fondo en movimiento no compensa
+ *   0,9 MB en datos móviles cuando el póster cuenta lo mismo.
+ * - **Ahorro de datos activado.** Gastarlos en un fondo decorativo es
+ *   exactamente lo que el visitante pidió no hacer.
+ * - **prefers-reduced-motion.** El video arrancaría detenido: bajarlo para
+ *   dejarlo quieto es tráfico tirado.
+ *
+ * En los tres queda el póster —que es lo que se ve igualmente— y el botón
+ * pasa a decir "reanudar": quien quiera el video lo pide y entonces se baja.
  */
 function evitarDescarga(): boolean {
   const conexion = (navigator as Navigator & { connection?: ConexionAhorro }).connection;
   if (conexion?.saveData) return true;
+  if (window.matchMedia("(max-width: 767px)").matches) return true;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 

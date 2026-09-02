@@ -38,6 +38,18 @@ tiempo de scroll del navegador. Donde no está soportada —hoy Firefox— la fo
 se queda quieta, que es exactamente lo que pide "parallax sutil" cuando hay
 dudas.
 
+**Las anclas aterrizaban 96 px más abajo de lo debido, en todas las páginas.** Se descubrió midiendo el índice de la política de datos: Lenis (desde 1.3) resta por su cuenta el `scroll-padding-top` del documento y el `scroll-margin` del destino, y el sitio le pasaba además la altura de la cabecera como `offset`. Dos descuentos en sentidos opuestos. Se quitó el `offset`; el CSS ya dice dónde empieza el contenido y Lenis lo lee.
+
+**La galería lleva la idea al límite.** El carrusel no mueve nada por
+JavaScript: es una pista con `scroll-snap`, y las flechas y el teclado solo
+piden `scrollTo` con `behavior: smooth`, que el navegador ya sabe frenar con
+`prefers-reduced-motion`. El único observador decide cuál es la foto activa
+—la de mayor `intersectionRatio`, no la primera que cruza el umbral, que
+era la que se equivocaba en el reposo— y el visor entra y sale como los
+demás paneles: `@starting-style` y `usePresencia`. Sin JavaScript cada foto
+es un enlace real al archivo y las flechas desaparecen por
+`@media (scripting: none)`.
+
 ---
 
 ## 1. Auditoría del sitio antes de intervenir

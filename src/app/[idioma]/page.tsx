@@ -9,13 +9,16 @@ import { Clientes } from "@/components/secciones/Clientes";
 import { EtapasEstudio } from "@/components/secciones/EtapasEstudio";
 import { FichaServicio } from "@/components/secciones/FichaServicio";
 import { FormularioContacto } from "@/components/secciones/FormularioContacto";
+import { Galeria } from "@/components/secciones/Galeria";
 import { Hero } from "@/components/secciones/Hero";
 import { MarcoInstitucional } from "@/components/secciones/MarcoInstitucional";
-import { TarjetaCaso } from "@/components/secciones/TarjetaCaso";
+import { PromesaMarca } from "@/components/secciones/PromesaMarca";
+import { Proyectos } from "@/components/secciones/Proyectos";
 import { proyectos } from "@/content/proyectos";
 import { regiones } from "@/content/respaldo";
 import { serviciosDetallados, serviciosListados } from "@/content/servicios";
 import { diccionario, comoIdioma } from "@/idioma";
+import { opcionesDeServicio } from "@/lib/formulario";
 import { empresa, mailto, whatsapp } from "@/lib/site";
 import controlFitosanitario from "@/fotos/control-fitosanitario.jpg";
 import cuadrillaLadera from "@/fotos/cuadrilla-ladera.jpg";
@@ -105,6 +108,11 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
       </Seccion>
 
       {/* ================================================================
+          La pausa del recorrido, entre los dos bloques más densos.
+          ================================================================ */}
+      <PromesaMarca idioma={idioma} />
+
+      {/* ================================================================
           Las cinco etapas del estudio ambiental, en banda oscura.
           ================================================================ */}
       <EtapasEstudio idioma={idioma} />
@@ -154,17 +162,12 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
           Proyectos, con el espacio reservado para las constancias.
           ================================================================ */}
       <Seccion id="proyectos" rotulo={t.proyectos.rotulo} titulo={t.proyectos.titulo}>
-        <div className="flex flex-col gap-24">
-          {proyectos.map((proyecto) => (
-            <TarjetaCaso
-              key={proyecto.slug}
-              proyecto={proyecto}
-              idioma={idioma}
-              textos={t.proyectos}
-              unidades={t.unidades}
-            />
-          ))}
-        </div>
+        <Proyectos
+          idioma={idioma}
+          textos={t.proyectos}
+          unidades={t.unidades}
+          fotos={t.fotos}
+        />
 
         {/* Espacio reservado para los certificados. Cuando lleguen los PDF
             entran en estas ranuras sin mover nada del layout. */}
@@ -192,6 +195,15 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
             </Boton>
           </div>
         </Reveal>
+      </Seccion>
+
+      {/* ================================================================
+          Galería de campo: la prueba visual de la ejecución, justo después
+          de los proyectos que la sustentan.
+          ================================================================ */}
+      <Seccion id="galeria" alterna rotulo={t.galeria.rotulo} titulo={t.galeria.titulo}>
+        <p className="medida -mt-8 mb-16 text-ink-muted">{t.galeria.texto}</p>
+        <Galeria textos={t.galeria} fotos={t.fotos} />
       </Seccion>
 
       {/* ================================================================
@@ -254,7 +266,11 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
           </div>
 
           <Reveal>
-            <FormularioContacto textos={t.contacto.formulario} />
+            <FormularioContacto
+              idioma={idioma}
+              textos={t.contacto.formulario}
+              opcionesServicio={opcionesDeServicio(t)}
+            />
           </Reveal>
         </div>
       </Seccion>

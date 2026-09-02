@@ -4,8 +4,10 @@ import {
   componerMensaje,
   validarTodo,
   type CamposContacto,
+  type ClaveServicioFormulario,
   type CodigoRespuesta,
 } from "@/lib/validacion";
+import { rotuloServicio } from "@/lib/formulario";
 import { empresa } from "@/lib/site";
 
 /**
@@ -25,16 +27,33 @@ import { empresa } from "@/lib/site";
  *   CONTACTO_DESTINO   a dónde llegan los mensajes (por defecto, gerencia)
  */
 
+/**
+ * El cuerpo trae, además de los campos, la trampa para robots: un campo
+ * que la página esconde y ninguna persona rellena.
+ */
+type Envio = CamposContacto & { sitioWeb?: unknown };
+
 const responder = (codigo: CodigoRespuesta, status: number, extra: object = {}) =>
   NextResponse.json({ codigo, ...extra }, { status });
 
 export async function POST(peticion: Request) {
-  let datos: CamposContacto;
+  let datos: Envio;
 
   try {
-    datos = (await peticion.json()) as CamposContacto;
+    datos = (await peticion.json()) as Envio;
   } catch {
     return responder("envioIlegible", 400);
+  }
+
+  if (!datos || typeof datos !== "object") {
+    return responder("envioIlegible", 400);
+  }
+
+  /* Honeypot. Si viene relleno, quien envía no es una persona. Se responde
+     como si todo hubiera ido bien y no se manda nada: un error le diría al
+     robot qué cambiar en el siguiente intento. */
+  if (typeof datos.sitioWeb === "string" && datos.sitioWeb.trim() !== "") {
+    return NextResponse.json({ ok: true });
   }
 
   // Se revalida en el servidor: la validación del navegador se puede saltar.
@@ -50,14 +69,27 @@ export async function POST(peticion: Request) {
     return responder("envioNoConectado", 503);
   }
 
+  /* `validarTodo` ya garantiza que `servicio` es una clave admitida. */
+  const servicio = rotuloServicio(datos.servicio as ClaveServicioFormulario);
+
+  /* La constancia de la autorización viaja con el mensaje: la Ley 1581 de
+     2012 pide poder demostrar que el titular autorizó, y este correo es el
+     único registro que existe del envío. */
+  const constancia = [
+    "",
+    "—",
+    `Autorización de tratamiento de datos: sí, ${new Date().toISOString()}`,
+    "Finalidad: responder a esta solicitud (política de tratamiento de datos del sitio).",
+  ].join("\n");
+
   try {
     const resend = new Resend(clave);
     const { error } = await resend.emails.send({
       from: remitente,
       to: process.env.CONTACTO_DESTINO ?? empresa.correo,
       replyTo: datos.correo.trim(),
-      subject: `Solicitud de propuesta — ${datos.empresa.trim()}`,
-      text: componerMensaje(datos),
+      subject: `Solicitud de propuesta — ${datos.empresa.trim()} · ${servicio}`,
+      text: componerMensaje(datos, servicio) + constancia,
     });
 
     if (error) {

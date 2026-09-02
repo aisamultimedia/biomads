@@ -9,7 +9,10 @@ type Props = {
   idioma: Idioma;
   /** Sobre superficie oscura: la palabra va en --ink-invert. */
   invertido?: boolean;
-  /** Alto en píxeles. El ancho sale de la proporción del archivo. */
+  /**
+   * Alto en píxeles. En la barra no se pasa: lo gobierna --alto-logo, que
+   * cambia al compactarse. Aquí solo se fija para el pie, donde es fijo.
+   */
   alto?: number;
   /**
    * Carga con prioridad. Por defecto no: precargar una imagen que puede
@@ -27,10 +30,13 @@ type Props = {
  * entregado: recorta las guías de espaciado y arma isotipo + palabra. La
  * variante clara solo repinta las letras, nunca el isotipo.
  */
+/** Alto máximo del logo en la barra; el CSS lo baja al compactar. */
+const ALTO_BARRA = 40;
+
 export function Logotipo({
   idioma,
   invertido = false,
-  alto = 34,
+  alto = ALTO_BARRA,
   prioridad = false,
   className = "",
 }: Props) {
@@ -43,17 +49,23 @@ export function Logotipo({
   return (
     <Link
       href={`/${idioma}`}
-      className={`enlace-logotipo group inline-flex items-center ${className}`}
+      /* flex-none: si la barra se queda sin sitio, lo que cede es el resto,
+         no el logo. Sin esto el ancho se comprimía mientras el CSS mantenía
+         el alto, y la marca salía deformada. */
+      className={`enlace-logotipo group inline-flex flex-none items-center ${className}`}
       aria-label={t.nav.irAlInicio}
     >
+      {/* Los atributos llevan el alto máximo para que el navegador reserve
+          la caja correcta desde el primer momento; el alto real lo pone el
+          CSS, que puede cambiarlo al compactar sin provocar salto. */}
       <Image
         src={fuente}
         alt="BIOMADS"
         height={alto}
         width={Math.round((fuente.width * alto) / fuente.height)}
         priority={prioridad}
-        className="w-auto transition-opacity duration-[var(--duracion-micro)] ease-base group-hover:opacity-80"
-        style={{ height: alto }}
+        className="logo-imagen w-auto transition-opacity duration-[var(--duracion-micro)] ease-base group-hover:opacity-80"
+        style={alto !== ALTO_BARRA ? { height: alto } : undefined}
       />
     </Link>
   );

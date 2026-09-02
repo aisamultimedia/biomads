@@ -10,7 +10,6 @@ import {
   IDIOMAS,
   diccionario,
   esIdioma,
-  idiomaPreferido,
   rutaEnIdioma,
   type Idioma,
 } from "@/idioma";
@@ -22,9 +21,15 @@ import {
  * propia URL, así que lo honesto es que se pueda abrir en otra pestaña,
  * copiar y compartir. Funciona sin JavaScript.
  *
- * Lo que sí necesita JavaScript es recordar la elección y respetar la del
- * navegador en la primera visita, y las dos cosas degradan bien: sin él se
- * sirve el idioma por defecto y el visitante cambia con un clic.
+ * Lo que sí necesita JavaScript es recordar la elección, y degrada bien:
+ * sin él se sirve el idioma de la URL y el visitante cambia con un clic.
+ *
+ * El idioma del navegador solo decide en la raíz `/`, y lo hace el
+ * servidor (src/proxy.ts). Aquí antes se redirigía también en las páginas
+ * interiores, y se quitó: quien abre un enlace a `/es/proyectos` quiere
+ * verlo en español aunque su navegador esté en inglés, y un rastreador con
+ * `Accept-Language: en` habría acabado indexando la versión inglesa de
+ * cada URL española.
  *
  * Con un solo idioma no se pinta. Un selector de una opción no es un
  * selector, es un adorno que promete algo que no hay.
@@ -33,9 +38,9 @@ export function SelectorIdioma({ idioma }: { idioma: Idioma }) {
   const ruta = usePathname();
   const router = useRouter();
 
-  /* Primera visita: sin elección guardada, manda el navegador. Se sustituye
-     la entrada del historial en vez de añadir una, para que el botón de
-     atrás no devuelva al idioma que el visitante no pidió. */
+  /* Elección guardada distinta de la URL: se cambia sustituyendo la entrada
+     del historial, para que el botón de atrás no devuelva al idioma que el
+     visitante no pidió. */
   useEffect(() => {
     if (!HAY_VARIOS_IDIOMAS) return;
 
@@ -47,14 +52,9 @@ export function SelectorIdioma({ idioma }: { idioma: Idioma }) {
       return;
     }
 
-    if (guardado) {
-      if (esIdioma(guardado) && guardado !== idioma)
-        router.replace(rutaEnIdioma(ruta, guardado) as Route);
-      return;
+    if (guardado && esIdioma(guardado) && guardado !== idioma) {
+      router.replace(rutaEnIdioma(ruta, guardado) as Route);
     }
-
-    const preferido = idiomaPreferido(navigator.languages ?? [navigator.language]);
-    if (preferido !== idioma) router.replace(rutaEnIdioma(ruta, preferido) as Route);
   }, [idioma, ruta, router]);
 
   if (!HAY_VARIOS_IDIOMAS) return null;

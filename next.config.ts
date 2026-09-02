@@ -16,17 +16,20 @@ const nextConfig: NextConfig = {
    * —las que el sitio sirvió antes de tener idiomas— tienen que ir a algún
    * sitio en vez de dar 404.
    *
-   * Las de contenido van permanentes (308): esa página ya no vive ahí y
-   * nunca volverá. La raíz va temporal (307) a propósito: el día que haya
-   * más de un idioma, `/` tendrá que mirar la preferencia del navegador, y
-   * un 308 se queda cacheado en el navegador impidiéndolo.
+   * Todas permanentes (308): esa página ya no vive ahí y nunca volverá.
+   * La raíz `/` no está aquí: la decide src/proxy.ts según el idioma del
+   * navegador, y por eso responde 307.
    */
   async redirects() {
     return [
-      { source: "/", destination: `/${POR_DEFECTO}`, permanent: false },
       {
         source: "/proyectos/:ruta*",
         destination: `/${POR_DEFECTO}/proyectos/:ruta*`,
+        permanent: true,
+      },
+      {
+        source: "/privacidad",
+        destination: `/${POR_DEFECTO}/privacidad`,
         permanent: true,
       },
       {

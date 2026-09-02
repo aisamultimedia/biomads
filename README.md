@@ -2,7 +2,7 @@
 
 Sitio corporativo de BIOMADS S.A.S — estudios y gestión ambiental, Ibagué.
 
-Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Motion · Resend.
+Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Resend. Sin librería de animación: ver MOTION.md.
 
 ---
 
@@ -32,6 +32,8 @@ Vercel → *Settings → Environment Variables*.
 | `RESEND_API_KEY` | Envío del formulario de contacto | No, pero sin ella el formulario no envía |
 | `CONTACTO_REMITENTE` | Remitente verificado en Resend, del dominio propio | Junto con la anterior |
 | `CONTACTO_DESTINO` | A dónde llegan los mensajes | No. Por defecto `gerencia@biomads.com` |
+
+**Qué lleva el formulario.** Nombre, empresa, correo, teléfono (opcional), tipo de servicio, mensaje y la casilla de autorización de tratamiento de datos (Ley 1581 de 2012), que enlaza a `/[idioma]/privacidad`. La autorización viaja en el correo con fecha y hora, como constancia. Hay un campo trampa para robots (`sitio_web`): si llega relleno, la ruta responde «enviado» y no envía nada. Validación en `src/lib/validacion.ts`, la misma en el navegador y en el servidor; devuelve códigos, y el texto lo pone el diccionario.
 
 **Sin `RESEND_API_KEY` el sitio funciona igual.** `/api/contacto` responde 503
 con un mensaje claro y el formulario ofrece WhatsApp y correo directo con el
@@ -73,9 +75,9 @@ src/
 ├── components/
 │   ├── layout/     cabecera, pie, navegación, menú móvil, cookies
 │   ├── motion/     vocabulario de entradas y revelados
-│   ├── secciones/  hero, etapas, servicios, proyectos, clientes, formulario
+│   ├── secciones/  hero, promesa, etapas, servicios, proyectos, galería, clientes, formulario
 │   └── ui/         botón, enlace, campo, ficha, foto, icono, sección
-├── content/        servicios, proyectos, respaldo, institucional, clientes  ← la verdad del sitio
+├── content/        servicios, proyectos, galería, respaldo, institucional, clientes  ← la verdad del sitio
 ├── fotos/          fotografía de campo procesada
 ├── logo/           piezas del logo (y clientes/ para la banda de logos)
 ├── lib/            configuración, validación, movimiento
@@ -93,22 +95,41 @@ entera sin dejar hueco.
 
 ## Idiomas
 
-El idioma es el **primer segmento de la ruta**: `/es`, y `/en` cuando se
-añada. `/` redirige al idioma por defecto con un 307 —temporal a propósito:
-el día que haya dos idiomas, `/` tendrá que mirar la preferencia del
-navegador y un 308 se queda cacheado impidiéndolo—.
+Español e inglés. El idioma es el **primer segmento de la ruta**: `/es` y
+`/en`. La raíz `/` la decide `src/proxy.ts` en el servidor leyendo
+`Accept-Language` (pesos `q` incluidos) y responde 307 —temporal a
+propósito: un 308 se quedaría cacheado y el visitante que cambia el idioma
+del sistema seguiría cayendo en el anterior—. Sin preferencia reconocible,
+español.
+
+Solo la raíz. Una URL interior nunca cambia de idioma por el navegador:
+quien comparte `/es/proyectos` quiere que se abra en español, y un
+rastreador con `Accept-Language: en` habría acabado indexando la versión
+inglesa de cada URL española. El selector (ES | EN en la cabecera) recuerda
+la elección explícita en `localStorage` y la aplica en visitas siguientes.
 
 ```text
 src/idioma/
-├── tipos.ts   la FORMA del diccionario; no contiene texto
-├── es.ts      el diccionario en español
-└── index.ts   IDIOMAS, diccionario(), comoIdioma(), interpolar()
+├── tipos.ts          la FORMA del diccionario; no contiene texto
+├── es.ts             el diccionario en español
+├── es.privacidad.ts  la política de datos en español (texto base, ver cabecera)
+├── en.ts             el diccionario en inglés
+├── en.privacidad.ts  la política en inglés
+├── negociar.ts       esIdioma(), idiomaPreferido(), preferenciasDeCabecera() — sin diccionarios, para el proxy
+└── index.ts          IDIOMAS, diccionario(), comoIdioma(), interpolar(), rutaEnIdioma()
 ```
 
-**Añadir un idioma son dos pasos:** crear `en.ts` tipado como `Diccionario` y
-añadir `"en"` a `IDIOMAS`. Nada más. Las rutas estáticas, el `lang`, los
-`hreflang`, el sitemap, el selector y la persistencia ya están montados y se
-encienden solos.
+**El inglés es una traducción base**, hecha el 2 de septiembre de 2026 y
+pendiente de revisión por BIOMADS. Los criterios están en la cabecera de
+`en.ts`: las normas colombianas conservan su nombre en español con una glosa
+(Ley 1581 de 2012, ANLA), «radicar» es *file*, los nombres propios no se
+traducen y el lema «Dejando huella» tampoco. La política en inglés dice que
+en caso de duda prevalece la española.
+
+**Añadir un tercer idioma son dos pasos:** crear su archivo tipado como
+`Diccionario` y añadirlo a `IDIOMAS`. Nada más. Las rutas estáticas, el
+`lang`, los `hreflang`, el sitemap, el selector y la negociación de la raíz
+ya están montados y se encienden solos.
 
 Y no se puede olvidar nada: **el tipo `Diccionario` es la lista de
 comprobación de traducción**, y es la misma que hace funcionar el sitio. Si
@@ -131,7 +152,11 @@ que cambia al cambiar de idioma vive en el diccionario, bajo la misma clave.
 
 **Rutas.** La portada es la página; solo quedan aparte las fichas de detalle
 (`/proyectos`, `/proyectos/[slug]`, `/servicios/[slug]`) para quien llegue por
-buscador o comparta un enlace. Los índices `/nosotros`, `/servicios` y
+buscador o comparta un enlace, y `/privacidad`, la política de tratamiento
+de datos personales, enlazada desde el pie y desde la casilla del formulario.
+Su texto vive en `src/idioma/es.privacidad.ts` y es un **texto base**: la
+cabecera del archivo dice qué tiene que confirmar un abogado antes de darlo
+por definitivo. Los índices `/nosotros`, `/servicios` y
 `/contacto` se borraron porque repetían lo que la portada ya dice, y `/estilo`
 —la página interna de tokens— también: estaba pública.
 
@@ -145,13 +170,14 @@ proyecto**, que no están en el repositorio por peso. Los resultados sí están
 versionados, así que un clon nuevo compila sin ejecutarlos.
 
 ```bash
-node scripts/preparar-fotos.mjs           # PNG de 3,5 MB → JPEG servibles
+node scripts/preparar-fotos.mjs           # PNG de 3,5 MB → JPEG servibles (24 de las 29 entregadas)
 node scripts/preparar-video.mjs           # 21,6 MB → 0,9 MB + póster
 node scripts/preparar-logo.mjs            # recorta guías y arma las variantes
 node scripts/preparar-logos-clientes.mjs  # iguala por área los tres logos de cliente
 node scripts/preparar-og.mjs              # imagen para compartir (1200×630)
 node scripts/paleta-logo.mjs              # extrae el color del logo y verifica contraste
 node scripts/medir-lectura.mjs            # cuenta caracteres por línea en cuatro anchos
+node scripts/contraste-hero.mjs           # contraste del texto sobre el video, fotograma a fotograma
 ```
 
 **Sobre la paleta.** Todo el color sale del isotipo. `paleta-logo.mjs` hace dos
@@ -161,6 +187,13 @@ Sale con código 1 si alguno cae por debajo de su mínimo WCAG, así que sirve
 en un hook o en CI. El logo tiene cuatro cromáticos y solo se usan dos: el
 verde y el ocre del engranaje. El lima de las hojas y el azul del agua se
 descartaron por decisión del cliente.
+
+**Sobre el hero.** Es el único sitio donde el contraste no se puede leer del
+DOM: el fondo de cada letra es un fotograma de video bajo un degradado y cambia
+treinta veces por segundo. `contraste-hero.mjs` recorre el bucle parando en
+siete fotogramas, captura la pantalla en cada uno y muestrea los píxeles detrás
+de cada línea de texto, en tres anchos. Se queda con el peor caso: basta un
+fotograma malo para que una frase deje de leerse.
 
 **Sobre la medida de lectura.** `--container-medida` va en `ch`, que es el ancho
 del cero de la fuente y no un carácter promedio: en Switzer ese cero vale 1.30
@@ -198,5 +231,13 @@ En orden de urgencia:
    adelantarse en uno.
 6. **Constancias de ejecución** en PDF con texto seleccionable: las ranuras
    ya están dimensionadas en la sección de proyectos.
-7. **Datos operativos:** dirección, NIT, redes, horario.
+7. **Datos operativos:** dirección, NIT, redes, horario. La política de
+   datos los necesita: la ley pide identificar al responsable con NIT y
+   dirección, y hoy solo van la ciudad, el correo y el teléfono.
 8. **Logo en vector (SVG).** Hoy se recorta del PNG entregado.
+9. **Revisión jurídica de la política de datos.** Es un texto base sobre la
+   Ley 1581 de 2012 y el Decreto 1377 de 2013. Lo que debe validar el
+   abogado está listado en la cabecera de `src/idioma/es.privacidad.ts`:
+   plazo de conservación propuesto (doce meses), transmisión internacional a
+   Vercel y Resend, autorización por conducta inequívoca por correo y
+   WhatsApp, y si existe registro en el RNBD.

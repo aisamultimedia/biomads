@@ -189,6 +189,11 @@
      (scripts/medir-lectura.mjs). 57ch deja la línea llena en 74, dentro de la
      banda cómoda de 60 a 75. */
   --container-medida: 57ch;
+  /* Medida corta para texto que cabe más letras por `ch`: el legal (muchas
+     letras estrechas) y el inglés (palabras más cortas). Con 57ch la
+     política llegaba a 77 caracteres por línea y el resumen del pie en
+     inglés a 76; con 54ch ambos quedan bajo 75, el techo de medir-lectura. */
+  --container-documento: 54ch;
 
   /* Las otras tres medidas del sistema. Estaban sueltas como max-w-[20ch],
      max-w-[42ch] y max-w-[52ch] repartidas por seis componentes: mismos
@@ -247,6 +252,15 @@
   --area-tactil: 44px; /* mínimo táctil en móvil */
   --altura-cabecera: 96px;
   --altura-cabecera-compacta: 64px;
+
+  /* Alto del logotipo en la barra.
+     El logo llevaba 28px y el botón de Contacto 50: era la pieza más
+     pequeña de la barra que lleva su nombre. A 40px pasa a ser la más
+     alta sin tocar el alto de la barra, porque el relleno ya dejaba 52px
+     libres. Al compactar encoge con ella, que es lo que hace que el gesto
+     de la cabecera se lea como uno solo. */
+  --alto-logo: 40px;
+  --alto-logo-compacto: 32px;
 }
 
 /* Color del anillo de foco y de las reglas trazadas. Se redefinen sobre

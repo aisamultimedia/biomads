@@ -25,6 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const rutas: readonly { ruta: string; prioridad: number }[] = [
     { ruta: "", prioridad: 1 },
     { ruta: "/proyectos", prioridad: 0.6 },
+    { ruta: "/privacidad", prioridad: 0.3 },
     ...serviciosDetallados.map((s) => ({ ruta: `/servicios/${s.slug}`, prioridad: 0.8 })),
     ...proyectos.map((p) => ({ ruta: `/proyectos/${p.slug}`, prioridad: 0.7 })),
   ];

@@ -20,7 +20,7 @@ export function Footer({ idioma }: { idioma: Idioma }) {
             de detalle no tiene por qué haber pasado por la sección Nosotros.
             El texto va con huecos y no concatenado: el orden de las palabras
             alrededor de los datos cambia con el idioma. */}
-        <Reveal as="p" className="medida mb-16 text-lg text-ink-invert">
+        <Reveal as="p" className="medida-documento mb-16 text-lg text-ink-invert">
           {interpolar(t.pie.resumen, {
             sede: empresa.sede,
             constitucion: empresa.constitucion,
@@ -73,6 +73,9 @@ export function Footer({ idioma }: { idioma: Idioma }) {
             {empresa.razonSocial} · {empresa.sede} · {t.pie.constituidaEn}{" "}
             <span className="dato">{empresa.constitucion}</span>
             <span className="mt-2 block">{t.pie.notaCookies}</span>
+            <span className="mt-2 block">
+              <Enlace href={`/${idioma}/privacidad`}>{t.pie.politicaDatos}</Enlace>
+            </span>
           </p>
           {/* El lema va como firma, nunca como argumento de venta. */}
           <p className="etiqueta text-ink-invert-muted">{t.pie.lema}</p>

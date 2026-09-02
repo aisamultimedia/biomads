@@ -1,4 +1,4 @@
-import { RevealGroup } from "@/components/motion/RevealGroup";
+import type { CSSProperties } from "react";
 import { Icono } from "@/components/ui/Icono";
 import { etapasEstudio } from "@/content/institucional";
 import { diccionario, type Idioma } from "@/idioma";
@@ -10,9 +10,18 @@ import { diccionario, type Idioma } from "@/idioma";
  * del recorrido que resume *qué se hace*, y el corte de color la separa de
  * lo que la rodea sin necesidad de un título más grande.
  *
- * Solo rótulos. CONTENIDO.md marca `[FALTA]` la descripción de cada etapa;
- * el día que lleguen se añaden bajo cada nombre y la fila no cambia de
- * forma. El icono acompaña al rótulo, no lo sustituye.
+ * **Por qué línea de tiempo y no acordeón ni pestañas.** Las cinco son un
+ * proceso secuencial y el orden *es* el mensaje: un acordeón las presentaría
+ * como opciones intercambiables y unas pestañas esconderían cuatro de cinco.
+ * Por eso el numeral y el hilo, que son las dos cosas que dicen "esto va en
+ * este orden"; y por eso el hilo avanza con el scroll, para que recorrerlo
+ * se parezca a recorrer el proceso.
+ *
+ * **Sobre los paneles.** Cada etapa admite una descripción y solo entonces
+ * se vuelve desplegable. Hoy CONTENIDO.md marca `[FALTA]` las cinco, así que
+ * ninguna lo es: un acordeón con paneles vacíos —o con texto inventado— es
+ * peor que no tenerlo. Cuando lleguen, se añaden al diccionario y la banda
+ * los recoge sin cambiar de forma.
  */
 export function EtapasEstudio({ idioma }: { idioma: Idioma }) {
   const t = diccionario(idioma);
@@ -28,25 +37,38 @@ export function EtapasEstudio({ idioma }: { idioma: Idioma }) {
         {/* En columna hasta md: cinco pasos apilados en rejilla de dos
             ocupaban pantalla y media y dejaban el quinto huérfano. En fila
             de uno, con el hilo bajando, la secuencia se lee de un vistazo. */}
-        <RevealGroup
-          as="ol"
-          className="mt-12 grid gap-y-6 md:mt-16 md:grid-cols-5 md:gap-x-4"
-          itemClassName="etapa-estudio"
-        >
-          {etapasEstudio.map((etapa) => (
-            <span
-              key={etapa.clave}
-              className="flex items-center gap-6 md:flex-col md:items-start"
-            >
-              <span className="etapa-estudio-icono">
-                <Icono nombre={etapa.icono} tamano={26} />
-              </span>
-              <span className="text-lg text-ink-invert md:text-base lg:text-lg">
-                {t.etapas.nombres[etapa.clave]}
-              </span>
-            </span>
-          ))}
-        </RevealGroup>
+        <ol className="etapas mt-12 grid gap-y-8 md:mt-16 md:grid-cols-5 md:gap-x-4">
+          {etapasEstudio.map((etapa, i) => {
+            const descripcion = t.etapas.descripciones?.[etapa.clave];
+
+            return (
+              <li
+                key={etapa.clave}
+                className="etapa-estudio"
+                style={{ "--indice": i } as CSSProperties}
+              >
+                <div className="flex items-center gap-6 md:flex-col md:items-start">
+                  <span className="etapa-estudio-icono">
+                    <Icono nombre={etapa.icono} tamano={26} />
+                  </span>
+
+                  <div className="md:mt-2">
+                    <span className="dato etapa-estudio-numero">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="mt-1 block text-lg text-ink-invert md:text-base lg:text-lg">
+                      {t.etapas.nombres[etapa.clave]}
+                    </span>
+                  </div>
+                </div>
+
+                {descripcion ? (
+                  <p className="etapa-estudio-descripcion">{descripcion}</p>
+                ) : null}
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );

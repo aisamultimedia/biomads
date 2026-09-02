@@ -21,19 +21,24 @@ export function MarcoInstitucional({ idioma }: { idioma: Idioma }) {
 
   return (
     <div className="mt-24 md:mt-32">
+      {/* Misión y visión sobre el ocre del logo: el único color de marca que
+          aguanta como fondo de bloque con texto claro encima (7.78:1). El
+          rótulo va en ocre claro y no en verde —verde sobre oliva da 2.52:1
+          y se lee como barro—. Las dos cards igualan altura por la rejilla,
+          no por una altura fija. */}
       <RevealGroup
         as="dl"
-        className="grid gap-12 md:grid-cols-2 md:gap-16"
-        itemClassName="con-regla pt-6"
-        regla
+        className="grid items-stretch gap-6 md:grid-cols-2"
+        itemClassName="tarjeta-institucional"
+        tipo="panel"
       >
         <div>
-          <dt className="etiqueta text-ink-muted">{t.misionRotulo}</dt>
-          <dd className="medida mt-4 text-ink">{t.mision}</dd>
+          <dt className="etiqueta text-ocre-claro">{t.misionRotulo}</dt>
+          <dd className="mt-4 text-lg text-ink-invert">{t.mision}</dd>
         </div>
         <div>
-          <dt className="etiqueta text-ink-muted">{t.visionRotulo}</dt>
-          <dd className="medida mt-4 text-ink">{t.vision}</dd>
+          <dt className="etiqueta text-ocre-claro">{t.visionRotulo}</dt>
+          <dd className="mt-4 text-lg text-ink-invert">{t.vision}</dd>
         </div>
       </RevealGroup>
 
