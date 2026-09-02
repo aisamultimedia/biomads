@@ -41,9 +41,16 @@ yarn-error.log*
 next-env.d.ts
 
 # salidas de auditoría (scripts de verificación, no forman parte del sitio)
+#
+# Ojo con esta regla: se comió vercel.json durante horas. El despliegue por
+# CLI subía el archivo local y funcionaba; el de Git clonaba un repo sin él,
+# Vercel caía al preset "Other" —sirviendo public/ en vez de la salida de
+# Next— y el dominio devolvía 404 en todas las rutas. Cualquier archivo de
+# configuración en la raíz tiene que ir en esta lista de excepciones.
 /*.json
 !package.json
 !package-lock.json
 !tsconfig.json
+!vercel.json
 
 .vercel
