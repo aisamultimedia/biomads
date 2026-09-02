@@ -1501,22 +1501,25 @@
 /* =========================================================================
    Banda de clientes
 
-   Tres logos ajenos, cada uno con su propio color de marca. En gris no
-   compiten entre sí ni con la paleta del sitio; recuperan su color al
-   pasar el cursor, que es cuando alguien los está mirando de verdad.
+   Tres logos ajenos, cada uno con su color de marca. Iban en gris y se
+   coloreaban al pasar el cursor; el cliente los quiso siempre a color. La
+   interacción es ahora el gesto físico: el logo se levanta un poco.
    ========================================================================= */
 
 @layer components {
   .logo-cliente {
-    filter: grayscale(1);
-    opacity: 0.75;
-    transition: filter var(--duracion-corta) var(--ease-base),
-      opacity var(--duracion-corta) var(--ease-base);
+    justify-self: center;
+    transition: transform var(--duracion-corta) var(--ease-base);
   }
 
   .logo-cliente:hover {
-    filter: grayscale(0);
-    opacity: 1;
+    transform: translateY(-4px) scale(1.04);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo-cliente:hover {
+      transform: none;
+    }
   }
 }
 
@@ -1812,10 +1815,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 72svh;
-    /* El min-height ya da el aire; con 160px arriba y abajo encima, la
-       sección abría un hueco muerto de media pantalla antes de la frase. */
-    padding-block: var(--spacing-24);
+    /* Era 72svh con 96px de relleno: sumado a los 160px con que cierra la
+       sección anterior, quedaba media pantalla vacía bajo la política de
+       calidad. La pausa sigue siendo pausa con bastante menos. */
+    min-height: 44svh;
+    padding-block: var(--spacing-12);
     background-color: var(--color-paper);
   }
 
@@ -1856,12 +1860,20 @@
     @media (prefers-reduced-motion: no-preference) {
       .promesa-frase--palabras .promesa-palabra {
         /* Cada palabra arranca un poco después que la anterior. */
-        --paso-palabra: 0.9%;
-        color: var(--color-ink-muted);
+        --paso-palabra: 0.8%;
+        display: inline-block;
+        /* Arranca casi papel, no en tinta atenuada: de --ink-muted a --ink
+           el cambio no se notaba. Y sube 0,2em al encenderse. */
+        color: color-mix(in srgb, var(--color-ink) 18%, var(--color-paper));
+        translate: 0 0.2em;
         animation: encender-palabra linear both;
         animation-timeline: view();
-        animation-range-start: cover calc(18% + var(--indice) * var(--paso-palabra));
-        animation-range-end: cover calc(30% + var(--indice) * var(--paso-palabra));
+        /* Medido: con 14-34 % la frase terminaba de encenderse en el tercio
+           inferior de la pantalla, antes de que nadie la leyera. Con 28-50 %
+           se enciende mientras sube del tercio inferior al centro, que es
+           donde se mira. La última palabra termina hacia el 60 %. */
+        animation-range-start: cover calc(28% + var(--indice) * var(--paso-palabra));
+        animation-range-end: cover calc(50% + var(--indice) * var(--paso-palabra));
       }
     }
   }
@@ -1871,6 +1883,7 @@
 @keyframes encender-palabra {
   to {
     color: var(--color-ink);
+    translate: 0 0;
   }
 }
 
@@ -2271,6 +2284,46 @@
     background-image: linear-gradient(var(--color-accent-deep), var(--color-accent-deep));
   }
 
+  /* --- Avance automático ---
+     Mientras el carrusel avanza solo, el tramo activo se rellena de
+     izquierda a derecha en el mismo tiempo que tarda en pasar a la
+     siguiente: quien mira sabe cuánto queda. Al pausar, la barra se va y
+     el tramo vuelve a ser la línea llena. */
+  .galeria-indicador[data-reproduciendo] .galeria-tramo[aria-current] {
+    position: relative;
+    background-image: linear-gradient(var(--color-line-strong), var(--color-line-strong));
+  }
+
+  .galeria-indicador[data-reproduciendo] .galeria-tramo[aria-current]::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    background-color: var(--color-accent-deep);
+    transform-origin: left;
+    animation: progreso-tramo var(--duracion-galeria) linear forwards;
+  }
+
+  /* La foto que entra en escena se asienta: llega un 5 % ampliada y vuelve
+     a su tamaño. Solo transform, y solo la activa. */
+  .galeria-imagen {
+    transform: scale(1.05);
+    transition: transform calc(var(--duracion-galeria) / 4) var(--ease-base);
+  }
+
+  .galeria-diapositiva[data-activa] .galeria-imagen {
+    transform: scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .galeria-imagen {
+      transform: none;
+      transition: none;
+    }
+  }
+
   /* --- Visor --- */
 
   /* Más cerrado que el velo de los paneles (72 %). Se midió: al 94 % el
@@ -2479,5 +2532,104 @@
   .casilla-texto {
     /* El enlace de la política hereda el subrayado del sitio. */
     max-width: var(--container-medida);
+  }
+}
+
+@keyframes progreso-tramo {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Lista de servicios sin ficha                                        */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  /* Cada fila responde al cursor: el icono gira y se adelanta, el texto
+     se desplaza 6px y todo toma el acento. Solo transform y color. */
+  .servicio-listado {
+    padding-block: var(--spacing-4);
+  }
+
+  .servicio-listado-fila {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    min-height: var(--area-tactil);
+    font-size: var(--text-lg);
+    color: var(--color-ink);
+    transition: color var(--duracion-micro) var(--ease-base);
+  }
+
+  .servicio-listado-icono {
+    flex: none;
+    color: var(--color-accent-deep);
+    transition: transform var(--duracion-corta) var(--ease-base);
+  }
+
+  .servicio-listado-texto {
+    transition: transform var(--duracion-corta) var(--ease-base);
+  }
+
+  .servicio-listado:hover .servicio-listado-fila {
+    color: var(--color-accent-deep);
+  }
+
+  .servicio-listado:hover .servicio-listado-icono {
+    transform: translateX(2px) rotate(-10deg) scale(1.12);
+  }
+
+  .servicio-listado:hover .servicio-listado-texto {
+    transform: translateX(6px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .servicio-listado:hover .servicio-listado-icono,
+    .servicio-listado:hover .servicio-listado-texto {
+      transform: none;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Estructura permanente: cargo con icono                              */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  .perfil-permanente {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+  }
+
+  .perfil-permanente-icono {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--spacing-12);
+    height: var(--spacing-12);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background-color: var(--color-paper-alt);
+    color: var(--color-accent-deep);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Pie: el lema como firma centrada                                    */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  .pie-lema {
+    font-family: var(--font-titulo);
+    font-size: var(--text-2xl);
+    font-style: italic;
+    letter-spacing: var(--tracking-titulo);
+    color: var(--color-ink-invert);
+    text-align: center;
   }
 }

@@ -2,6 +2,7 @@ import { Boton } from "@/components/ui/Boton";
 import { Enlace } from "@/components/ui/Enlace";
 import { Foto } from "@/components/ui/Foto";
 import { Icono } from "@/components/ui/Icono";
+import { perfilesPermanentes } from "@/content/institucional";
 import { Seccion } from "@/components/ui/Seccion";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealGroup } from "@/components/motion/RevealGroup";
@@ -55,48 +56,47 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
               {t.nosotros.fortaleza}
             </Reveal>
 
+            {/* Los cinco cargos con su icono. La lista de especialistas
+                que se vinculan por proyecto y la nota de la tarjeta
+                profesional se retiraron por decisión del cliente. */}
             <Reveal regla className="mt-12 pt-6">
               <p className="etiqueta text-ink-muted">{t.nosotros.estructuraRotulo}</p>
-              <ul className="mt-4 flex flex-col gap-2">
-                {t.nosotros.perfilesPermanentes.map((perfil) => (
-                  <li key={perfil} className="flex items-baseline gap-3 text-ink">
-                    <span
-                      aria-hidden="true"
-                      className="h-2 w-2 flex-none translate-y-[-0.15em] rounded-sm bg-accent"
-                    />
-                    {perfil}
+              <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+                {perfilesPermanentes.map((perfil) => (
+                  <li key={perfil.clave} className="perfil-permanente">
+                    <span className="perfil-permanente-icono" aria-hidden="true">
+                      <Icono nombre={perfil.icono} tamano={22} />
+                    </span>
+                    <span className="text-ink">{t.nosotros.perfiles[perfil.clave]}</span>
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-sm text-ink-muted">{t.nosotros.tarjetaProfesional}</p>
-            </Reveal>
-
-            <Reveal regla className="mt-12 pt-6">
-              <p className="etiqueta text-ink-muted">{t.nosotros.especialistasRotulo}</p>
-              <p className="medida mt-4 text-sm text-ink">
-                {t.nosotros.especialistas.join(" · ")}
-              </p>
             </Reveal>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          {/* Tres fotos en composición escalonada: la ancha arriba con
+              parallax, y debajo dos verticales con la segunda descolgada,
+              para que el bloque no se lea como una rejilla de catálogo. */}
+          <div className="grid grid-cols-2 gap-6 md:gap-8">
             <Foto
               className="col-span-2"
               imagen={cuadrillaLadera}
               alt={t.fotos["cuadrilla-ladera"]}
-              proporcion="16/9"
+              proporcion="3/2"
               sizes="(min-width: 768px) 45vw, 90vw"
+              parallax
             />
             <Foto
               imagen={mantenimientoIndividuo}
               alt={t.fotos["mantenimiento-individuo"]}
-              proporcion="1/1"
+              proporcion="4/5"
               sizes="(min-width: 768px) 22vw, 45vw"
             />
             <Foto
+              className="mt-12 md:mt-16"
               imagen={controlFitosanitario}
               alt={t.fotos["control-fitosanitario"]}
-              proporcion="1/1"
+              proporcion="4/5"
               sizes="(min-width: 768px) 22vw, 45vw"
             />
           </div>
@@ -136,26 +136,30 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
           ))}
         </div>
 
-        <div className="mt-24 grid gap-16 md:grid-cols-2 md:gap-24">
-          <RevealGroup as="ul" regla className="flex flex-col" itemClassName="py-5">
-            {serviciosListados.map((servicio) => (
-              <span key={servicio.clave} className="flex items-center gap-4 text-lg text-ink">
-                <Icono nombre={servicio.icono} className="text-accent-deep" />
+        {/* Los siete servicios sin ficha, en dos columnas. El rótulo
+            «También prestamos» y su nota se retiraron por decisión del
+            cliente: queda la lista y la llamada a consultar. */}
+        <RevealGroup
+          as="ul"
+          regla
+          className="mt-24 grid md:grid-cols-2 md:gap-x-16"
+          itemClassName="servicio-listado"
+        >
+          {serviciosListados.map((servicio) => (
+            <span key={servicio.clave} className="servicio-listado-fila">
+              <Icono nombre={servicio.icono} className="servicio-listado-icono" />
+              <span className="servicio-listado-texto">
                 {t.servicios.listados[servicio.clave]}
               </span>
-            ))}
-          </RevealGroup>
+            </span>
+          ))}
+        </RevealGroup>
 
-          <Reveal>
-            <p className="etiqueta text-ink-muted">{t.servicios.tambienRotulo}</p>
-            <p className="medida mt-4 text-ink-muted">{t.servicios.tambienTexto}</p>
-            <div className="mt-8">
-              <Boton href="#contacto" variante="secundario">
-                {t.servicios.consultarAlcance}
-              </Boton>
-            </div>
-          </Reveal>
-        </div>
+        <Reveal className="mt-12">
+          <Boton href="#contacto" variante="secundario">
+            {t.servicios.consultarAlcance}
+          </Boton>
+        </Reveal>
       </Seccion>
 
       {/* ================================================================
@@ -214,7 +218,7 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
       {/* ================================================================
           Contacto.
           ================================================================ */}
-      <Seccion id="contacto" alterna rotulo={t.contacto.rotulo} titulo={t.contacto.titulo}>
+      <Seccion id="contacto" rotulo={t.contacto.rotulo} titulo={t.contacto.titulo}>
         <div className="grid gap-16 md:grid-cols-[1fr_1.2fr] md:gap-24">
           <div>
             <Reveal as="p" className="medida text-lg text-ink">

@@ -34,6 +34,9 @@ export function aniosDesdeConstitucion(): number {
   return new Date().getFullYear() - empresa.constitucion;
 }
 
+/** Año en que se desarrolló el sitio; va en el pie. */
+export const sitioDesarrolladoEn = 2026;
+
 export const whatsapp = `https://wa.me/${empresa.telefonoE164.replace("+", "")}`;
 export const mailto = `mailto:${empresa.correo}`;
 

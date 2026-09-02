@@ -26,12 +26,35 @@ type Props = {
  * con la barra, y cada foto es un enlace a su archivo. Con JavaScript ese
  * clic abre el visor en vez de salir de la página.
  *
- * Nada se mueve solo: un carrusel que avanza sin que nadie lo pida cambia
- * la foto justo cuando se está mirando.
+ * **Avanza sola, con cuidado.** Cada cinco segundos pasa a la siguiente,
+ * y el tramo del indicador se rellena mientras tanto para que se vea
+ * venir. Se detiene en cuanto alguien la mira de cerca: cursor encima,
+ * foco dentro, dedo sobre la pista, visor abierto, pestaña en segundo
+ * plano o fuera de pantalla. Con `prefers-reduced-motion` no avanza nunca.
+ * Cualquier gesto manual reinicia la cuenta, así que la foto que alguien
+ * acaba de elegir no se le va a los dos segundos.
  */
 
 /** Píxeles de desplazamiento a partir de los cuales un gesto es arrastre y no clic. */
 const UMBRAL_ARRASTRE = 6;
+
+/** Cuánto sigue pausado el avance después de levantar el dedo. */
+const REPOSO_TACTIL_MS = 8000;
+
+/**
+ * Intervalo del avance automático, leído del CSS para que coincida con la
+ * barra del indicador. El token dice `5000ms`, pero el compilador de CSS lo
+ * minifica a `5s`: hay que mirar la unidad. Sin ella, `parseFloat("5s")`
+ * daba 5 y la galería recorría las doce fotos en un segundo.
+ */
+function intervaloGaleria(): number {
+  const valor = getComputedStyle(document.documentElement)
+    .getPropertyValue("--duracion-galeria")
+    .trim();
+  const numero = Number.parseFloat(valor);
+  if (Number.isNaN(numero)) return 5000;
+  return valor.endsWith("ms") ? numero : numero * 1000;
+}
 
 export function Galeria({ textos, fotos }: Props) {
   const pistaRef = useRef<HTMLUListElement>(null);
@@ -39,6 +62,51 @@ export function Galeria({ textos, fotos }: Props) {
   const [activa, setActiva] = useState(0);
   const [abierta, setAbierta] = useState<number | null>(null);
   const total = galeria.length;
+
+  /* --- Avance automático: lo que lo detiene --- */
+  const [atendida, setAtendida] = useState(false); // cursor encima o foco dentro
+  const [enPantalla, setEnPantalla] = useState(false);
+  const [oculta, setOculta] = useState(false); // pestaña en segundo plano
+  const [sinMovimiento, setSinMovimiento] = useState(true); // hasta saber lo contrario
+  const reposoTactil = useRef<number | null>(null);
+
+  useEffect(() => {
+    const consulta = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const leer = () => setSinMovimiento(consulta.matches);
+    leer();
+    consulta.addEventListener("change", leer);
+    const visibilidad = () => setOculta(document.hidden);
+    document.addEventListener("visibilitychange", visibilidad);
+    return () => {
+      consulta.removeEventListener("change", leer);
+      document.removeEventListener("visibilitychange", visibilidad);
+    };
+  }, []);
+
+  useEffect(() => {
+    const pista = pistaRef.current;
+    if (!pista) return;
+    const observador = new IntersectionObserver(
+      ([entrada]) => setEnPantalla(entrada.intersectionRatio >= 0.5),
+      { threshold: [0, 0.5, 1] },
+    );
+    observador.observe(pista);
+    return () => observador.disconnect();
+  }, []);
+
+  const reproduciendo =
+    !sinMovimiento && enPantalla && !oculta && !atendida && abierta === null;
+
+  /* Un dedo sobre la pista pausa; al levantarlo, la cuenta sigue parada
+     un rato más: quien acaba de pasar una foto con el dedo la está mirando. */
+  const alTocar = () => {
+    if (reposoTactil.current) window.clearTimeout(reposoTactil.current);
+    setAtendida(true);
+  };
+  const alSoltarDedo = () => {
+    if (reposoTactil.current) window.clearTimeout(reposoTactil.current);
+    reposoTactil.current = window.setTimeout(() => setAtendida(false), REPOSO_TACTIL_MS);
+  };
 
   const suave = useCallback(
     (): ScrollBehavior =>
@@ -79,6 +147,15 @@ export function Galeria({ textos, fotos }: Props) {
     },
     [suave],
   );
+
+  /* El avance. Depende de `activa`: cada cambio —automático o manual—
+     reinicia la cuenta, y así la barra del indicador y el temporizador
+     arrancan a la vez. Al llegar al final vuelve a la primera. */
+  useEffect(() => {
+    if (!reproduciendo) return;
+    const id = window.setTimeout(() => irA((activa + 1) % total), intervaloGaleria());
+    return () => window.clearTimeout(id);
+  }, [reproduciendo, activa, irA, total]);
 
   /* --- Arrastre con ratón. El táctil ya es nativo. ---
      Mientras se arrastra se apaga el encaje: si no, la pista pelea con el
@@ -165,7 +242,20 @@ export function Galeria({ textos, fotos }: Props) {
   }, [abierta]);
 
   return (
-    <>
+    /* El envoltorio solo escucha: cursor encima o foco dentro detienen el
+       avance; `onBlur` comprueba que el foco salió de verdad del bloque. */
+    <div
+      className="galeria"
+      onPointerEnter={(e) => e.pointerType === "mouse" && setAtendida(true)}
+      onPointerLeave={(e) => e.pointerType === "mouse" && setAtendida(false)}
+      onFocus={() => setAtendida(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setAtendida(false);
+      }}
+      onTouchStart={alTocar}
+      onTouchEnd={alSoltarDedo}
+      onTouchCancel={alSoltarDedo}
+    >
       {/* Flechas y posición, en la misma fila que el texto de la sección:
           forman parte de la cabecera, no flotan sobre las fotos. */}
       <div className="galeria-controles">
@@ -206,7 +296,12 @@ export function Galeria({ textos, fotos }: Props) {
         onClickCapture={alHacerClicEnPista}
       >
         {galeria.map((foto, i) => (
-          <li key={foto.clave} className="galeria-diapositiva" data-indice={i}>
+          <li
+            key={foto.clave}
+            className="galeria-diapositiva"
+            data-indice={i}
+            data-activa={i === activa ? "" : undefined}
+          >
             {/* Enlace al archivo: sin JavaScript abre la foto a tamaño
                 completo; con él, el visor. */}
             <a
@@ -239,7 +334,11 @@ export function Galeria({ textos, fotos }: Props) {
 
       {/* Indicador segmentado: un tramo por foto, no puntos. Dialoga con las
           reglas de 1px del resto del sitio y además es navegable. */}
-      <ol className="galeria-indicador" aria-label={textos.carrusel}>
+      <ol
+        className="galeria-indicador"
+        aria-label={textos.carrusel}
+        data-reproduciendo={reproduciendo ? "" : undefined}
+      >
         {galeria.map((foto, i) => (
           <li key={foto.clave}>
             <button
@@ -261,7 +360,7 @@ export function Galeria({ textos, fotos }: Props) {
         onCerrar={cerrarVisor}
         onIr={(i) => setAbierta(((i % total) + total) % total)}
       />
-    </>
+    </div>
   );
 }
 

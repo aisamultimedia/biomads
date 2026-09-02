@@ -86,29 +86,13 @@ export const en: Diccionario = {
     fortaleza:
       "Our main strength is the ability to adapt to the specific needs of each project, assembling a multidisciplinary team of professionals and specialists. That lets us offer tailored solutions and stay close to the client throughout the project.",
     estructuraRotulo: "Permanent structure",
-    tarjetaProfesional: "All hold a Colombian professional licence.",
-    especialistasRotulo: "Engaged per project",
-    perfilesPermanentes: [
-      "General manager",
-      "Administrative director",
-      "Environmental / GIS coordinator",
-      "Administrative assistant",
-      "Project lead",
-    ],
-    especialistas: [
-      "Environmental engineers",
-      "Civil engineers",
-      "Forestry engineers",
-      "Biologists",
-      "Ecologists",
-      "Geologists",
-      "Surveyors",
-      "Architects",
-      "Veterinarians",
-      "Systems engineers",
-      "Economists",
-      "Social workers",
-    ],
+    perfiles: {
+      gerente: "General manager",
+      "director-administrativo": "Administrative director",
+      "coordinador-ambiental": "Environmental / GIS coordinator",
+      "auxiliar-administrativa": "Administrative assistant",
+      "lider-proyectos": "Project lead",
+    },
   },
 
   institucional: {
@@ -181,9 +165,6 @@ export const en: Diccionario = {
     rotulo: "Services",
     titulo: "Two fronts, documented in depth",
     pieTarjeta: "Regulatory framework, deliverable and duration",
-    tambienRotulo: "We also provide",
-    tambienTexto:
-      "No published fact sheet. If a front is outside our competence, we say so.",
     consultarAlcance: "Ask about a scope",
     listados: {
       "actividad-forestal": "Forestry activities",
@@ -458,6 +439,7 @@ export const en: Diccionario = {
     constituidaEn: "Incorporated in",
     notaCookies: "We do not use tracking cookies; only your answer to the notice is stored.",
     politicaDatos: "Personal data policy",
+    desarrollado: "Website developed in {anio}",
     lema: "Dejando huella",
   },
 

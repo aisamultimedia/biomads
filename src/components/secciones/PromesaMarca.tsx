@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { Fragment, type CSSProperties } from "react";
 import { diccionario, type Idioma } from "@/idioma";
 
 /**
@@ -34,13 +34,13 @@ export function PromesaMarca({ idioma }: { idioma: Idioma }) {
             otras ocho secciones y la pausa dejaba de notarse como pausa. */}
         <p id="promesa-titulo" className="promesa-frase promesa-frase--palabras">
           {t.enunciado.split(" ").map((palabra, i) => (
-            <span
-              key={`${palabra}-${i}`}
-              className="promesa-palabra"
-              style={{ "--indice": i } as CSSProperties}
-            >
-              {palabra}{" "}
-            </span>
+            <Fragment key={`${palabra}-${i}`}>
+              <span className="promesa-palabra" style={{ "--indice": i } as CSSProperties}>
+                {palabra}
+              </span>
+              {/* El espacio va fuera del span: dentro, el inline-block que
+                  permite desplazar la palabra se lo come y las junta. */}{" "}
+            </Fragment>
           ))}
         </p>
       </div>

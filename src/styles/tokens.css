@@ -228,6 +228,7 @@
 
   --duracion-micro:    180ms; /* hover, foco, pulsación, subrayados */
   --duracion-corta:    250ms; /* paneles, cabecera, salidas */
+  --duracion-galeria:  5000ms; /* avance automático del carrusel */
   --duracion-entrada:  600ms; /* texto y paneles */
   --duracion-titulo:   700ms; /* máscara de títulos */
   --duracion-regla:    800ms; /* trazo de reglas */

@@ -39,6 +39,14 @@ export type ClaveValor =
   | "innovacion"
   | "social";
 
+/** Cargos de la estructura permanente; el icono de cada uno vive en src/content/institucional.ts. */
+export type ClavePerfil =
+  | "gerente"
+  | "director-administrativo"
+  | "coordinador-ambiental"
+  | "auxiliar-administrativa"
+  | "lider-proyectos";
+
 export type ClaveEtapa =
   | "identificacion"
   | "evaluacion"
@@ -141,10 +149,7 @@ export type Diccionario = {
     quienesSomos: string;
     fortaleza: string;
     estructuraRotulo: string;
-    tarjetaProfesional: string;
-    especialistasRotulo: string;
-    perfilesPermanentes: readonly string[];
-    especialistas: readonly string[];
+    perfiles: PorClave<ClavePerfil>;
   };
 
   institucional: {
@@ -184,8 +189,6 @@ export type Diccionario = {
     titulo: string;
     /** Pie de la tarjeta: anuncia lo que hay dentro del panel. */
     pieTarjeta: string;
-    tambienRotulo: string;
-    tambienTexto: string;
     consultarAlcance: string;
     listados: PorClave<ClaveServicioListado>;
     detallados: PorClave<
@@ -393,6 +396,8 @@ export type Diccionario = {
     notaCookies: string;
     /** Enlace a /privacidad, junto a la nota de cookies. */
     politicaDatos: string;
+    /** Lleva {anio}. */
+    desarrollado: string;
     lema: string;
   };
 

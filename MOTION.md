@@ -38,6 +38,10 @@ tiempo de scroll del navegador. Donde no está soportada —hoy Firefox— la fo
 se queda quieta, que es exactamente lo que pide "parallax sutil" cuando hay
 dudas.
 
+**La galería avanza sola desde el 2 de septiembre de 2026**, a petición del cliente, y con estas condiciones: solo cuando está al menos a la mitad en pantalla, sin cursor encima ni foco dentro, sin visor abierto, con la pestaña visible y sin `prefers-reduced-motion`. El tramo activo del indicador se rellena en el mismo tiempo (`--duracion-galeria`), así que se ve venir. Un fallo que costó encontrar: el token dice `5000ms` y el compilador lo minifica a `5s`; `parseFloat` daba 5 y la galería recorría las doce fotos en un segundo. Ahora se lee la unidad.
+
+**La promesa se enciende del 28 al 50 % del recorrido**, no del 14 al 34: medido, con el tramo anterior las palabras terminaban de encenderse en el tercio inferior de la pantalla, antes de que nadie las leyera. Y arrancan casi en papel (18 % de tinta), no en tinta atenuada: de `--ink-muted` a `--ink` el cambio no se notaba.
+
 **Las anclas aterrizaban 96 px más abajo de lo debido, en todas las páginas.** Se descubrió midiendo el índice de la política de datos: Lenis (desde 1.3) resta por su cuenta el `scroll-padding-top` del documento y el `scroll-margin` del destino, y el sitio le pasaba además la altura de la cabecera como `offset`. Dos descuentos en sentidos opuestos. Se quitó el `offset`; el CSS ya dice dónde empieza el contenido y Lenis lo lee.
 
 **La galería lleva la idea al límite.** El carrusel no mueve nada por

@@ -69,7 +69,7 @@ export function MarcoInstitucional({ idioma }: { idioma: Idioma }) {
             <span aria-hidden="true" className="politica-signo" />
           </summary>
 
-          <div className="pb-8">
+          <div className="pb-2">
             {t.politica.map((parrafo) => (
               <p key={parrafo} className="medida mt-4 text-ink-muted">
                 {parrafo}

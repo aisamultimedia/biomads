@@ -6,7 +6,7 @@ import { Logotipo } from "./Logotipo";
 import { Nav } from "./Nav";
 import { equipo, regiones } from "@/content/respaldo";
 import { diccionario, interpolar, type Idioma } from "@/idioma";
-import { empresa, mailto, whatsapp } from "@/lib/site";
+import { empresa, mailto, sitioDesarrolladoEn, whatsapp } from "@/lib/site";
 
 export function Footer({ idioma }: { idioma: Idioma }) {
   const t = diccionario(idioma);
@@ -62,23 +62,26 @@ export function Footer({ idioma }: { idioma: Idioma }) {
           </nav>
         </RevealGroup>
 
-        <Reveal
-          regla
-          className="mt-24 flex flex-col gap-6 pt-8 md:flex-row md:items-baseline md:justify-between"
-        >
-          {/* La nota de cookies vive aquí de forma permanente: el aviso
-              flotante se retira solo en escritorio y lo que dice no puede
-              dejar de estar disponible por eso. */}
-          <p className="text-sm text-ink-invert-muted">
-            {empresa.razonSocial} · {empresa.sede} · {t.pie.constituidaEn}{" "}
-            <span className="dato">{empresa.constitucion}</span>
-            <span className="mt-2 block">{t.pie.notaCookies}</span>
-            <span className="mt-2 block">
-              <Enlace href={`/${idioma}/privacidad`}>{t.pie.politicaDatos}</Enlace>
-            </span>
+        {/* Cierre en tres columnas: la razón social a la izquierda, el lema
+            en el centro como firma —nunca como argumento de venta— y el año
+            del sitio a la derecha. Debajo, la nota de cookies y la política:
+            viven aquí de forma permanente porque el aviso flotante se retira
+            solo y lo que dice no puede dejar de estar disponible. */}
+        <Reveal regla className="mt-24 pt-8">
+          <div className="grid gap-6 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-8">
+            <p className="text-sm text-ink-invert-muted">
+              {empresa.razonSocial} · {empresa.sede} · {t.pie.constituidaEn}{" "}
+              <span className="dato">{empresa.constitucion}</span>
+            </p>
+            <p className="pie-lema">{t.pie.lema}</p>
+            <p className="text-sm text-ink-invert-muted md:text-right">
+              {interpolar(t.pie.desarrollado, { anio: sitioDesarrolladoEn })}
+            </p>
+          </div>
+          <p className="mt-8 text-sm text-ink-invert-muted">
+            {t.pie.notaCookies}{" "}
+            <Enlace href={`/${idioma}/privacidad`}>{t.pie.politicaDatos}</Enlace>
           </p>
-          {/* El lema va como firma, nunca como argumento de venta. */}
-          <p className="etiqueta text-ink-invert-muted">{t.pie.lema}</p>
         </Reveal>
       </div>
     </footer>

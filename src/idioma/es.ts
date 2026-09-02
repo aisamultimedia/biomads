@@ -74,29 +74,13 @@ export const es: Diccionario = {
     fortaleza:
       "Nuestra principal fortaleza es la capacidad de adaptarnos a las necesidades específicas de cada proyecto, articulando un equipo multidisciplinario de profesionales y especialistas. Esto nos permite ofrecer soluciones personalizadas y mantener un acompañamiento cercano durante el desarrollo de los proyectos.",
     estructuraRotulo: "Estructura permanente",
-    tarjetaProfesional: "Todos con tarjeta profesional.",
-    especialistasRotulo: "Se vinculan por proyecto",
-    perfilesPermanentes: [
-      "Gerente",
-      "Director administrativo",
-      "Coordinador ambiental / SIG",
-      "Auxiliar administrativa",
-      "Líder de proyectos",
-    ],
-    especialistas: [
-      "Ingenieros ambientales",
-      "Ingenieros civiles",
-      "Ingenieros forestales",
-      "Biólogos",
-      "Ecólogos",
-      "Geólogos",
-      "Topógrafos",
-      "Arquitectos",
-      "Médicos veterinarios",
-      "Ingenieros de sistemas",
-      "Economistas",
-      "Profesionales de trabajo social",
-    ],
+    perfiles: {
+      gerente: "Gerente",
+      "director-administrativo": "Director administrativo",
+      "coordinador-ambiental": "Coordinador ambiental / SIG",
+      "auxiliar-administrativa": "Auxiliar administrativa",
+      "lider-proyectos": "Líder de proyectos",
+    },
   },
 
   institucional: {
@@ -170,9 +154,6 @@ export const es: Diccionario = {
     rotulo: "Servicios",
     titulo: "Dos frentes documentados a fondo",
     pieTarjeta: "Marco normativo, entregable y duración",
-    tambienRotulo: "También prestamos",
-    tambienTexto:
-      "Sin ficha publicada. Si el frente no está dentro de nuestras competencias, lo decimos.",
     consultarAlcance: "Consultar un alcance",
     listados: {
       "actividad-forestal": "Actividad forestal",
@@ -447,6 +428,7 @@ export const es: Diccionario = {
     constituidaEn: "Constituida en",
     notaCookies: "No usamos cookies de seguimiento; solo se guarda su respuesta al aviso.",
     politicaDatos: "Política de tratamiento de datos personales",
+    desarrollado: "Sitio web desarrollado en {anio}",
     lema: "Dejando huella",
   },
 

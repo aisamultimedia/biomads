@@ -13,6 +13,11 @@ import { permisos } from "@/lib/site";
  * lo que no consta. Los dos proyectos con ficha detallada son otros y
  * viven en su propia sección.
  *
+ * Va sobre la misma superficie que la galería, separada por una regla: una
+ * banda corta de papel entre dos superficies verdes se leía como un error
+ * de fondo. Los logos van a color —cada marca con el suyo— y se levantan
+ * al pasar el cursor.
+ *
  * Toda la banda depende de `permisos.nombrarClientes`. En `false` no
  * renderiza nada y la página cierra el hueco sola.
  */
@@ -21,16 +26,18 @@ export function Clientes({ idioma }: { idioma: Idioma }) {
   const t = diccionario(idioma);
 
   return (
-    <section className="mx-auto w-full max-w-ancho px-6 pb-24 md:pb-40">
-      <Reveal as="p" tipo="lateral" className="etiqueta text-ink-muted">
-        {t.clientes.rotulo}
-      </Reveal>
+    <section className="bg-paper-alt">
+      <div className="mx-auto w-full max-w-ancho border-t border-line px-6 pb-24 pt-16 md:pb-32 md:pt-24">
+        <Reveal as="p" tipo="lateral" className="etiqueta text-ink-muted">
+          {t.clientes.rotulo}
+        </Reveal>
 
-      <RevealGroup
-        as="ul"
-        className="mt-12 flex flex-wrap items-center gap-x-16 gap-y-10"
-        itemClassName="logo-cliente"
-      >
+        <RevealGroup
+          as="ul"
+          tipo="panel"
+          className="mt-12 grid grid-cols-2 items-center gap-x-12 gap-y-12 sm:grid-cols-3 sm:gap-x-16"
+          itemClassName="logo-cliente"
+        >
         {clientes.map((cliente) => (
           <Image
             key={cliente.clave}
@@ -46,7 +53,8 @@ export function Clientes({ idioma }: { idioma: Idioma }) {
             sizes="(min-width: 768px) 220px, 40vw"
           />
         ))}
-      </RevealGroup>
+        </RevealGroup>
+      </div>
     </section>
   );
 }
