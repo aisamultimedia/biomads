@@ -41,10 +41,27 @@ mensaje ya compuesto: nadie se queda sin poder escribir.
 
 ## Despliegue en Vercel
 
-1. Importar el repositorio en Vercel. El preajuste de Next.js sirve tal cual:
-   no hace falta tocar comandos de build ni directorio de salida.
+1. Importar el repositorio. **Root Directory se deja vacío** — el repositorio
+   ya es la aplicación. El framework lo fija `vercel.json`, así que no
+   depende de la autodetección: si se importa el repo vacío, Vercel elige
+   "Other", sirve solo `public/` y todas las rutas dan 404.
 2. Cargar las variables de arriba.
-3. Apuntar el dominio y poner `NEXT_PUBLIC_SITE_URL` al dominio definitivo.
+3. Comprobar en la URL `*.vercel.app` antes de conectar el dominio.
+
+### Dominio: biomads.aisacreative.com
+
+Es un subdominio, así que va por CNAME. En el DNS de `aisacreative.com`:
+
+| Tipo | Nombre | Valor |
+| --- | --- | --- |
+| CNAME | `biomads` | el que muestre Vercel al añadir el dominio |
+
+Vercel indica el destino exacto en *Project → Settings → Domains*; cópielo de
+ahí en vez de suponerlo, porque cambia según la cuenta.
+
+Después ponga `NEXT_PUBLIC_SITE_URL=https://biomads.aisacreative.com` y
+redespliegue: esa variable alimenta `metadataBase`, el sitemap y el Open
+Graph, y solo se lee en tiempo de compilación.
 
 ---
 
