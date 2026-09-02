@@ -1,9 +1,13 @@
 /**
  * Validación del formulario de contacto.
  *
- * Los mensajes dicen qué pasa y cómo arreglarlo. Nunca "campo inválido".
- * Se usan igual en el cliente (en vivo) y en el servidor (route handler),
- * así que no dependen del DOM.
+ * Devuelve **códigos**, no frases. El texto vive en el diccionario de cada
+ * idioma, así que este módulo no tiene que saber en qué lengua está el
+ * visitante: se usa igual en el cliente (validación en vivo) y en el
+ * servidor (route handler), y ninguno de los dos emite prosa.
+ *
+ * Los códigos son específicos a propósito. Un único "campo inválido" obliga
+ * a adivinar; "al dominio le falta un punto" se arregla solo.
  */
 
 export type CamposContacto = {
@@ -13,7 +17,33 @@ export type CamposContacto = {
   mensaje: string;
 };
 
-export type ErroresContacto = Partial<Record<keyof CamposContacto, string>>;
+/** Un código por cosa que puede ir mal, no uno por campo. */
+export type CodigoError =
+  | "nombreVacio"
+  | "empresaVacia"
+  | "correoVacio"
+  | "correoSinArroba"
+  | "correoSinUsuario"
+  | "correoDosArrobas"
+  | "correoSinDominio"
+  | "correoDominioSinPunto"
+  | "correoDominioConPuntoSuelto"
+  | "correoConEspacios"
+  | "mensajeVacio"
+  | "mensajeCorto";
+
+export type ErroresContacto = Partial<Record<keyof CamposContacto, CodigoError>>;
+
+/**
+ * Lo que puede responder `/api/contacto`. Mismo criterio que arriba: el
+ * servidor devuelve un código y el texto lo pone el diccionario del idioma
+ * en el que está el visitante, que el servidor no tiene por qué conocer.
+ */
+export type CodigoRespuesta =
+  | "envioIlegible"
+  | "datosInvalidos"
+  | "envioNoConectado"
+  | "correoNoSalio";
 
 export const camposVacios: CamposContacto = {
   nombre: "",
@@ -25,37 +55,37 @@ export const camposVacios: CamposContacto = {
 /** Mínimo para que el mensaje sirva de algo al responder. */
 const MINIMO_MENSAJE = 20;
 
-export function validarCampo(campo: keyof CamposContacto, valor: string): string | undefined {
+export function validarCampo(
+  campo: keyof CamposContacto,
+  valor: string,
+): CodigoError | undefined {
   const v = valor.trim();
 
   switch (campo) {
     case "nombre":
-      if (!v) return "Escriba su nombre.";
-      return undefined;
+      return v ? undefined : "nombreVacio";
 
     case "empresa":
-      if (!v) return "Escriba la empresa o entidad desde la que escribe.";
-      return undefined;
+      return v ? undefined : "empresaVacia";
 
     case "correo": {
-      if (!v) return "Escriba un correo para responderle.";
-      if (!v.includes("@")) return "El correo necesita un @.";
+      if (!v) return "correoVacio";
+      if (/\s/.test(v)) return "correoConEspacios";
+      if (!v.includes("@")) return "correoSinArroba";
       const [usuario, ...resto] = v.split("@");
-      if (!usuario) return "Falta lo que va antes del @.";
-      if (resto.length > 1) return "El correo tiene más de un @.";
+      if (!usuario) return "correoSinUsuario";
+      if (resto.length > 1) return "correoDosArrobas";
       const dominio = resto[0];
-      if (!dominio) return "Falta el dominio después del @ — por ejemplo, empresa.com.";
-      if (!dominio.includes(".")) return "Al dominio le falta un punto — por ejemplo, empresa.com.";
+      if (!dominio) return "correoSinDominio";
       if (dominio.startsWith(".") || dominio.endsWith("."))
-        return "El dominio no puede empezar ni terminar en punto.";
-      if (/\s/.test(v)) return "El correo no puede llevar espacios.";
+        return "correoDominioConPuntoSuelto";
+      if (!dominio.includes(".")) return "correoDominioSinPunto";
       return undefined;
     }
 
     case "mensaje": {
-      if (!v) return "Cuéntenos qué necesita radicar o ejecutar.";
-      if (v.length < MINIMO_MENSAJE)
-        return "Con un poco más de detalle podemos responderle mejor.";
+      if (!v) return "mensajeVacio";
+      if (v.length < MINIMO_MENSAJE) return "mensajeCorto";
       return undefined;
     }
   }
@@ -64,8 +94,8 @@ export function validarCampo(campo: keyof CamposContacto, valor: string): string
 export function validarTodo(campos: CamposContacto): ErroresContacto {
   const errores: ErroresContacto = {};
   for (const campo of Object.keys(campos) as (keyof CamposContacto)[]) {
-    const error = validarCampo(campo, campos[campo]);
-    if (error) errores[campo] = error;
+    const codigo = validarCampo(campo, campos[campo]);
+    if (codigo) errores[campo] = codigo;
   }
   return errores;
 }

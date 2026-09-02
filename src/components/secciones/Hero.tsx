@@ -3,8 +3,8 @@ import { Enlace } from "@/components/ui/Enlace";
 import { Entrada } from "@/components/motion/Entrada";
 import { TituloPorLineas } from "@/components/motion/TituloPorLineas";
 import { VideoFondo } from "./VideoFondo";
-import { descriptor } from "@/content/institucional";
 import { regiones } from "@/content/respaldo";
+import { diccionario, type Idioma } from "@/idioma";
 import { aniosDesdeConstitucion, empresa } from "@/lib/site";
 
 /**
@@ -19,32 +19,46 @@ import { aniosDesdeConstitucion, empresa } from "@/lib/site";
  * su estado oculto espera a la hidratación y eso retrasa el LCP.
  */
 
-/**
- * Ficha de identidad al pie del hero.
- *
- * Sustituye a las dos tarjetas de cifra que había antes —número de
- * proyectos y tamaño del equipo—: un contador de dos y otro de diez no
- * impresionan a nadie y ocupaban la mitad del hero. Aquí todo es texto
- * plano, sin tarjeta.
- *
- * Los años van junto al año de constitución a propósito: la cifra se
- * calcula de ahí y así queda comprobable de un vistazo.
- */
-const ficha = [
-  { rotulo: "Experiencia", valor: `${aniosDesdeConstitucion()} años`, mono: true },
-  { rotulo: "Constituida", valor: String(empresa.constitucion), mono: true },
-  { rotulo: "Sede", valor: empresa.sede, mono: false },
-  { rotulo: "Proyectos ejecutados en", valor: regiones.join(" y "), mono: false },
-] as const;
-
 /* Posiciones en la secuencia de carga. El descriptor comparte paso con la
    primera línea del título: llegan juntos y no retrasan el LCP. */
 const PASO = { descriptor: 0, titulo: 0, bajada: 3, acciones: 4, ficha: 5 } as const;
 
-export function Hero() {
+export function Hero({ idioma }: { idioma: Idioma }) {
+  const t = diccionario(idioma);
+
+  /**
+   * Ficha de identidad al pie del hero.
+   *
+   * Sustituye a las dos tarjetas de cifra que había antes —número de
+   * proyectos y tamaño del equipo—: un contador de dos y otro de diez no
+   * impresionan a nadie y ocupaban la mitad del hero. Aquí todo es texto
+   * plano, sin tarjeta.
+   *
+   * Los años van junto al año de constitución a propósito: la cifra se
+   * calcula de ahí y así queda comprobable de un vistazo.
+   */
+  const ficha = [
+    {
+      rotulo: t.hero.ficha.experiencia,
+      valor: `${aniosDesdeConstitucion()} ${t.hero.anios}`,
+      mono: true,
+    },
+    { rotulo: t.hero.ficha.constituida, valor: String(empresa.constitucion), mono: true },
+    { rotulo: t.hero.ficha.sede, valor: empresa.sede, mono: false },
+    {
+      rotulo: t.hero.ficha.regiones,
+      valor: regiones.join(` ${t.unidades.y} `),
+      mono: false,
+    },
+  ];
+
   return (
     <section className="hero-completo superficie-oscura">
-      <VideoFondo fuente="/video/hero.mp4" poster="/video/hero-poster.jpg" />
+      <VideoFondo
+        fuente="/video/hero.mp4"
+        poster="/video/hero-poster.jpg"
+        textos={{ pausar: t.hero.pausarVideo, reanudar: t.hero.reanudarVideo }}
+      />
       <div className="hero-velo" aria-hidden="true" />
 
       <div className="hero-contenido">
@@ -54,13 +68,13 @@ export function Hero() {
             indice={PASO.descriptor}
             className="descriptor mb-6 text-sm text-ink-invert"
           >
-            {descriptor}
+            {t.hero.descriptor}
           </Entrada>
 
           <TituloPorLineas
             indice={PASO.titulo}
-            className="max-w-[19ch] text-3xl text-ink-invert md:text-4xl xl:text-5xl"
-            lineas={["Estudios ambientales", "hechos para la revisión", "de la autoridad."]}
+            className="max-w-titulo text-3xl text-ink-invert md:text-4xl xl:text-5xl"
+            lineas={t.hero.titulo}
           />
 
           {/* Una frase, no dos. La segunda —metodología, registros,
@@ -70,18 +84,17 @@ export function Hero() {
           <Entrada
             as="p"
             indice={PASO.bajada}
-            className="mt-8 max-w-[52ch] text-lg text-ink-invert"
+            className="mt-8 max-w-bajada text-lg text-ink-invert"
           >
-            Monitoreos de fauna, seguimiento de flora reubicada y gestión de
-            obligaciones ambientales para proyectos de infraestructura.
+            {t.hero.bajada}
           </Entrada>
 
           <Entrada indice={PASO.acciones} className="mt-12 flex flex-wrap items-center gap-8">
             <Boton href="#contacto" variante="acento">
-              Cuéntenos su proyecto
+              {t.hero.ctaPrincipal}
             </Boton>
             <Enlace href="#proyectos" className="text-ink-invert">
-              Ver proyectos ejecutados
+              {t.hero.ctaSecundario}
             </Enlace>
           </Entrada>
 

@@ -1,36 +1,15 @@
 "use client";
 
-import { AnimatePresence, m, type Variants } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import { Nav } from "./Nav";
-import { CURVA_ENTRADA, CURVA_SALIDA, DURACION, texto } from "@/lib/motion";
+import { usePresencia } from "@/hooks/usePresencia";
+import { diccionario, type Idioma } from "@/idioma";
 import { empresa, mailto, navegacion, whatsapp } from "@/lib/site";
 
 type Props = {
   abierto: boolean;
   onCerrar: () => void;
-};
-
-/**
- * El velo entra en 250ms y va soltando a sus hijos —los ítems de navegación
- * y el bloque de contacto— cada 50ms. Al cerrar, todo se va a la vez en
- * 200ms: cerrar un menú debe ser inmediato.
- */
-const velo: Variants = {
-  oculto: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: DURACION.corta,
-      ease: CURVA_ENTRADA,
-      when: "beforeChildren",
-      staggerChildren: 0.05,
-    },
-  },
-  salida: {
-    opacity: 0,
-    transition: { duration: 0.2, ease: CURVA_SALIDA },
-  },
+  idioma: Idioma;
 };
 
 /**
@@ -41,8 +20,17 @@ const velo: Variants = {
  * cabecera queda debajo del panel, así que no serviría ni con el cursor ni
  * con el teclado.
  */
-export function MenuMovil({ abierto, onCerrar }: Props) {
+export function MenuMovil({ abierto, onCerrar, idioma }: Props) {
+  const t = diccionario(idioma);
   const panelRef = useRef<HTMLDivElement>(null);
+  const { montado, estado, ref: presenciaRef } = usePresencia(abierto);
+
+  /* Dos referencias sobre el mismo nodo: la del foco y la que usa
+     usePresencia para escuchar el final de la transición de salida. */
+  const fijarPanel = (nodo: HTMLDivElement | null) => {
+    panelRef.current = nodo;
+    presenciaRef.current = nodo;
+  };
 
   useEffect(() => {
     if (!abierto) return;
@@ -86,38 +74,35 @@ export function MenuMovil({ abierto, onCerrar }: Props) {
     };
   }, [abierto, onCerrar]);
 
+  if (!montado) return null;
+
   return (
-    <AnimatePresence>
-      {abierto && (
-        <m.div
-          key="menu"
-          ref={panelRef}
-          tabIndex={-1}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menú de navegación"
-          variants={velo}
-          initial="oculto"
-          animate="visible"
-          exit="salida"
-          // Mismo corte que el botón que lo abre (lg): en tablet también
-          // hace falta.
-          className="fixed inset-0 z-50 flex flex-col bg-paper px-6 pb-12 pt-24 lg:hidden"
-        >
+    <div
+      ref={fijarPanel}
+      tabIndex={-1}
+      role="dialog"
+      aria-modal="true"
+      aria-label={t.nav.menuNavegacion}
+      data-estado={estado}
+      // Mismo corte que el botón que lo abre (lg): en tablet también
+      // hace falta.
+      className="menu-movil fixed inset-0 z-50 flex flex-col bg-paper px-6 pb-12 pt-24 lg:hidden"
+    >
           <button
             type="button"
             onClick={onCerrar}
             className="absolute right-6 top-6 inline-flex h-[var(--area-tactil)] w-[var(--area-tactil)] items-center justify-center"
           >
-            <span className="sr-only">Cerrar menú</span>
+            <span className="sr-only">{t.nav.cerrarMenu}</span>
             <span aria-hidden="true" className="icono-menu es-cerrar">
               <span />
               <span />
             </span>
           </button>
 
-          <nav aria-label="Principal">
+          <nav aria-label={t.nav.principal}>
             <Nav
+              textos={t.nav.secciones}
               items={navegacion}
               orientacion="vertical"
               tamano="grande"
@@ -126,8 +111,12 @@ export function MenuMovil({ abierto, onCerrar }: Props) {
             />
           </nav>
 
-          <m.div variants={texto} className="con-regla mt-auto pt-8">
-            <p className="etiqueta text-ink-muted">Contacto directo</p>
+      <div
+        data-entrada="texto"
+        style={{ "--indice": navegacion.length + 1 } as CSSProperties}
+        className="con-regla mt-auto pt-8"
+      >
+            <p className="etiqueta text-ink-muted">{t.contacto.directoRotulo}</p>
             <ul className="mt-4 flex flex-col gap-3">
               <li>
                 <a
@@ -137,7 +126,7 @@ export function MenuMovil({ abierto, onCerrar }: Props) {
                   className="dato flex min-h-[var(--area-tactil)] items-center text-lg text-ink"
                 >
                   {empresa.telefono}
-                  <span className="sr-only"> — escribir por WhatsApp</span>
+                  <span className="sr-only"> — {t.contacto.formulario.escribirWhatsapp}</span>
                 </a>
               </li>
               <li>
@@ -149,9 +138,7 @@ export function MenuMovil({ abierto, onCerrar }: Props) {
                 </a>
               </li>
             </ul>
-          </m.div>
-        </m.div>
-      )}
-    </AnimatePresence>
+      </div>
+    </div>
   );
 }

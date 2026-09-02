@@ -1,8 +1,8 @@
 "use client";
 
-import { m } from "motion/react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useSeccionActiva } from "@/hooks/useSeccionActiva";
-import { RESORTE } from "@/lib/motion";
+import type { Diccionario } from "@/idioma";
 import { navegacion } from "@/lib/site";
 
 /** Contacto sale del menú: vive como botón siempre visible en la barra. */
@@ -26,25 +26,49 @@ const subrayadoHover = [
 /**
  * Navegación de la barra flotante.
  *
- * Tres anclas y nada más. Antes dos de ellas abrían un panel con las fichas
- * de detalle; en un sitio de una sola página eso era un submenú cuyo único
- * propósito era sacar al visitante de ella, así que se quitó junto con los
- * temporizadores de cierre, la gestión de foco y el chevron.
+ * Tres anclas y nada más. El indicador de sección activa es **un solo
+ * elemento** que se desliza de un ítem al siguiente en vez de aparecer de
+ * golpe; antes lo hacía el `layoutId` de motion, que obligaba a cargar
+ * `domMax` —el paquete con proyección de layout y arrastre— por este único
+ * gesto. Ahora se resuelve midiendo el ítem activo y moviendo el indicador
+ * con `translate` y `scaleX`: solo transform, nada que dispare layout.
  *
- * El indicador de sección activa es un solo elemento con `layoutId`: al
- * desplazarse se desliza de un ítem al siguiente en vez de aparecer de
- * golpe. Cuál está activa lo decide el scroll, no la ruta —en una página
- * única la ruta siempre es "/"—.
+ * Cuál está activa lo decide el scroll, no la ruta: en una página única la
+ * ruta siempre es la misma.
  */
-export function NavBarra() {
+export function NavBarra({ textos }: { textos: Diccionario["nav"]["secciones"] }) {
   const seccionActiva = useSeccionActiva();
+  const listaRef = useRef<HTMLUListElement>(null);
+  const [indicador, setIndicador] = useState<{ x: number; ancho: number } | null>(null);
+
+  useEffect(() => {
+    const lista = listaRef.current;
+    if (!lista) return;
+
+    const medir = () => {
+      const activo = lista.querySelector<HTMLElement>("[aria-current]");
+      if (!activo) {
+        setIndicador(null);
+        return;
+      }
+      setIndicador({ x: activo.offsetLeft, ancho: activo.offsetWidth });
+    };
+
+    medir();
+
+    /* La barra se compacta al bajar y las anchuras cambian con el idioma,
+       así que la medida no vale para siempre. */
+    const observador = new ResizeObserver(medir);
+    observador.observe(lista);
+    return () => observador.disconnect();
+  }, [seccionActiva]);
 
   return (
-    <ul className="flex items-center gap-8">
+    <ul ref={listaRef} className="relative flex items-center gap-8">
       {items.map((item) => {
         const activo = seccionActiva === item.href;
         return (
-          <li key={item.href} className="relative">
+          <li key={item.href}>
             {/* Ancla de la misma página: <a> y no <Link>, para no perder el
                 desplazamiento suave en una navegación que no cambia de
                 página. */}
@@ -54,19 +78,27 @@ export function NavBarra() {
               /* El color lo pone el tema de la barra, no una clase fija. */
               className={[enlaceBase, activo ? "es-activo" : subrayadoHover].join(" ")}
             >
-              {item.rotulo}
-              {activo && (
-                <m.span
-                  layoutId="nav-activo"
-                  transition={RESORTE}
-                  aria-hidden="true"
-                  className="absolute inset-x-0 bottom-2 h-px bg-accent"
-                />
-              )}
+              {textos[item.clave]}
             </a>
           </li>
         );
       })}
+
+      {indicador && (
+        <span
+          aria-hidden="true"
+          className="indicador-nav"
+          style={
+            {
+              "--x": `${indicador.x}px`,
+              /* Sin unidad: `scale` toma un número, y con "88px" la
+                 declaración entera es inválida y el indicador se queda de
+                 1px sin que nada avise. */
+              "--ancho": indicador.ancho,
+            } as CSSProperties
+          }
+        />
+      )}
     </ul>
   );
 }

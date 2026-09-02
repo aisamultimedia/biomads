@@ -1,9 +1,7 @@
-"use client";
-
-import { m } from "motion/react";
 import type { CSSProperties, ReactNode } from "react";
-import { useRevelado } from "@/hooks/useRevelado";
-import { vocabulario, vocabularioRegla, type Tipo } from "@/lib/motion";
+
+/** Los cuatro gestos del sistema. El CSS los resuelve por `data-revelar`. */
+export type Tipo = "texto" | "lateral" | "titulo" | "panel";
 
 type Etiqueta =
   | "div"
@@ -13,7 +11,8 @@ type Etiqueta =
   | "p"
   | "figure"
   | "blockquote"
-  | "span";
+  | "span"
+  | "dl";
 
 type Props = {
   children: ReactNode;
@@ -36,14 +35,16 @@ type Props = {
 /**
  * Revela su contenido al entrar en pantalla, una sola vez.
  *
- * El gesto lo decide `tipo` (ver src/lib/motion.ts). El estado oculto lo
- * escribe motion en línea al renderizar en el servidor; si JavaScript no
- * corre, globals.css lo anula bajo `@media (scripting: none)`. Con
- * prefers-reduced-motion arranca directamente en su estado final.
+ * Es un componente de servidor: solo emite atributos. El estado oculto, la
+ * curva y el retraso los pone el CSS, y `<Revelador />` —montado una vez en
+ * el layout— decide cuándo poner `data-visible`.
+ *
+ * Sin JavaScript, o con prefers-reduced-motion, el estado oculto ni siquiera
+ * se aplica: la consulta que lo define no encaja y el contenido nace visible.
  */
 export function Reveal({
   children,
-  as = "div",
+  as: Componente = "div",
   tipo = "texto",
   regla = false,
   indice = 0,
@@ -51,19 +52,12 @@ export function Reveal({
   style,
   id,
 }: Props) {
-  const revelado = useRevelado();
-  const Componente = m[as] as typeof m.div;
-  const variantes = regla ? vocabularioRegla[tipo] : vocabulario[tipo];
-
   return (
     <Componente
       id={id}
-      data-revelar=""
-      variants={variantes}
-      custom={indice}
-      {...revelado}
+      data-revelar={tipo}
       className={regla ? `con-regla ${className}` : className}
-      style={style}
+      style={indice ? ({ ...style, "--indice": indice } as CSSProperties) : style}
     >
       {children}
     </Componente>

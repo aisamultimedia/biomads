@@ -2,6 +2,7 @@ import Image from "next/image";
 import { RevealGroup } from "@/components/motion/RevealGroup";
 import { Reveal } from "@/components/motion/Reveal";
 import { clientes } from "@/content/clientes";
+import { diccionario, type Idioma } from "@/idioma";
 import { permisos } from "@/lib/site";
 
 /**
@@ -15,13 +16,14 @@ import { permisos } from "@/lib/site";
  * Toda la banda depende de `permisos.nombrarClientes`. En `false` no
  * renderiza nada y la página cierra el hueco sola.
  */
-export function Clientes() {
+export function Clientes({ idioma }: { idioma: Idioma }) {
   if (!permisos.nombrarClientes) return null;
+  const t = diccionario(idioma);
 
   return (
     <section className="mx-auto w-full max-w-ancho px-6 pb-24 md:pb-40">
       <Reveal as="p" tipo="lateral" className="etiqueta text-ink-muted">
-        Han confiado en nosotros
+        {t.clientes.rotulo}
       </Reveal>
 
       <RevealGroup
@@ -31,11 +33,11 @@ export function Clientes() {
       >
         {clientes.map((cliente) => (
           <Image
-            key={cliente.nombre}
+            key={cliente.clave}
             src={cliente.logo}
             /* El nombre va en el alt porque el logo es la única forma en que
                aparece: no hay rótulo de texto al lado que lo repita. */
-            alt={cliente.nombre}
+            alt={t.clientes.nombres[cliente.clave]}
             /* Alturas normalizadas por área en preparar-logos-clientes.mjs;
                aquí solo se sirven a la mitad de su tamaño para pantallas
                de densidad doble. */

@@ -1,14 +1,13 @@
-"use client";
-
-import { m } from "motion/react";
 import { Enlace } from "@/components/ui/Enlace";
 import { FichaDatos } from "@/components/ui/FichaDatos";
-import { useRevelado } from "@/hooks/useRevelado";
-import { grupoConRegla, texto, titulo } from "@/lib/motion";
 import type { Proyecto } from "@/content/proyectos";
+import type { Diccionario, Idioma } from "@/idioma";
 
 type Props = {
   proyecto: Proyecto;
+  idioma: Idioma;
+  textos: Diccionario["proyectos"];
+  unidades: Diccionario["unidades"];
 };
 
 /**
@@ -20,45 +19,48 @@ type Props = {
  * revela tras su máscara y el resto se asienta en orden. La ficha, anidada,
  * escalona sus filas en su turno.
  */
-export function TarjetaCaso({ proyecto }: Props) {
-  const revelado = useRevelado();
+export function TarjetaCaso({ proyecto, idioma, textos, unidades }: Props) {
+  const caso = textos.casos[proyecto.slug];
 
   return (
-    <m.article data-revelar="" variants={grupoConRegla} {...revelado} className="con-regla pt-8">
-      <m.h3 data-revelar="" variants={titulo} className="text-xl md:text-2xl">
-        {proyecto.clienteCorto}
-      </m.h3>
-      <m.p data-revelar="" variants={texto} className="medida mt-4 text-ink">
-        {proyecto.encargo}
-      </m.p>
+    <article data-revelar="grupo" className="con-regla pt-8">
+      <h3 data-revelar="titulo" className="text-xl md:text-2xl">
+        {caso.clienteCorto}
+      </h3>
+      <p data-revelar="texto" className="medida mt-4 text-ink">
+        {caso.encargo}
+      </p>
 
       <FichaDatos
-        anidada
         className="mt-12"
         datos={[
-          { rotulo: "Año", valor: proyecto.anio, mono: true },
-          { rotulo: "Duración", valor: proyecto.duracion, mono: true },
-          { rotulo: "Ubicación", valor: proyecto.ubicacion },
-          { rotulo: "Servicio", valor: proyecto.servicioRotulo },
+          { rotulo: textos.ficha.anio, valor: String(proyecto.anio), mono: true },
+          {
+            rotulo: textos.ficha.duracion,
+            valor: `${proyecto.duracionMeses} ${unidades.meses}`,
+            mono: true,
+          },
+          { rotulo: textos.ficha.ubicacion, valor: caso.ubicacion },
+          { rotulo: textos.ficha.servicio, valor: caso.servicioRotulo },
         ]}
       />
 
-      <m.dl data-revelar="" variants={texto} className="mt-12 grid gap-8 md:grid-cols-2">
+      <dl data-revelar="texto" className="mt-12 grid gap-8 md:grid-cols-2">
         <div>
-          <dt className="etiqueta text-ink-muted">La dificultad</dt>
-          <dd className="mt-2 text-sm text-ink">{proyecto.dificultad}</dd>
+          <dt className="etiqueta text-ink-muted">{textos.dificultadRotulo}</dt>
+          <dd className="medida mt-2 text-sm text-ink">{caso.dificultad}</dd>
         </div>
         <div>
-          <dt className="etiqueta text-ink-muted">Cómo se resolvió</dt>
-          <dd className="mt-2 text-sm text-ink">{proyecto.resolucion}</dd>
+          <dt className="etiqueta text-ink-muted">{textos.resolucionRotulo}</dt>
+          <dd className="medida mt-2 text-sm text-ink">{caso.resolucion}</dd>
         </div>
-      </m.dl>
+      </dl>
 
-      <m.p data-revelar="" variants={texto} className="mt-8">
-        <Enlace flecha href={`/proyectos/${proyecto.slug}`}>
-          Ver el proyecto completo
+      <p data-revelar="texto" className="mt-8">
+        <Enlace flecha href={`/${idioma}/proyectos/${proyecto.slug}`}>
+          {textos.verCompleto}
         </Enlace>
-      </m.p>
-    </m.article>
+      </p>
+    </article>
   );
 }

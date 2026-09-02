@@ -1,7 +1,8 @@
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealGroup } from "@/components/motion/RevealGroup";
 import { Icono } from "@/components/ui/Icono";
-import { mision, politicaCalidad, valores, vision } from "@/content/institucional";
+import { valores } from "@/content/institucional";
+import { diccionario, type Idioma } from "@/idioma";
 
 /**
  * Misión, visión, valores y política de calidad.
@@ -15,7 +16,9 @@ import { mision, politicaCalidad, valores, vision } from "@/content/instituciona
  * plegada en un <details>: sigue en el HTML para quien la busque o la
  * indexe, sin ocupar pantalla para quien no.
  */
-export function MarcoInstitucional() {
+export function MarcoInstitucional({ idioma }: { idioma: Idioma }) {
+  const t = diccionario(idioma).institucional;
+
   return (
     <div className="mt-24 md:mt-32">
       <RevealGroup
@@ -25,17 +28,17 @@ export function MarcoInstitucional() {
         regla
       >
         <div>
-          <dt className="etiqueta text-ink-muted">Misión</dt>
-          <dd className="medida mt-4 text-ink">{mision}</dd>
+          <dt className="etiqueta text-ink-muted">{t.misionRotulo}</dt>
+          <dd className="medida mt-4 text-ink">{t.mision}</dd>
         </div>
         <div>
-          <dt className="etiqueta text-ink-muted">Visión</dt>
-          <dd className="medida mt-4 text-ink">{vision}</dd>
+          <dt className="etiqueta text-ink-muted">{t.visionRotulo}</dt>
+          <dd className="medida mt-4 text-ink">{t.vision}</dd>
         </div>
       </RevealGroup>
 
       <Reveal as="p" className="etiqueta mt-24 text-ink-muted">
-        Valores corporativos
+        {t.valoresRotulo}
       </Reveal>
 
       <RevealGroup
@@ -46,10 +49,10 @@ export function MarcoInstitucional() {
         itemClassName="border-t border-line pt-6"
       >
         {valores.map((valor) => (
-          <span key={valor.nombre} className="flex flex-col gap-4">
+          <span key={valor.clave} className="flex flex-col gap-4">
             <Icono nombre={valor.icono} tamano={26} className="text-accent-deep" />
-            <span className="text-lg text-ink">{valor.nombre}</span>
-            <span className="text-sm text-ink-muted">{valor.texto}</span>
+            <span className="text-lg text-ink">{t.valores[valor.clave].nombre}</span>
+            <span className="text-sm text-ink-muted">{t.valores[valor.clave].texto}</span>
           </span>
         ))}
       </RevealGroup>
@@ -57,20 +60,20 @@ export function MarcoInstitucional() {
       <Reveal className="mt-24">
         <details className="politica">
           <summary>
-            <span className="etiqueta text-ink">Política de calidad</span>
+            <span className="etiqueta text-ink">{t.politicaRotulo}</span>
             <span aria-hidden="true" className="politica-signo" />
           </summary>
 
           <div className="pb-8">
-            {politicaCalidad.texto.map((parrafo) => (
+            {t.politica.map((parrafo) => (
               <p key={parrafo} className="medida mt-4 text-ink-muted">
                 {parrafo}
               </p>
             ))}
 
-            <p className="etiqueta mt-12 text-ink-muted">Objetivos</p>
+            <p className="etiqueta mt-12 text-ink-muted">{t.objetivosRotulo}</p>
             <ul className="mt-4 flex flex-col gap-2">
-              {politicaCalidad.objetivos.map((objetivo) => (
+              {t.objetivos.map((objetivo) => (
                 <li key={objetivo} className="flex items-baseline gap-3 text-ink">
                   <span
                     aria-hidden="true"

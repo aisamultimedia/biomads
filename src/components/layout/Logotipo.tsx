@@ -2,8 +2,11 @@ import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import logoClaro from "@/logo/logo-header-claro.png";
 import logoOscuro from "@/logo/logo-header.png";
+import { diccionario, type Idioma } from "@/idioma";
 
 type Props = {
+  /** Idioma activo: fija el destino del enlace y su nombre accesible. */
+  idioma: Idioma;
   /** Sobre superficie oscura: la palabra va en --ink-invert. */
   invertido?: boolean;
   /** Alto en píxeles. El ancho sale de la proporción del archivo. */
@@ -25,6 +28,7 @@ type Props = {
  * variante clara solo repinta las letras, nunca el isotipo.
  */
 export function Logotipo({
+  idioma,
   invertido = false,
   alto = 34,
   prioridad = false,
@@ -34,12 +38,13 @@ export function Logotipo({
      conmutaba de tema al pasar el hero. Ahora la barra es clara siempre:
      una sola pieza, ~12 kB menos y una petición menos. */
   const fuente: StaticImageData = invertido ? logoClaro : logoOscuro;
+  const t = diccionario(idioma);
 
   return (
     <Link
-      href="/"
+      href={`/${idioma}`}
       className={`enlace-logotipo group inline-flex items-center ${className}`}
-      aria-label="BIOMADS — ir al inicio"
+      aria-label={t.nav.irAlInicio}
     >
       <Image
         src={fuente}

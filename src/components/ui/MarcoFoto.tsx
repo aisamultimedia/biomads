@@ -23,7 +23,7 @@ export function MarcoFoto({ proporcion = "3/2", descripcion, className = "" }: P
     >
       <div className="p-6">
         <p className="etiqueta text-ink-muted">[Foto de campo — pendiente]</p>
-        <p className="mt-2 max-w-[42ch] text-sm text-ink-muted">{descripcion}</p>
+        <p className="mt-2 max-w-estrecho text-sm text-ink-muted">{descripcion}</p>
       </div>
     </div>
   );

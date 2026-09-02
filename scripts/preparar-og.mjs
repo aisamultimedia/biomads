@@ -22,9 +22,10 @@ const ANCHO = 1200;
 const ALTO = 630;
 
 /* Velo: el mismo tono neutro del hero, para que la tarjeta y el sitio se
-   reconozcan como lo mismo. */
+   reconozcan como lo mismo. Es --color-velo (#0E120E) de tokens.css; aquí
+   va en canales porque sharp no lee CSS. Si allí cambia, cambia aquí. */
 const velo = await sharp({
-  create: { width: ANCHO, height: ALTO, channels: 4, background: { r: 14, g: 18, b: 16, alpha: 0.62 } },
+  create: { width: ANCHO, height: ALTO, channels: 4, background: { r: 14, g: 18, b: 14, alpha: 0.62 } },
 })
   .png()
   .toBuffer();

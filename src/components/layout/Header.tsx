@@ -5,6 +5,8 @@ import { Boton } from "@/components/ui/Boton";
 import { Logotipo } from "./Logotipo";
 import { MenuMovil } from "./MenuMovil";
 import { NavBarra } from "./NavBarra";
+import { SelectorIdioma } from "./SelectorIdioma";
+import { diccionario, type Idioma } from "@/idioma";
 
 /** Desplazamiento a partir del cual la barra se compacta. */
 const UMBRAL_COMPACTO = 80;
@@ -68,7 +70,8 @@ function useSobreOscuro() {
  * transición entre páginas: es el punto fijo que le dice al visitante que
  * lo que cambió fue el contenido, no la ventana.
  */
-export function Header() {
+export function Header({ idioma }: { idioma: Idioma }) {
+  const t = diccionario(idioma);
   const compacto = useCompacto();
   const sobreOscuro = useSobreOscuro();
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -91,26 +94,28 @@ export function Header() {
           <div data-entrada="barra" className="barra">
             {/* Izquierda: navegación en escritorio, logo en móvil */}
             <div className="flex items-center">
-              <nav aria-label="Principal" className="hidden lg:block">
-                <NavBarra />
+              <nav aria-label={t.nav.principal} className="hidden lg:block">
+                <NavBarra textos={t.nav.secciones} />
               </nav>
               {/* Mismo alto que el del centro a propósito: solo uno de los
                   dos se ve, pero con altos distintos el optimizador genera
                   dos URL y el navegador baja las dos. */}
               <div className="lg:hidden">
-                <Logotipo alto={28} />
+                <Logotipo idioma={idioma} alto={28} />
               </div>
             </div>
 
             {/* Centro: el logo, como en una marca de producto */}
             <div className="hidden justify-center lg:flex">
-              <Logotipo alto={28} />
+              <Logotipo idioma={idioma} alto={28} />
             </div>
 
             {/* Derecha: el paso siguiente, siempre visible */}
             <div className="flex items-center justify-end gap-4">
+              <SelectorIdioma idioma={idioma} />
+
               <Boton href="#contacto" variante="acento" className="hidden sm:inline-flex">
-                Contacto
+                {t.nav.secciones.contacto}
               </Boton>
 
               <button
@@ -121,7 +126,7 @@ export function Header() {
                 aria-controls="menu-movil"
                 className="inline-flex h-[var(--area-tactil)] w-[var(--area-tactil)] items-center justify-center lg:hidden"
               >
-                <span className="sr-only">Abrir menú</span>
+                <span className="sr-only">{t.nav.abrirMenu}</span>
                 <span aria-hidden="true" className="icono-menu">
                   <span />
                   <span />
@@ -133,7 +138,7 @@ export function Header() {
       </header>
 
       <div id="menu-movil">
-        <MenuMovil abierto={menuAbierto} onCerrar={cerrarMenu} />
+        <MenuMovil abierto={menuAbierto} onCerrar={cerrarMenu} idioma={idioma} />
       </div>
     </>
   );

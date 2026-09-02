@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 type Props = {
   /** Ruta del mp4 dentro de /public. */
   fuente: string;
+  /** Nombres accesibles del control. Es de cliente: llegan por props. */
+  textos: { pausar: string; reanudar: string };
   /** Primer fotograma. Se ve mientras carga y sustituye al video si hace falta. */
   poster: string;
   className?: string;
@@ -46,7 +48,7 @@ function evitarDescarga(): boolean {
  * desde el primer instante y el video entra después, sin que nadie note el
  * relevo.
  */
-export function VideoFondo({ fuente, poster, className = "" }: Props) {
+export function VideoFondo({ fuente, poster, textos, className = "" }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [pausadoPorEvento, setPausadoPorEvento] = useState(false);
   const [fuenteLista, setFuenteLista] = useState<string | undefined>(undefined);
@@ -121,7 +123,7 @@ export function VideoFondo({ fuente, poster, className = "" }: Props) {
 
       <button type="button" onClick={alternar} className="hero-control-video">
         <span className="sr-only">
-          {pausado ? "Reanudar el video de fondo" : "Pausar el video de fondo"}
+          {pausado ? textos.reanudar : textos.pausar}
         </span>
         <span aria-hidden="true" className={`icono-video ${pausado ? "es-play" : ""}`}>
           <span />

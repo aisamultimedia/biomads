@@ -28,37 +28,73 @@
 
   /* --- Color ---------------------------------------------------------- */
 
+  /* --- Anclaje al logo -------------------------------------------------
+     Todo el color del sitio sale del isotipo, muestreado píxel a píxel por
+     familias de tono (scripts/paleta-logo.mjs). El logo tiene cuatro
+     cromáticos y solo se usan dos:
+
+       engranaje verde  #3F9D32  hsl(113 52% 41%)  ← el verde del sitio
+       engranaje ocre   #5F4F19  hsl( 46 58% 24%)  ← acento secundario
+       hojas lima       #74A12A  hsl( 83 59% 40%)  ← descartado por decisión
+       agua azul        #029EE3  hsl(198 98% 45%)  ← descartado por decisión
+
+     Los verdes de las superficies estaban en 136–150°, es decir eran otro
+     verde distinto al de la marca. Se rotaron todos a 113° conservando su
+     contraste exacto: se movió la luminosidad hasta recuperar la razón que
+     cada uno tenía, así que el cambio es de temperatura, no de legibilidad.
+
+     Ninguna derivada se escribe a ojo: `scripts/paleta-logo.mjs` busca la
+     luminosidad que alcanza el objetivo WCAG sin mover tono ni saturación,
+     y verifica los 30 pares que el sitio usa de verdad.
+     --------------------------------------------------------------------- */
+
   /* superficies */
-  --color-paper:      #FAF9F6; /* base, nunca blanco puro */
-  --color-paper-alt:  #F1F3EE; /* bloques alternos */
-  --color-dark:       #12261B; /* footer y bloques invertidos */
+  --color-paper:      #FAF9F6; /* base, nunca blanco puro. Blanco cálido a
+                                  46°, el mismo tono que el ocre del logo. */
+  --color-paper-alt:  #EFF3EF; /* bloques alternos */
+  --color-dark:       #142612; /* footer y bloques invertidos */
 
   /* texto */
-  --color-ink:        #1B3D2A; /* principal — 11.41:1 sobre paper (AAA) */
-  --color-ink-muted:  #4A5D50; /* secundario — 6.71:1 sobre paper (AA) */
-  --color-ink-invert: #F1F3EE; /* sobre dark — 14.25:1 (AAA) */
-  /* Añadido: secundario sobre superficie oscura. --ink-muted solo alcanza
-     2.25:1 sobre --dark y no se puede usar ahí. Medido: 7.67:1 (AAA). */
-  --color-ink-invert-muted: #AEB6AF;
+  --color-ink:        #1F3D1B; /* principal — 11.45:1 sobre paper (AAA) */
+  --color-ink-muted:  #4C5D4A; /* secundario — 6.71:1 sobre paper (AA) */
+  --color-ink-invert: #F1F3EE; /* sobre dark — 14.28:1 (AAA) */
+  /* Secundario sobre superficie oscura. --ink-muted solo alcanza 2.25:1
+     sobre --dark y no se puede usar ahí. Medido: 7.70:1 (AAA). */
+  --color-ink-invert-muted: #AFB6AE;
 
   /* estructura */
-  --color-line:       #DCDFD6; /* divisiones decorativas, 1px */
-  /* Añadido: borde con significado (campos de formulario, controles).
-     WCAG 1.4.11 exige 3:1 y --line queda en 1.28:1. Medido: 3.12:1. */
-  --color-line-strong: #7B8E80;
-  /* Añadido: división sobre superficie oscura. --line se lee como un trazo
-     blanco sobre --dark (11.81:1). Medido: 1.33:1, la misma relación visual
-     que --line sobre --paper. */
-  --color-line-invert: #283B30;
+  --color-line:       #D8E0D7; /* divisiones decorativas, 1px */
+  /* Borde con significado (campos de formulario, controles). WCAG 1.4.11
+     exige 3:1 y --line queda en 1.28:1. Medido: 3.31:1. */
+  --color-line-strong: #7D8E7A;
+  /* División sobre superficie oscura. --line se lee como un trazo blanco
+     sobre --dark; esta mantiene la misma relación visual (1.33:1). */
+  --color-line-invert: #2B3B28;
   /* Velo del hero. Oscurece sin teñir: --dark tiñe de verde y sobre video
      se nota. Sigue sin ser negro puro, como manda el sistema. */
-  --color-velo: #0E1210;
+  --color-velo: #0E120E;
 
-  /* acento */
-  --color-accent:      #4CAF50; /* verde del logo — 2.64:1 sobre paper.
-                                   NUNCA en texto ni como fondo de bloque.
-                                   Solo subrayados, viñetas, bordes, estado. */
-  --color-accent-deep: #2E7D3E; /* acento legible — 4.84:1 sobre paper (AA) */
+  /* --- Verde de marca --------------------------------------------------
+     Una sola familia: H=113, S=52. Solo cambia la luminosidad. */
+
+  /* El verde exacto del engranaje. 4.62:1 sobre --dark y 5.47:1 sobre el
+     velo, así que sí puede ser texto pequeño ahí. Sobre papel solo llega a
+     3.28:1: ahí es grafismo, borde o viñeta, nunca texto ni fondo. */
+  --color-accent:       #3F9D32;
+  /* Acento legible sobre papel (4.81:1) y sobre papel-alt (4.51:1). */
+  --color-accent-deep:  #327E28;
+  /* Hover del anterior: un paso más oscuro, 6.71:1. */
+  --color-accent-hondo: #286520;
+  /* Relleno suave sobre papel. Tan claro que --ink encima da 10.85:1. */
+  --color-accent-suave: #EBF6EA;
+
+  /* --- Ocre del logo ---------------------------------------------------
+     Acento secundario. H=46, S=58. Es el único color de marca que pasa AA
+     como texto sobre papel sin oscurecerlo: 7.62:1 de fábrica. */
+
+  --color-ocre:            #5F4F19; /* texto y grafismo sobre papel */
+  --color-ocre-superficie: #594A17; /* fondo de bloque; --ink-invert da 7.78:1 */
+  --color-ocre-claro:      #DDC77E; /* rótulos sobre esa superficie, 5.19:1 */
 
   /* --- Tipografía ------------------------------------------------------ */
   --font-titulo: var(--fuente-newsreader), Georgia, "Times New Roman", serif;
@@ -71,7 +107,11 @@
   --default-font-family: var(--font-cuerpo);
   --default-mono-font-family: var(--font-mono);
 
-  /* Escala de razón 1.25 anclada en 17px */
+  /* Escala tipográfica anclada en 17px. La razón es ~1.25 en el rango de
+     titulares (21 → 27 → 33 → 42 → 52 → 65) y se aprieta a ~1.13 en el de
+     texto (13 → 15 → 17), donde saltos de un cuarto serían demasiado bruscos
+     para tamaños que conviven en el mismo párrafo. Ningún tamaño se escribe
+     fuera de esta escala. */
   --text-xs:   13px;  /* rótulos en versalitas */
   --text-xs--line-height: 1.45;
   --text-xs--letter-spacing: 0.02em;
@@ -110,13 +150,19 @@
   --text-5xl--letter-spacing: 0;
 
   --tracking-mono:     0.02em; /* el mono siempre en positivo */
-  --tracking-etiqueta: 0.1em;  /* versalitas de ficha */
+  /* Versalitas de rótulo. Estaban en 0.1em, que abre tanto la palabra que
+     deja de leerse como una unidad; en caja alta basta con lo justo para
+     compensar el apretado de la mayúscula. */
+  --tracking-etiqueta: 0.05em;
   --tracking-titulo:  0;       /* los títulos van sin interletrado */
   /* Descriptor del hero: cuerpo en caja baja, apretado dos puntos. Es una
      frase, no un rótulo, así que no lleva ni el mono ni las versalitas. */
   --tracking-descriptor: -0.02em;
 
-  /* --- Espaciado — escala de 8px, nada fuera de ella -------------------- */
+  /* --- Espaciado -------------------------------------------------------
+     Base de 8px con dos medios peldaños abajo (4 y 12), donde la diferencia
+     entre 8 y 16 sí se nota. De 16 en adelante la escala dobla. Nada fuera
+     de ella: un margen escrito a mano es un descuido, no una decisión. */
   /* El 0 debe existir: utilidades como inset-0, p-0 o gap-0 lo resuelven por
      esta clave. Sin ella compilan a calc(var(--spacing) * 0), que al estar
      --spacing anulado es inválido y la propiedad se descarta en silencio. */
@@ -134,7 +180,22 @@
   --spacing-40: 160px;  /* ritmo vertical entre secciones — escritorio */
 
   /* --- Medidas --------------------------------------------------------- */
-  --container-medida: 68ch;  /* lectura: entre 62 y 72 caracteres */
+  /* Medida de lectura. El valor va en `ch`, que es el ancho del cero: en
+     Switzer ese cero vale 1.30 caracteres reales, así que los 68ch de antes
+     producían líneas de hasta 85.
+
+     El valor no se dedujo: se midió en navegador partiendo cada nodo de texto
+     en renglones con rangos y contando caracteres por renglón
+     (scripts/medir-lectura.mjs). 57ch deja la línea llena en 74, dentro de la
+     banda cómoda de 60 a 75. */
+  --container-medida: 57ch;
+
+  /* Las otras tres medidas del sistema. Estaban sueltas como max-w-[20ch],
+     max-w-[42ch] y max-w-[52ch] repartidas por seis componentes: mismos
+     papeles, valores distintos y sin nombre. */
+  --container-titulo:   20ch; /* cuánto corre un titular antes de romper */
+  --container-bajada:   52ch; /* entradilla del hero, a 21px */
+  --container-estrecho: 42ch; /* pies de foto y columnas secundarias */
   --container-ancho:  1200px;
   --container-angosto: 880px;
 

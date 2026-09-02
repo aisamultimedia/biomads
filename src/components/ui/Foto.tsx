@@ -1,11 +1,5 @@
-"use client";
-
 import Image, { type StaticImageData } from "next/image";
-import { m, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef, type CSSProperties } from "react";
-import { useEscritorio } from "@/hooks/useEscritorio";
-import { useRevelado } from "@/hooks/useRevelado";
-import { imagenInterior, imagenMarco } from "@/lib/motion";
+import type { CSSProperties } from "react";
 
 type Props = {
   imagen: StaticImageData;
@@ -22,8 +16,8 @@ type Props = {
   prioridad?: boolean;
   /**
    * Entra al cargar, por CSS, sin esperar a la hidratación. Obligatorio en
-   * la mitad superior: el revelado por scroll solo se levanta cuando React
-   * hidrata, y eso retrasa el LCP.
+   * la mitad superior: el revelado por scroll solo se levanta cuando el
+   * observador se monta, y eso retrasa el LCP.
    */
   inmediata?: boolean;
   /**
@@ -37,8 +31,9 @@ type Props = {
    */
   llenarAlto?: boolean;
   /**
-   * La foto se desplaza ±6 % dentro del marco al hacer scroll. Solo en
-   * escritorio y sin prefers-reduced-motion; en el resto queda quieta.
+   * La foto deriva ±6 % dentro del marco al hacer scroll. Lo resuelve
+   * `animation-timeline: view()` en CSS: sin JavaScript, solo en escritorio
+   * y solo donde el navegador lo soporta. En el resto queda quieta.
    */
   parallax?: boolean;
   className?: string;
@@ -47,6 +42,10 @@ type Props = {
 /**
  * Fotografía de campo. Se revela detrás de una máscara que sube mientras la
  * imagen se asienta de 1,08 a 1 (ver `imagen` en MOTION.md). Una sola vez.
+ *
+ * Es un componente de servidor: no hay estado ni medición: la máscara la
+ * dispara `[data-revelar="imagen"]` y la deriva la lleva la línea de tiempo
+ * de scroll del navegador.
  */
 export function Foto({
   imagen,
@@ -60,73 +59,35 @@ export function Foto({
   parallax = false,
   className = "",
 }: Props) {
-  const marcoRef = useRef<HTMLDivElement>(null);
-  const revelado = useRevelado();
-  const reducido = useReducedMotion();
-  const escritorio = useEscritorio();
-
-  /* El progreso va de 0 (el marco asoma por abajo) a 1 (sale por arriba).
-     Escribe en el transform directamente, sin pasar por React. */
-  const { scrollYProgress } = useScroll({
-    target: marcoRef,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
-  const conParallax = parallax && escritorio && !reducido;
-
   const claseMarco = [
     "marco-imagen",
     llenarAlto ? "lg:h-full lg:!aspect-auto" : "",
     className,
   ].join(" ");
 
-  const foto = (
-    <Image
-      src={imagen}
-      alt={alt}
-      sizes={sizes}
-      priority={prioridad}
-      placeholder="blur"
-      className="imagen-revelada"
-    />
-  );
-
-  /* La capa de parallax va escalada un 12 % para que el desplazamiento de
-     ±6 % nunca deje ver el borde del marco. */
-  const capaParallax = (interior: React.ReactNode) => (
-    <m.div className="h-full w-full" style={conParallax ? { y, scale: 1.12 } : undefined}>
-      {interior}
-    </m.div>
-  );
-
-  if (inmediata) {
-    return (
-      <div
-        ref={marcoRef}
-        data-entrada="imagen"
-        className={claseMarco}
-        style={{ aspectRatio: proporcion, "--indice": indice } as CSSProperties}
-      >
-        {capaParallax(<div className="imagen-interior h-full w-full">{foto}</div>)}
-      </div>
-    );
-  }
+  const estilo = { aspectRatio: proporcion, "--indice": indice } as CSSProperties;
 
   return (
-    <m.div
-      ref={marcoRef}
-      data-revelar=""
-      variants={imagenMarco}
-      custom={indice}
-      {...revelado}
+    <div
+      {...(inmediata ? { "data-entrada": "imagen" } : { "data-revelar": "imagen" })}
+      {...(parallax ? { "data-parallax": "" } : {})}
       className={claseMarco}
-      style={{ aspectRatio: proporcion }}
+      style={estilo}
     >
-      {capaParallax(
-        <m.div data-revelar="" variants={imagenInterior} custom={indice} className="h-full w-full">
-          {foto}
-        </m.div>,
-      )}
-    </m.div>
+      {/* La capa de parallax va escalada un 12 % para que el desplazamiento
+          de ±6 % nunca deje ver el borde del marco. */}
+      <div className="capa-parallax h-full w-full">
+        <div className="imagen-interior h-full w-full">
+          <Image
+            src={imagen}
+            alt={alt}
+            sizes={sizes}
+            priority={prioridad}
+            placeholder="blur"
+            className="imagen-revelada"
+          />
+        </div>
+      </div>
+    </div>
   );
 }

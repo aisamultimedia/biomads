@@ -1,12 +1,7 @@
-"use client";
-
-import { m } from "motion/react";
 import type { CSSProperties } from "react";
-import { useRevelado } from "@/hooks/useRevelado";
-import { grupoConRegla, texto } from "@/lib/motion";
 
 export type Dato = {
-  /** Rótulo en versalitas mono. */
+  /** Rótulo en versalitas. */
   rotulo: string;
   /** Valor. Si es un dato duro (duración, año, cifra) va en mono. */
   valor: string;
@@ -20,7 +15,8 @@ type Props = {
   invertida?: boolean;
   /**
    * Entra al cargar, por CSS. Obligatorio en la mitad superior: el revelado
-   * por scroll solo se levanta cuando React hidrata, y eso retrasa el LCP.
+   * por scroll solo se levanta cuando el observador se monta, y eso retrasa
+   * el LCP.
    */
   inmediata?: boolean;
   /**
@@ -28,19 +24,14 @@ type Props = {
    * ese paso y las filas van en los siguientes.
    */
   indice?: number;
-  /**
-   * Forma parte de un grupo revelado por un padre: no dispara su propio
-   * revelado, hereda el del padre y entra en su turno del escalonado.
-   */
-  anidada?: boolean;
   /** Columnas en escritorio. En móvil siempre son dos. */
   columnas?: 2 | 4;
   className?: string;
 };
 
 /**
- * Ficha de datos: rótulo mono arriba, valor abajo. La regla superior se
- * traza mientras las filas entran escalonadas.
+ * Ficha de datos: rótulo arriba, valor abajo. La regla superior se traza
+ * mientras las filas entran escalonadas.
  *
  * En móvil se reordena a dos columnas —cuatro datos quedan en dos filas—
  * en vez de encogerse hasta ser ilegible.
@@ -50,12 +41,9 @@ export function FichaDatos({
   invertida = false,
   inmediata = false,
   indice = 0,
-  anidada = false,
   columnas = 4,
   className = "",
 }: Props) {
-  const revelado = useRevelado();
-
   const rotuloColor = invertida ? "text-ink-invert-muted" : "text-ink-muted";
   const valorColor = invertida ? "text-ink-invert" : "text-ink";
   const clases = [
@@ -93,18 +81,20 @@ export function FichaDatos({
     );
   }
 
+  /* Siempre lleva `data-revelar`, anidada o no: el observador solo mira
+     las raíces —los que no cuelgan de otro `[data-revelar]`—, así que una
+     ficha dentro de un grupo la marca su grupo y no se observa dos veces. */
   return (
-    <m.dl
-      data-revelar=""
-      variants={grupoConRegla}
-      {...(anidada ? {} : revelado)}
-      className={clases}
-    >
-      {datos.map((dato) => (
-        <m.div key={dato.rotulo} data-revelar="" variants={texto}>
+    <dl data-revelar="grupo" className={clases}>
+      {datos.map((dato, i) => (
+        <div
+          key={dato.rotulo}
+          data-revelar="texto"
+          style={{ "--indice": i } as CSSProperties}
+        >
           {fila(dato)}
-        </m.div>
+        </div>
       ))}
-    </m.dl>
+    </dl>
   );
 }

@@ -10,15 +10,23 @@ import { SiguientePaso } from "@/components/secciones/SiguientePaso";
 import { TarjetaCaso } from "@/components/secciones/TarjetaCaso";
 import { proyectos } from "@/content/proyectos";
 import { regiones } from "@/content/respaldo";
+import { diccionario, comoIdioma } from "@/idioma";
 import parcelaEstacas from "@/fotos/parcela-estacas.jpg";
 
-export const metadata: Metadata = {
-  title: "Proyectos",
-  description:
-    "Proyectos ejecutados por BIOMADS en Huila: monitoreo de fauna para EIA de vías terciarias (SOLINTER, 2017) y seguimiento de flora epífita en El Quimbo (GES, 2018).",
-};
+export async function generateMetadata({
+  params,
+}: PageProps<"/[idioma]/proyectos">): Promise<Metadata> {
+  const { idioma: segmento } = await params;
+  const idioma = comoIdioma(segmento);
+  const t = diccionario(idioma);
+  return { title: t.meta.tituloProyectos, description: t.meta.descripcionProyectos };
+}
 
-export default function Pagina() {
+export default async function Pagina({ params }: PageProps<"/[idioma]/proyectos">) {
+  const { idioma: segmento } = await params;
+  const idioma = comoIdioma(segmento);
+  const t = diccionario(idioma);
+
   return (
     <>
       {/* ---------------- Cabecera ----------------
@@ -26,28 +34,26 @@ export default function Pagina() {
           entradilla → foto → ficha. */}
       <section className="mx-auto w-full max-w-ancho px-6 pb-24 pt-16 md:pb-40 md:pt-24">
         <Entrada as="p" tipo="lateral" className="etiqueta text-accent-deep">
-          Proyectos
+          {t.proyectos.rotulo}
         </Entrada>
 
         <TituloPorLineas
           indice={1}
           className="mt-8 text-3xl md:text-4xl"
-          lineas={["Lo que hemos ejecutado,", "con nombre y duración"]}
+          lineas={t.proyectos.indice.lineasTitulo}
         />
 
         {/* Antes esta entradilla abría con las cuatro recontrataciones de un
             mismo cliente. Se retiró por decisión del cliente: la relación
             existe y está en CONTENIDO.md, pero no es lo que se destaca. */}
         <Entrada as="p" indice={4} className="medida mt-8 text-lg text-ink-muted">
-          Dos proyectos con ficha completa: encargo, dificultad, cómo se resolvió y
-          duración contractual. Publicamos lo que podemos sustentar, así que aquí no
-          hay contador de proyectos ni de años acumulados.
+          {t.proyectos.indice.entradilla}
         </Entrada>
 
         <div className="mt-16">
           <Foto
             imagen={parcelaEstacas}
-            alt="Parcela de siembra junto a una vía, con individuos jóvenes alineados, estacas de señalización y un operario trasladando material en carretilla."
+            alt={t.fotos["parcela-estacas"]}
             proporcion="16/9"
             sizes="(min-width: 1200px) 1200px, 100vw"
             inmediata
@@ -62,27 +68,51 @@ export default function Pagina() {
           inmediata
           indice={6}
           datos={[
-            { rotulo: "Con ficha completa", valor: String(proyectos.length), mono: true },
-            { rotulo: "Regiones", valor: regiones.join(" y ") },
-            { rotulo: "Años", valor: "2017 · 2018", mono: true },
-            { rotulo: "Duraciones", valor: "6 y 8 meses", mono: true },
+            {
+              rotulo: t.proyectos.indice.conFichaCompleta,
+              valor: String(proyectos.length),
+              mono: true,
+            },
+            {
+              rotulo: t.proyectos.indice.regiones,
+              valor: regiones.join(` ${t.unidades.y} `),
+            },
+            {
+              rotulo: t.proyectos.indice.anios,
+              valor: proyectos.map((p) => p.anio).join(" · "),
+              mono: true,
+            },
+            {
+              rotulo: t.proyectos.indice.duraciones,
+              valor: `${proyectos.map((p) => p.duracionMeses).join(` ${t.unidades.y} `)} ${t.unidades.meses}`,
+              mono: true,
+            },
           ]}
         />
       </section>
 
-
       {/* ---------------- Los dos casos ---------------- */}
-      <Seccion rotulo="Casos" titulo="Ejecutados y verificables">
+      <Seccion rotulo={t.proyectos.indice.casosRotulo} titulo={t.proyectos.titulo}>
         <div className="flex flex-col gap-24">
           {proyectos.map((proyecto) => (
-            <TarjetaCaso key={proyecto.slug} proyecto={proyecto} />
+            <TarjetaCaso
+              key={proyecto.slug}
+              proyecto={proyecto}
+              idioma={idioma}
+              textos={t.proyectos}
+              unidades={t.unidades}
+            />
           ))}
         </div>
       </Seccion>
 
       {/* ---------------- Alcance real ----------------
           Cobertura declarada: Antioquia y Huila. No se dice nacional. */}
-      <Seccion alterna rotulo="Dónde" titulo="Regiones con proyectos ejecutados">
+      <Seccion
+        alterna
+        rotulo={t.proyectos.indice.dondeRotulo}
+        titulo={t.proyectos.indice.dondeTitulo}
+      >
         <div className="grid gap-16 md:grid-cols-[auto_1fr] md:gap-24">
           <RevealGroup as="ul" regla className="flex flex-col">
             {regiones.map((region) => (
@@ -92,18 +122,15 @@ export default function Pagina() {
             ))}
           </RevealGroup>
 
-          <Reveal as="p" indice={2} className="text-ink-muted md:max-w-[42ch]">
-            Ahí están los proyectos que podemos documentar. Trabajamos desde Ibagué y
-            nos desplazamos según lo pida el frente, pero no vamos a decirle que
-            tenemos cobertura nacional para ganarnos una invitación.
+          <Reveal as="p" indice={2} className="text-ink-muted md:max-w-estrecho">
+            {t.proyectos.indice.dondeTexto}
           </Reveal>
         </div>
       </Seccion>
 
       {/* ---------------- Siguiente paso ---------------- */}
-      <SiguientePaso titulo="¿Necesita referencias de un frente parecido?">
-        Pídanos el detalle del proyecto que más se acerque al suyo y le contamos cómo
-        se ejecutó.
+      <SiguientePaso idioma={idioma} titulo={t.siguientePaso.tituloProyectos}>
+        {t.siguientePaso.textoProyectos}
       </SiguientePaso>
     </>
   );

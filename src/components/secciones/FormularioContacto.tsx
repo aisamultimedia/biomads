@@ -1,34 +1,41 @@
 "use client";
 
-import { AnimatePresence, m } from "motion/react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Boton } from "@/components/ui/Boton";
 import { Campo } from "@/components/ui/Campo";
 import { Enlace } from "@/components/ui/Enlace";
-import { aviso, salida, vocabularioRegla } from "@/lib/motion";
 import {
   camposVacios,
   componerMensaje,
   validarCampo,
   validarTodo,
   type CamposContacto,
+  type CodigoError,
+  type CodigoRespuesta,
   type ErroresContacto,
 } from "@/lib/validacion";
+import { interpolar, type Diccionario } from "@/idioma";
 import { empresa, mailto, whatsapp } from "@/lib/site";
 
 type Estado = "reposo" | "enviando" | "exito" | "error";
 
-/* El formulario solo necesita salir: entra con la página. */
-const formulario = {
-  visible: { opacity: 1 },
-  salida: { opacity: 0, transition: salida },
-};
-
-export function FormularioContacto() {
+export function FormularioContacto({
+  textos,
+}: {
+  /** Es componente de cliente: el texto llega resuelto por props. */
+  textos: Diccionario["contacto"]["formulario"];
+}) {
   const prefijo = useId();
+
+  /* `validarCampo` devuelve códigos, no frases: el texto es cosa del
+     diccionario. Sin este paso el campo mostraría «correoSinArroba». */
+  const mensajeDe = (codigo: CodigoError | undefined) =>
+    codigo ? textos.errores[codigo] : undefined;
   const [campos, setCampos] = useState<CamposContacto>(camposVacios);
   const [errores, setErrores] = useState<ErroresContacto>({});
-  const [tocados, setTocados] = useState<Partial<Record<keyof CamposContacto, boolean>>>({});
+  const [tocados, setTocados] = useState<Partial<Record<keyof CamposContacto, boolean>>>(
+    {},
+  );
   const [estado, setEstado] = useState<Estado>("reposo");
   const [mensajeError, setMensajeError] = useState("");
   const errorRef = useRef<HTMLDivElement>(null);
@@ -87,11 +94,16 @@ export function FormularioContacto() {
       });
 
       if (!respuesta.ok) {
-        const cuerpo = await respuesta.json().catch(() => ({}));
+        /* El servidor responde con un código, no con una frase: se traduce
+           aquí, que es donde se sabe en qué idioma está el visitante. */
+        const cuerpo: { codigo?: CodigoRespuesta } = await respuesta
+          .json()
+          .catch(() => ({}));
+        const codigo = cuerpo.codigo;
         setMensajeError(
-          typeof cuerpo.mensaje === "string"
-            ? cuerpo.mensaje
-            : "No pudimos enviar el mensaje.",
+          codigo && codigo in textos.respuestas
+            ? textos.respuestas[codigo]
+            : textos.errorGenerico,
         );
         setEstado("error");
         return;
@@ -99,7 +111,7 @@ export function FormularioContacto() {
 
       setEstado("exito");
     } catch {
-      setMensajeError("No pudimos enviar el mensaje.");
+      setMensajeError(textos.errorGenerico);
       setEstado("error");
     }
   }
@@ -115,24 +127,22 @@ export function FormularioContacto() {
   /* `mode="wait"`: el formulario termina de irse antes de que entre la
      confirmación. Nada se solapa ni salta de sitio. */
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <>
       {estado === "exito" ? (
-        <m.div
-          key="exito"
+        <div
           ref={enfocarAlMontar}
           tabIndex={-1}
           role="status"
-          variants={vocabularioRegla.panel}
-          initial="oculto"
-          animate="visible"
-          exit="salida"
+          data-entrada="panel"
           className="con-regla con-regla--acento pt-8"
         >
-          <p className="etiqueta text-accent-deep">Mensaje enviado</p>
-          <h3 className="mt-4 text-xl">Gracias, {campos.nombre.trim()}.</h3>
+          <p className="etiqueta text-accent-deep">{textos.exitoRotulo}</p>
+          <h3 className="mt-4 text-xl">
+            {interpolar(textos.exitoGracias, { nombre: campos.nombre.trim() })}
+          </h3>
           <p className="medida mt-4 text-ink">
-            Le respondemos a <span className="dato">{campos.correo.trim()}</span>. Si es
-            urgente, escríbanos por WhatsApp al{" "}
+            {interpolar(textos.exitoRespuesta, { correo: campos.correo.trim() })}{" "}
+            {textos.exitoUrgente}{" "}
             <Enlace href={whatsapp} externo className="dato">
               {empresa.telefono}
             </Enlace>
@@ -148,28 +158,19 @@ export function FormularioContacto() {
                 setEstado("reposo");
               }}
             >
-              Enviar otro mensaje
+              {textos.otroMensaje}
             </Boton>
           </div>
-        </m.div>
+        </div>
       ) : (
-        <m.form
-          key="formulario"
-          onSubmit={alEnviar}
-          noValidate
-          variants={formulario}
-          initial={false}
-          animate="visible"
-          exit="salida"
-          className="flex flex-col gap-8"
-        >
+        <form onSubmit={alEnviar} noValidate className="flex flex-col gap-8">
           <Campo
             id={id("nombre")}
-            etiqueta="Nombre"
+            etiqueta={textos.nombre}
             name="nombre"
             autoComplete="name"
             value={campos.nombre}
-            error={errores.nombre}
+            error={mensajeDe(errores.nombre)}
             disabled={enviando}
             onChange={(e) => alCambiar("nombre", e.target.value)}
             onBlur={() => alSalir("nombre")}
@@ -177,11 +178,11 @@ export function FormularioContacto() {
 
           <Campo
             id={id("empresa")}
-            etiqueta="Empresa o entidad"
+            etiqueta={textos.empresa}
             name="empresa"
             autoComplete="organization"
             value={campos.empresa}
-            error={errores.empresa}
+            error={mensajeDe(errores.empresa)}
             disabled={enviando}
             onChange={(e) => alCambiar("empresa", e.target.value)}
             onBlur={() => alSalir("empresa")}
@@ -189,13 +190,13 @@ export function FormularioContacto() {
 
           <Campo
             id={id("correo")}
-            etiqueta="Correo"
+            etiqueta={textos.correo}
             name="correo"
             type="email"
             inputMode="email"
             autoComplete="email"
             value={campos.correo}
-            error={errores.correo}
+            error={mensajeDe(errores.correo)}
             disabled={enviando}
             onChange={(e) => alCambiar("correo", e.target.value)}
             onBlur={() => alSalir("correo")}
@@ -203,62 +204,55 @@ export function FormularioContacto() {
 
           <Campo
             id={id("mensaje")}
-            etiqueta="Mensaje"
-            ayuda="El alcance y la autoridad ante la que responde nos bastan para empezar."
+            etiqueta={textos.mensaje}
+            ayuda={textos.mensajeAyuda}
             name="mensaje"
             multilinea
             value={campos.mensaje}
-            error={errores.mensaje}
+            error={mensajeDe(errores.mensaje)}
             disabled={enviando}
             onChange={(e) => alCambiar("mensaje", e.target.value)}
             onBlur={() => alSalir("mensaje")}
           />
 
           {/* --- Error de envío: no deja al visitante sin salida --- */}
-          <AnimatePresence>
-            {estado === "error" && (
-              <m.div
-                key="error"
-                ref={errorRef}
-                tabIndex={-1}
-                role="alert"
-                variants={aviso}
-                initial="oculto"
-                animate="visible"
-                exit="salida"
-                className="con-regla con-regla--acento pt-6"
-              >
-                <p className="etiqueta text-accent-deep">No se pudo enviar</p>
-                <p className="medida mt-3 text-ink">
-                  {mensajeError} Su mensaje no se perdió: mándelo directo por cualquiera de
-                  estas dos vías y llega igual.
-                </p>
-                <div className="mt-6 flex flex-wrap gap-4">
-                  <Boton href={respaldoWhatsapp} variante="secundario" externo>
-                    Enviarlo por WhatsApp
-                  </Boton>
-                  <Boton href={respaldoCorreo} variante="secundario" externo>
-                    Enviarlo por correo
-                  </Boton>
-                </div>
-              </m.div>
-            )}
-          </AnimatePresence>
+          {estado === "error" && (
+            <div
+              ref={errorRef}
+              tabIndex={-1}
+              role="alert"
+              data-entrada="aviso"
+              className="con-regla con-regla--acento pt-6"
+            >
+              <p className="etiqueta text-accent-deep">{textos.errorRotulo}</p>
+              <p className="medida mt-3 text-ink">
+                {mensajeError} {textos.errorRespaldo}
+              </p>
+              <div className="mt-6 flex flex-wrap gap-4">
+                <Boton href={respaldoWhatsapp} variante="secundario" externo>
+                  {textos.escribirWhatsapp}
+                </Boton>
+                <Boton href={respaldoCorreo} variante="secundario" externo>
+                  {textos.escribirCorreo}
+                </Boton>
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-wrap items-center gap-6">
             <Boton type="submit" cargando={enviando}>
-              {enviando ? "Enviando" : "Enviar mensaje"}
+              {enviando ? textos.enviando : textos.enviar}
             </Boton>
             <p className="text-sm text-ink-muted">
-              O escríbanos directo por{" "}
+              {textos.oEscribanos}{" "}
               <Enlace href={whatsapp} externo>
                 WhatsApp
               </Enlace>
               .
             </p>
           </div>
-        </m.form>
+        </form>
       )}
-    </AnimatePresence>
+    </>
   );
 }

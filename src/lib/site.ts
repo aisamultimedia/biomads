@@ -1,3 +1,7 @@
+import type { Diccionario } from "@/idioma/tipos";
+
+export type ClaveSeccion = keyof Diccionario["nav"]["secciones"];
+
 /**
  * Datos de la empresa y configuración del sitio.
  * Todo sale de CONTENIDO.md. Lo que no está ahí no se publica.
@@ -51,7 +55,8 @@ export const permisos = {
 export type ItemNav = {
   /** Ancla de la página única. */
   href: `#${string}`;
-  rotulo: string;
+  /** Clave en `nav.secciones` del diccionario. El rótulo es texto. */
+  clave: ClaveSeccion;
 };
 
 /**
@@ -64,10 +69,10 @@ export type ItemNav = {
  * la ficha viene a cuento.
  */
 export const navegacion: readonly ItemNav[] = [
-  { href: "#nosotros", rotulo: "Nosotros" },
-  { href: "#servicios", rotulo: "Servicios" },
-  { href: "#proyectos", rotulo: "Proyectos" },
-  { href: "#contacto", rotulo: "Contacto" },
+  { href: "#nosotros", clave: "nosotros" },
+  { href: "#servicios", clave: "servicios" },
+  { href: "#proyectos", clave: "proyectos" },
+  { href: "#contacto", clave: "contacto" },
 ] as const;
 
 /**

@@ -91,6 +91,44 @@ desde que BIOMADS entregó los tres logos —Autopista Río Magdalena, IBAL y
 Grupo Energía Bogotá— para publicarlos. Ponerla en `false` retira la banda
 entera sin dejar hueco.
 
+## Idiomas
+
+El idioma es el **primer segmento de la ruta**: `/es`, y `/en` cuando se
+añada. `/` redirige al idioma por defecto con un 307 —temporal a propósito:
+el día que haya dos idiomas, `/` tendrá que mirar la preferencia del
+navegador y un 308 se queda cacheado impidiéndolo—.
+
+```text
+src/idioma/
+├── tipos.ts   la FORMA del diccionario; no contiene texto
+├── es.ts      el diccionario en español
+└── index.ts   IDIOMAS, diccionario(), comoIdioma(), interpolar()
+```
+
+**Añadir un idioma son dos pasos:** crear `en.ts` tipado como `Diccionario` y
+añadir `"en"` a `IDIOMAS`. Nada más. Las rutas estáticas, el `lang`, los
+`hreflang`, el sitemap, el selector y la persistencia ya están montados y se
+encienden solos.
+
+Y no se puede olvidar nada: **el tipo `Diccionario` es la lista de
+comprobación de traducción**, y es la misma que hace funcionar el sitio. Si
+falta una clave, no compila. Eso incluye lo que no se ve —textos
+alternativos, `aria-label`, mensajes de error y metadatos—, que es justo lo
+que se queda sin traducir cuando el diccionario solo cubre lo visible.
+
+**Ni el validador ni la API emiten prosa.** `validarCampo` devuelve códigos
+(`correoSinArroba`) y `/api/contacto` responde `{ codigo }`: el texto lo pone
+el diccionario del idioma en el que está el visitante, que el servidor no
+tiene por qué conocer. Los tipos `CodigoError` y `CodigoRespuesta` se
+importan en `tipos.ts`, así que añadir una comprobación obliga a escribir su
+mensaje en todos los idiomas.
+
+**Qué va en `src/content` y qué en el diccionario.** En `content` solo lo
+estructural: claves, años, duraciones en número, iconos e imágenes. Todo lo
+que cambia al cambiar de idioma vive en el diccionario, bajo la misma clave.
+
+---
+
 **Rutas.** La portada es la página; solo quedan aparte las fichas de detalle
 (`/proyectos`, `/proyectos/[slug]`, `/servicios/[slug]`) para quien llegue por
 buscador o comparta un enlace. Los índices `/nosotros`, `/servicios` y
@@ -112,7 +150,24 @@ node scripts/preparar-video.mjs           # 21,6 MB → 0,9 MB + póster
 node scripts/preparar-logo.mjs            # recorta guías y arma las variantes
 node scripts/preparar-logos-clientes.mjs  # iguala por área los tres logos de cliente
 node scripts/preparar-og.mjs              # imagen para compartir (1200×630)
+node scripts/paleta-logo.mjs              # extrae el color del logo y verifica contraste
+node scripts/medir-lectura.mjs            # cuenta caracteres por línea en cuatro anchos
 ```
+
+**Sobre la paleta.** Todo el color sale del isotipo. `paleta-logo.mjs` hace dos
+cosas: muestrea el logo por familias de tono y comprueba los 23 pares de
+contraste que el sitio usa de verdad, leyendo `tokens.css` —no una copia—.
+Sale con código 1 si alguno cae por debajo de su mínimo WCAG, así que sirve
+en un hook o en CI. El logo tiene cuatro cromáticos y solo se usan dos: el
+verde y el ocre del engranaje. El lima de las hojas y el azul del agua se
+descartaron por decisión del cliente.
+
+**Sobre la medida de lectura.** `--container-medida` va en `ch`, que es el ancho
+del cero de la fuente y no un carácter promedio: en Switzer ese cero vale 1.30
+caracteres, así que 60ch son 78 caracteres, no 60. `medir-lectura.mjs` parte
+cada nodo de texto en renglones con un Range y cuenta lo que el navegador
+pinta de verdad, en 1440, 1024, 768 y 390 px. También sale con código 1 si
+alguna línea llena pasa de 75.
 
 **Sobre el video.** Una sola pista H.264. VP9 y AV1 se probaron los dos y
 salen más pesados con esta imagen —follaje en movimiento a tasa baja es el

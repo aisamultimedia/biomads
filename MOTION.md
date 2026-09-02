@@ -6,6 +6,40 @@ anima.
 
 ---
 
+## 0. El sistema hoy: CSS y un observador
+
+**Ya no hay librería de animación.** `motion` se retiró el 2 de septiembre de
+2026 tras medir lo que costaba: **165 kB de los 694 kB** de JavaScript que
+bajaba la portada, el 24 %, para hacer revelados al scroll. El sitio quedó en
+534 kB.
+
+Lo que la sustituye:
+
+| Antes | Ahora |
+|---|---|
+| `m.div` con variantes | `data-revelar="<gesto>"` y CSS |
+| `staggerChildren` | `transition-delay` calculado desde `--indice` |
+| Un `IntersectionObserver` por grupo, dentro de motion | Uno para todo el documento (`Revelador`) |
+| `AnimatePresence` | `@starting-style` para entrar, `usePresencia` para salir |
+| `layoutId` (obligaba a cargar `domMax`) | Un elemento medido y movido con `translate`/`scale` |
+| `useScroll` + `useTransform` (parallax) | `animation-timeline: view()` |
+| `useReducedMotion` | `matchMedia`, y sobre todo consultas en el CSS |
+
+**Consecuencia de diseño, no solo de peso:** el estado oculto vive dentro de
+`@media (scripting: enabled) and (prefers-reduced-motion: no-preference)`. Solo
+se esconde lo que alguien va a poder revelar, así que sin JavaScript o con
+menos movimiento el contenido nace visible sin necesidad de anular nada con
+`!important`. Y `Reveal`, `RevealGroup`, `Foto`, `FichaDatos`, `Seccion` y
+`TarjetaCaso` pasaron a ser componentes de servidor: no hidratan.
+
+**El parallax es el caso más claro.** Antes costaba dos hooks escribiendo un
+`transform` en cada cuadro; ahora es una línea de CSS ligada a la línea de
+tiempo de scroll del navegador. Donde no está soportada —hoy Firefox— la foto
+se queda quieta, que es exactamente lo que pide "parallax sutil" cuando hay
+dudas.
+
+---
+
 ## 1. Auditoría del sitio antes de intervenir
 
 ### Lo que ya estaba bien y se conserva

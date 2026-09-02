@@ -1,15 +1,5 @@
-"use client";
-
-import { m } from "motion/react";
-import { Children, useMemo, type ReactNode } from "react";
-import { useRevelado } from "@/hooks/useRevelado";
-import {
-  conRegla,
-  grupo,
-  vocabulario,
-  vocabularioRegla,
-  type Tipo,
-} from "@/lib/motion";
+import { Children, type CSSProperties, type ReactNode } from "react";
+import type { Tipo } from "./Reveal";
 
 type Contenedor = "div" | "ul" | "ol" | "dl" | "section" | "article";
 type Item = "div" | "li" | "article";
@@ -45,13 +35,17 @@ const CONTENEDORES_LISTA = new Set<Contenedor>(["ul", "ol"]);
 /**
  * Revela a sus hijos escalonados cuando el grupo entra en pantalla.
  *
- * El escalonado lo orquesta el contenedor (`staggerChildren`), así que los
- * hijos no necesitan índice ni observador propio: un solo
- * IntersectionObserver por grupo.
+ * El contenedor lleva `data-revelar="grupo"`, que no tiene gesto propio: es
+ * solo la marca que hace que el observador lo mire. Al entrar marca a todos
+ * sus hijos a la vez y cada uno espera su turno por el `transition-delay`
+ * que el CSS calcula desde `--indice`.
+ *
+ * Así el escalonado no lo orquesta nadie en JavaScript, y hace falta un solo
+ * IntersectionObserver por grupo en vez de uno por hijo.
  */
 export function RevealGroup({
   children,
-  as = "div",
+  as: Contenedor = "div",
   itemAs,
   tipo = "texto",
   tipos,
@@ -60,34 +54,28 @@ export function RevealGroup({
   className = "",
   itemClassName = "",
 }: Props) {
-  const revelado = useRevelado();
-  const etiquetaHijo: Item = itemAs ?? (CONTENEDORES_LISTA.has(as) ? "li" : "div");
-  const Contenedor = m[as] as typeof m.div;
-  const Hijo = m[etiquetaHijo] as typeof m.div;
+  const Hijo = itemAs ?? (CONTENEDORES_LISTA.has(Contenedor) ? "li" : "div");
 
   const reglaContenedor = regla === "contenedor";
   const reglaHijos = regla === true;
-
-  const variantesGrupo = useMemo(
-    () => (reglaContenedor ? conRegla(grupo(escalonado)) : grupo(escalonado)),
-    [escalonado, reglaContenedor],
-  );
-  const vocabularioHijo = reglaHijos ? vocabularioRegla : vocabulario;
   const claseHijo = reglaHijos ? `con-regla ${itemClassName}` : itemClassName;
 
   return (
     <Contenedor
-      data-revelar=""
-      variants={variantesGrupo}
-      {...revelado}
+      data-revelar="grupo"
       className={reglaContenedor ? `con-regla ${className}` : className}
+      style={
+        escalonado !== undefined
+          ? ({ "--stagger-grupo": `${escalonado}s` } as CSSProperties)
+          : undefined
+      }
     >
       {Children.toArray(children).map((hijo, i) => (
         <Hijo
           key={i}
-          data-revelar=""
-          variants={vocabularioHijo[tipos?.[i] ?? tipo]}
+          data-revelar={tipos?.[i] ?? tipo}
           className={claseHijo}
+          style={{ "--indice": i } as CSSProperties}
         >
           {hijo}
         </Hijo>

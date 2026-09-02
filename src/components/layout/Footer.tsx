@@ -5,27 +5,34 @@ import { RevealGroup } from "@/components/motion/RevealGroup";
 import { Logotipo } from "./Logotipo";
 import { Nav } from "./Nav";
 import { equipo, regiones } from "@/content/respaldo";
+import { diccionario, interpolar, type Idioma } from "@/idioma";
 import { empresa, mailto, whatsapp } from "@/lib/site";
 
-export function Footer() {
+export function Footer({ idioma }: { idioma: Idioma }) {
+  const t = diccionario(idioma);
+
   return (
     <footer className="superficie-oscura bg-dark text-ink-invert">
       <div className="mx-auto w-full max-w-ancho px-6 py-24">
-        <Logotipo invertido alto={40} className="mb-12" />
+        <Logotipo idioma={idioma} invertido alto={40} className="mb-12" />
 
         {/* Quiénes somos, en tres líneas. Quien llega al pie desde una página
-            de detalle no tiene por qué haber pasado por la sección Nosotros. */}
+            de detalle no tiene por qué haber pasado por la sección Nosotros.
+            El texto va con huecos y no concatenado: el orden de las palabras
+            alrededor de los datos cambia con el idioma. */}
         <Reveal as="p" className="medida mb-16 text-lg text-ink-invert">
-          BIOMADS es una empresa de estudios y gestión ambiental con sede en{" "}
-          {empresa.sede}, constituida en {empresa.constitucion}. Un equipo permanente de{" "}
-          {equipo.permanentes} personas más los especialistas que pida cada proyecto,
-          con trabajo ejecutado en {regiones.join(" y ")}.
+          {interpolar(t.pie.resumen, {
+            sede: empresa.sede,
+            constitucion: empresa.constitucion,
+            equipo: equipo.permanentes,
+            regiones: regiones.join(` ${t.unidades.y} `),
+          })}
         </Reveal>
 
         <RevealGroup className="grid gap-16 md:grid-cols-[1fr_auto]">
           {/* Contacto: el paso siguiente desde cualquier página */}
           <div>
-            <p className="etiqueta text-ink-invert-muted">Escríbanos</p>
+            <p className="etiqueta text-ink-invert-muted">{t.pie.escribanos}</p>
             {/* El icono queda fuera del enlace: dentro alargaría el área
                 pulsable con una zona que no parece parte del enlace. */}
             <ul className="mt-6 flex flex-col gap-4">
@@ -40,15 +47,17 @@ export function Footer() {
                 <Enlace href={whatsapp} externo className="dato text-xl">
                   {empresa.telefono}
                 </Enlace>
-                <span className="text-sm text-ink-invert-muted">llamada o WhatsApp</span>
+                <span className="text-sm text-ink-invert-muted">
+                  {t.pie.llamadaOWhatsapp}
+                </span>
               </li>
             </ul>
           </div>
 
-          <nav aria-label="Pie de página">
-            <p className="etiqueta text-ink-invert-muted">Secciones</p>
+          <nav aria-label={t.nav.pieDePagina}>
+            <p className="etiqueta text-ink-invert-muted">{t.pie.seccionesRotulo}</p>
             <div className="mt-6">
-              <Nav orientacion="vertical" invertido />
+              <Nav textos={t.nav.secciones} orientacion="vertical" invertido />
             </div>
           </nav>
         </RevealGroup>
@@ -61,14 +70,12 @@ export function Footer() {
               flotante se retira solo en escritorio y lo que dice no puede
               dejar de estar disponible por eso. */}
           <p className="text-sm text-ink-invert-muted">
-            {empresa.razonSocial} · {empresa.sede} · Constituida en{" "}
+            {empresa.razonSocial} · {empresa.sede} · {t.pie.constituidaEn}{" "}
             <span className="dato">{empresa.constitucion}</span>
-            <span className="mt-2 block">
-              No usamos cookies de seguimiento; solo se guarda su respuesta al aviso.
-            </span>
+            <span className="mt-2 block">{t.pie.notaCookies}</span>
           </p>
           {/* El lema va como firma, nunca como argumento de venta. */}
-          <p className="etiqueta text-ink-invert-muted">{empresa.lema}</p>
+          <p className="etiqueta text-ink-invert-muted">{t.pie.lema}</p>
         </Reveal>
       </div>
     </footer>

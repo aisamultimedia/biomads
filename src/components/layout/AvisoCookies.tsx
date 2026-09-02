@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Diccionario } from "@/idioma";
 
 const CLAVE = "biomads:cookies";
 
@@ -39,7 +40,7 @@ const RETIRO_MS = 20000;
  * móvil es una barra que sube desde el borde inferior; en escritorio, una
  * píldora abajo a la izquierda que se retira sola. Se cierra con Escape.
  */
-export function AvisoCookies() {
+export function AvisoCookies({ textos }: { textos: Diccionario["cookies"] }) {
   /* Nace oculto: en el servidor no se sabe qué decidió el visitante, y
      pintarlo para esconderlo después haría un parpadeo en cada carga. */
   const [visible, setVisible] = useState(false);
@@ -97,20 +98,20 @@ export function AvisoCookies() {
   return (
     <aside
       role="region"
-      aria-label="Aviso sobre cookies"
+      aria-label={textos.region}
       className="aviso-cookies"
       onMouseEnter={() => setRetenido(true)}
       onMouseLeave={() => setRetenido(false)}
       onFocusCapture={() => setRetenido(true)}
       onBlurCapture={() => setRetenido(false)}
     >
-      <p className="text-sm text-ink">No usamos cookies de seguimiento.</p>
+      <p className="text-sm text-ink">{textos.texto}</p>
       <button
         type="button"
         onClick={() => responder("aceptado")}
         className="aviso-cookies-cerrar"
       >
-        <span className="sr-only">Entendido, cerrar el aviso</span>
+        <span className="sr-only">{textos.cerrar}</span>
         <span aria-hidden="true" className="icono-menu es-cerrar">
           <span />
           <span />

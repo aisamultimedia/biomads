@@ -5,6 +5,7 @@ import { Boton } from "@/components/ui/Boton";
 import { Icono } from "@/components/ui/Icono";
 import type { ServicioDetallado } from "@/content/servicios";
 import type { Proyecto } from "@/content/proyectos";
+import type { Diccionario } from "@/idioma";
 
 type Props = {
   servicio: ServicioDetallado;
@@ -12,6 +13,12 @@ type Props = {
   numero: string;
   /** Proyecto que lo respalda, para el bloque de método. */
   caso?: Proyecto;
+  /** Es componente de cliente: el texto llega resuelto por props. */
+  textos: Diccionario["servicios"];
+  proyectos: Diccionario["proyectos"];
+  unidades: Diccionario["unidades"];
+  /** Prefijo de idioma para el enlace a la ficha completa. */
+  idioma: string;
 };
 
 /**
@@ -25,7 +32,16 @@ type Props = {
  * El panel es un diálogo de verdad: atrapa el foco, cierra con Escape y con
  * clic fuera, y devuelve el foco a la tarjeta que lo abrió.
  */
-export function FichaServicio({ servicio, numero, caso }: Props) {
+export function FichaServicio({
+  servicio,
+  numero,
+  caso,
+  textos,
+  proyectos,
+  unidades,
+  idioma,
+}: Props) {
+  const ficha = textos.detallados[servicio.slug];
   const [abierto, setAbierto] = useState(false);
   const idPanel = useId();
   const disparadorRef = useRef<HTMLButtonElement>(null);
@@ -75,10 +91,10 @@ export function FichaServicio({ servicio, numero, caso }: Props) {
   }
 
   const bloques = [
-    { rotulo: "Cuándo se necesita", texto: servicio.cuandoSeNecesita },
-    { rotulo: "Marco normativo", texto: servicio.marco },
-    { rotulo: "Entregable", texto: servicio.entregable },
-    { rotulo: "Duración típica", texto: servicio.duracion },
+    { rotulo: textos.panel.cuandoSeNecesita, texto: ficha.cuandoSeNecesita },
+    { rotulo: textos.panel.marco, texto: ficha.marco },
+    { rotulo: textos.panel.entregable, texto: ficha.entregable },
+    { rotulo: textos.panel.duracion, texto: ficha.duracion },
   ];
 
   return (
@@ -99,15 +115,13 @@ export function FichaServicio({ servicio, numero, caso }: Props) {
         </span>
 
         <span className="mt-6 block font-titulo text-xl text-ink md:text-2xl">
-          {servicio.titulo}
+          {ficha.titulo}
         </span>
 
-        <span className="medida mt-4 block text-ink-muted">{servicio.resumen}</span>
+        <span className="medida mt-4 block text-ink-muted">{ficha.resumen}</span>
 
         <span className="tarjeta-servicio-pie">
-          <span className="etiqueta text-accent-deep">
-            Marco normativo, entregable y duración
-          </span>
+          <span className="etiqueta text-accent-deep">{textos.pieTarjeta}</span>
           <span aria-hidden="true" className="tarjeta-servicio-mas">
             +
           </span>
@@ -122,7 +136,7 @@ export function FichaServicio({ servicio, numero, caso }: Props) {
             tabIndex={-1}
             role="dialog"
             aria-modal="true"
-            aria-label={servicio.titulo}
+            aria-label={ficha.titulo}
             className="panel-servicio"
             onClick={(evento) => evento.stopPropagation()}
           >
@@ -132,11 +146,11 @@ export function FichaServicio({ servicio, numero, caso }: Props) {
               <div>
                 <p className="dato text-sm text-accent-deep">{numero}</p>
                 <h3 className="mt-4 font-titulo text-2xl text-ink md:text-3xl">
-                  {servicio.titulo}
+                  {ficha.titulo}
                 </h3>
               </div>
               <button type="button" onClick={cerrar} className="panel-servicio-cerrar">
-                <span className="sr-only">Cerrar</span>
+                <span className="sr-only">{textos.panel.cerrar}</span>
                 <span aria-hidden="true" className="icono-menu es-cerrar">
                   <span />
                   <span />
@@ -145,38 +159,41 @@ export function FichaServicio({ servicio, numero, caso }: Props) {
             </div>
 
             <div className="panel-servicio-cuerpo">
-              <p className="medida text-lg text-ink">{servicio.elVacio}</p>
+              <p className="medida text-lg text-ink">{ficha.elVacio}</p>
 
               <dl className="mt-12 grid gap-8 md:grid-cols-2">
                 {bloques.map((bloque) => (
                   <div key={bloque.rotulo} className="border-t border-line pt-4">
                     <dt className="etiqueta text-ink-muted">{bloque.rotulo}</dt>
-                    <dd className="mt-2 text-sm text-ink">{bloque.texto}</dd>
+                    <dd className="medida mt-2 text-sm text-ink">{bloque.texto}</dd>
                   </div>
                 ))}
               </dl>
 
               <div className="mt-12 border-t border-line pt-6">
-                <p className="etiqueta text-ink-muted">Método aplicado en campo</p>
-                <p className="medida mt-3 text-sm text-ink">{servicio.metodologia}</p>
+                <p className="etiqueta text-ink-muted">{textos.panel.metodo}</p>
+                <p className="medida mt-3 text-sm text-ink">{ficha.metodologia}</p>
                 <p className="dato mt-3 text-xs text-ink-muted">
-                  {servicio.metodologiaFuente}
+                  {ficha.metodologiaFuente}
                 </p>
               </div>
 
               {caso && (
                 <p className="mt-8 text-sm text-ink-muted">
-                  Última ejecución: <span className="dato">{caso.duracion}</span> en{" "}
-                  {caso.ubicacion}.
+                  {textos.panel.ultimaEjecucion}:{" "}
+                  <span className="dato">
+                    {caso.duracionMeses} {unidades.meses}
+                  </span>{" "}
+                  — {proyectos.casos[caso.slug].ubicacion}.
                 </p>
               )}
 
               <div className="mt-12 flex flex-wrap gap-4">
                 <Boton href="#contacto" variante="acento">
-                  Cuéntenos su proyecto
+                  {textos.panel.cta}
                 </Boton>
-                <Boton href={`/servicios/${servicio.slug}`} variante="secundario">
-                  Ver la página completa
+                <Boton href={`/${idioma}/servicios/${servicio.slug}`} variante="secundario">
+                  {textos.panel.paginaCompleta}
                 </Boton>
               </div>
             </div>

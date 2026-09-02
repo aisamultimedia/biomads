@@ -10,13 +10,11 @@ import { TituloPorLineas } from "@/components/motion/TituloPorLineas";
 import { SiguientePaso } from "./SiguientePaso";
 import { proyectos } from "@/content/proyectos";
 import { serviciosDetallados, type ServicioDetallado } from "@/content/servicios";
+import { diccionario, type Idioma } from "@/idioma";
 
 type Props = {
   servicio: ServicioDetallado;
-  /** Título partido en líneas por quien escribe, no por el ancho. */
-  lineasTitulo: readonly string[];
-  /** Autoridad ante la que responde, para la ficha de cabecera. */
-  autoridad: string;
+  idioma: Idioma;
   /** Fotografía de cabecera. Trae su propio paso en la secuencia (5). */
   medio: ReactNode;
 };
@@ -31,33 +29,40 @@ type Props = {
  * entradilla → foto → ficha. Es el mismo patrón de todas las páginas
  * interiores.
  */
-export function DetalleServicio({ servicio, lineasTitulo, autoridad, medio }: Props) {
+export function DetalleServicio({ servicio, idioma, medio }: Props) {
+  const t = diccionario(idioma);
+  const d = t.servicios.detalle;
+  const ficha = t.servicios.detallados[servicio.slug];
+
   const caso = proyectos.find((p) => p.slug === servicio.casoRelacionado);
+  const casoTexto = caso ? t.proyectos.casos[caso.slug] : undefined;
   const otro = serviciosDetallados.find((s) => s.slug !== servicio.slug)!;
 
   const bloques = [
-    { rotulo: "Cuándo se necesita", texto: servicio.cuandoSeNecesita },
-    { rotulo: "Marco normativo", texto: servicio.marco },
-    { rotulo: "Entregable", texto: servicio.entregable },
-    { rotulo: "Duración típica", texto: servicio.duracion },
+    { rotulo: t.servicios.panel.cuandoSeNecesita, texto: ficha.cuandoSeNecesita },
+    { rotulo: t.servicios.panel.marco, texto: ficha.marco },
+    { rotulo: t.servicios.panel.entregable, texto: ficha.entregable },
+    { rotulo: t.servicios.panel.duracion, texto: ficha.duracion },
   ];
+
+  const duracionReferencia = `${servicio.duracionReferenciaMeses} ${t.unidades.meses}`;
 
   return (
     <>
       {/* ---------------- Cabecera ---------------- */}
       <section className="mx-auto w-full max-w-ancho px-6 pb-24 pt-16 md:pb-40 md:pt-24">
         <Entrada as="p" tipo="lateral" className="etiqueta text-accent-deep">
-          <Enlace href="/#servicios">Servicios</Enlace>
+          <Enlace href={`/${idioma}#servicios`}>{d.volver}</Enlace>
         </Entrada>
 
         <TituloPorLineas
           indice={1}
           className="mt-8 text-3xl md:text-4xl"
-          lineas={lineasTitulo}
+          lineas={ficha.lineasTitulo}
         />
 
         <Entrada as="p" indice={4} className="medida mt-8 text-lg text-ink-muted">
-          {servicio.elVacio}
+          {ficha.elVacio}
         </Entrada>
 
         <div className="mt-16">{medio}</div>
@@ -67,19 +72,19 @@ export function DetalleServicio({ servicio, lineasTitulo, autoridad, medio }: Pr
           inmediata
           indice={6}
           datos={[
-            { rotulo: "Autoridad", valor: autoridad },
-            { rotulo: "Última ejecución", valor: servicio.duracionReferencia, mono: true },
-            { rotulo: "Entregable", valor: "Informe técnico" },
+            { rotulo: d.autoridad, valor: ficha.autoridad },
+            { rotulo: d.ultimaEjecucion, valor: duracionReferencia, mono: true },
+            { rotulo: d.entregable, valor: d.informeTecnico },
             {
-              rotulo: "Ejecutado en",
-              valor: caso ? caso.ubicacion.split(" · ")[0] : "Huila",
+              rotulo: d.ejecutadoEn,
+              valor: casoTexto ? casoTexto.ubicacion.split(" · ")[0] : "Huila",
             },
           ]}
         />
       </section>
 
       {/* ---------------- Ficha técnica ---------------- */}
-      <Seccion alterna rotulo="La ficha" titulo="Qué cubre y bajo qué marco">
+      <Seccion alterna rotulo={d.fichaRotulo} titulo={d.fichaTitulo}>
         <div className="grid gap-16 md:grid-cols-2 md:gap-24">
           <RevealBloques bloques={bloques.slice(0, 2)} />
           <RevealBloques bloques={bloques.slice(2)} desplazado />
@@ -90,32 +95,32 @@ export function DetalleServicio({ servicio, lineasTitulo, autoridad, medio }: Pr
           El brief no documenta diseño de muestreo, esfuerzo ni equipos.
           Lo único respaldado es cómo se ejecutó en el proyecto real, y así
           va: atribuido, no como método genérico. */}
-      <Seccion rotulo="Cómo se ejecuta" titulo="Método aplicado en campo">
+      <Seccion rotulo={d.metodoRotulo} titulo={d.metodoTitulo}>
         <div className="grid gap-16 md:grid-cols-[1fr_auto] md:gap-24">
           <Reveal>
-            <p className="medida text-lg text-ink">{servicio.metodologia}</p>
-            <p className="dato mt-8 text-sm text-ink-muted">{servicio.metodologiaFuente}</p>
+            <p className="medida text-lg text-ink">{ficha.metodologia}</p>
+            <p className="dato mt-8 text-sm text-ink-muted">{ficha.metodologiaFuente}</p>
           </Reveal>
 
-          {caso && (
-            <RevealGroup tipos={["lateral", "texto"]} className="md:max-w-[34ch]">
-              <p className="etiqueta text-ink-muted">Qué lo hacía difícil</p>
-              <p className="mt-4 text-sm text-ink">{caso.dificultad}</p>
+          {casoTexto && (
+            <RevealGroup tipos={["lateral", "texto"]} className="md:max-w-estrecho">
+              <p className="etiqueta text-ink-muted">{d.dificultadTitulo}</p>
+              <p className="mt-4 text-sm text-ink">{casoTexto.dificultad}</p>
             </RevealGroup>
           )}
         </div>
       </Seccion>
 
       {/* ---------------- Caso relacionado ---------------- */}
-      {caso && (
-        <Seccion alterna rotulo="Caso relacionado" titulo="Dónde se ejecutó">
+      {caso && casoTexto && (
+        <Seccion alterna rotulo={d.casoRotulo} titulo={d.casoTitulo}>
           <div className="grid gap-16 md:grid-cols-[1fr_1fr] md:gap-24">
             <RevealGroup tipos={["titulo", "texto", "texto"]}>
-              <h3 className="text-xl md:text-2xl">{caso.clienteCorto}</h3>
-              <p className="medida mt-4 text-ink">{caso.encargo}</p>
+              <h3 className="text-xl md:text-2xl">{casoTexto.clienteCorto}</h3>
+              <p className="medida mt-4 text-ink">{casoTexto.encargo}</p>
               <div className="mt-8">
-                <Boton href={`/proyectos/${caso.slug}`} variante="secundario">
-                  Ver el proyecto
+                <Boton href={`/${idioma}/proyectos/${caso.slug}`} variante="secundario">
+                  {t.proyectos.verCompleto}
                 </Boton>
               </div>
             </RevealGroup>
@@ -124,10 +129,14 @@ export function DetalleServicio({ servicio, lineasTitulo, autoridad, medio }: Pr
                 como método, y el brief no tiene otra. */}
             <FichaDatos
               datos={[
-                { rotulo: "Año", valor: caso.anio, mono: true },
-                { rotulo: "Duración", valor: caso.duracion, mono: true },
-                { rotulo: "Ubicación", valor: caso.ubicacion },
-                { rotulo: "Servicio", valor: caso.servicioRotulo },
+                { rotulo: t.proyectos.ficha.anio, valor: String(caso.anio), mono: true },
+                {
+                  rotulo: t.proyectos.ficha.duracion,
+                  valor: `${caso.duracionMeses} ${t.unidades.meses}`,
+                  mono: true,
+                },
+                { rotulo: t.proyectos.ficha.ubicacion, valor: casoTexto.ubicacion },
+                { rotulo: t.proyectos.ficha.servicio, valor: casoTexto.servicioRotulo },
               ]}
             />
           </div>
@@ -135,16 +144,18 @@ export function DetalleServicio({ servicio, lineasTitulo, autoridad, medio }: Pr
       )}
 
       {/* ---------------- Siguiente paso ---------------- */}
-      <SiguientePaso titulo="Cuéntenos el alcance y la autoridad">
-        Con eso alcanza para estimar campañas, duración y equipo. También puede revisar
-        el otro frente que documentamos a fondo:{" "}
-        <Enlace href={`/servicios/${otro.slug}`}>{otro.titulo.toLowerCase()}</Enlace>.
+      <SiguientePaso idioma={idioma} titulo={t.siguientePaso.tituloServicio}>
+        {t.siguientePaso.textoServicio}{" "}
+        <Enlace href={`/${idioma}/servicios/${otro.slug}`}>
+          {t.servicios.detallados[otro.slug].titulo.toLowerCase()}
+        </Enlace>
+        .
       </SiguientePaso>
     </>
   );
 }
 
-/** Columna de bloques rótulo + texto: cada uno traza su regla y se asienta. */
+/** Bloques de la ficha, revelados en grupo con su regla. */
 function RevealBloques({
   bloques,
   desplazado = false,
@@ -153,13 +164,13 @@ function RevealBloques({
   desplazado?: boolean;
 }) {
   return (
-    <dl className="flex flex-col gap-16">
-      {bloques.map((bloque, i) => (
-        <Reveal key={bloque.rotulo} regla indice={desplazado ? i + 1 : i} className="pt-6">
+    <RevealGroup as="dl" regla className="flex flex-col gap-12" itemClassName="pt-6">
+      {bloques.map((bloque) => (
+        <div key={bloque.rotulo} className={desplazado ? "md:mt-12" : undefined}>
           <dt className="etiqueta text-ink-muted">{bloque.rotulo}</dt>
-          <dd className="medida mt-4 text-ink">{bloque.texto}</dd>
-        </Reveal>
+          <dd className="medida mt-3 text-ink">{bloque.texto}</dd>
+        </div>
       ))}
-    </dl>
+    </RevealGroup>
   );
 }

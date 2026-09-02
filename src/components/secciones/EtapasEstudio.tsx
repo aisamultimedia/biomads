@@ -1,6 +1,7 @@
 import { RevealGroup } from "@/components/motion/RevealGroup";
 import { Icono } from "@/components/ui/Icono";
 import { etapasEstudio } from "@/content/institucional";
+import { diccionario, type Idioma } from "@/idioma";
 
 /**
  * Las cinco etapas del estudio ambiental, tal como las declara el portafolio.
@@ -13,14 +14,16 @@ import { etapasEstudio } from "@/content/institucional";
  * el día que lleguen se añaden bajo cada nombre y la fila no cambia de
  * forma. El icono acompaña al rótulo, no lo sustituye.
  */
-export function EtapasEstudio() {
+export function EtapasEstudio({ idioma }: { idioma: Idioma }) {
+  const t = diccionario(idioma);
+
   return (
     <section
       id="estudios-ambientales"
       className="superficie-oscura bg-dark text-ink-invert"
     >
       <div className="mx-auto w-full max-w-ancho px-6 py-24 md:py-32">
-        <p className="etiqueta text-accent">Estudios ambientales</p>
+        <p className="etiqueta text-accent">{t.etapas.rotulo}</p>
 
         {/* En columna hasta md: cinco pasos apilados en rejilla de dos
             ocupaban pantalla y media y dejaban el quinto huérfano. En fila
@@ -32,14 +35,14 @@ export function EtapasEstudio() {
         >
           {etapasEstudio.map((etapa) => (
             <span
-              key={etapa.nombre}
+              key={etapa.clave}
               className="flex items-center gap-6 md:flex-col md:items-start"
             >
               <span className="etapa-estudio-icono">
                 <Icono nombre={etapa.icono} tamano={26} />
               </span>
               <span className="text-lg text-ink-invert md:text-base lg:text-lg">
-                {etapa.nombre}
+                {t.etapas.nombres[etapa.clave]}
               </span>
             </span>
           ))}

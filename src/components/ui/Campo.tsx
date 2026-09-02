@@ -1,8 +1,6 @@
 "use client";
 
-import { AnimatePresence, m } from "motion/react";
 import type { ComponentProps } from "react";
-import { aviso } from "@/lib/motion";
 
 type Base = {
   id: string;
@@ -87,26 +85,23 @@ export function Campo(props: PropsInput | PropsTextarea) {
         )}
       </div>
 
-      <AnimatePresence>
-        {error && (
-          <m.p
-            key="error"
-            id={idError}
-            role="alert"
-            variants={aviso}
-            initial="oculto"
-            animate="visible"
-            exit="salida"
-            className="mt-2 flex items-baseline gap-2 text-sm text-accent-deep"
-          >
-            <span
-              aria-hidden="true"
-              className="h-2 w-2 flex-none translate-y-[-0.15em] rounded-sm bg-accent-deep"
-            />
-            {error}
-          </m.p>
-        )}
-      </AnimatePresence>
+      {/* Entra con su propio gesto y se va sin ceremonia: un error
+          desaparece porque el visitante acaba de corregirlo, y animar esa
+          salida solo retrasaría la confirmación de que ya está bien. */}
+      {error && (
+        <p
+          id={idError}
+          role="alert"
+          data-entrada="aviso"
+          className="mt-2 flex items-baseline gap-2 text-sm text-accent-deep"
+        >
+          <span
+            aria-hidden="true"
+            className="h-2 w-2 flex-none translate-y-[-0.15em] rounded-sm bg-accent-deep"
+          />
+          {error}
+        </p>
+      )}
     </div>
   );
 }

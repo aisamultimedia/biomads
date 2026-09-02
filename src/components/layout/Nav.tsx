@@ -1,12 +1,14 @@
 "use client";
 
-import { m } from "motion/react";
+import type { CSSProperties } from "react";
 import { useSeccionActiva } from "@/hooks/useSeccionActiva";
-import { texto } from "@/lib/motion";
+import type { Diccionario } from "@/idioma";
 import { navegacion, type ItemNav } from "@/lib/site";
 
 type Props = {
-  /** Ítems a mostrar. Por defecto los cinco de la navegación. */
+  /** Rótulos de sección. Es componente de cliente: el texto llega por props. */
+  textos: Diccionario["nav"]["secciones"];
+  /** Ítems a mostrar. Por defecto los cuatro de la navegación. */
   items?: readonly ItemNav[];
   orientacion?: "horizontal" | "vertical";
   /** Tamaño de los rótulos. `grande` es para el menú a pantalla completa. */
@@ -23,6 +25,7 @@ type Props = {
 };
 
 export function Nav({
+  textos,
   items = navegacion,
   orientacion = "horizontal",
   tamano = "normal",
@@ -40,7 +43,7 @@ export function Nav({
 
   return (
     <ul className={vertical ? "flex flex-col" : "flex items-center gap-8"}>
-      {items.map((item) => {
+      {items.map((item, indice) => {
         const activo = seccionActiva === item.href;
         /* Ancla de la misma página: <a> y no <Link>. El enrutador trataría
            esto como una navegación que no cambia de página y se perdería el
@@ -65,15 +68,21 @@ export function Nav({
                 activo ? "after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100",
               ].join(" ")}
             >
-              {item.rotulo}
+              {textos[item.clave]}
             </a>
           </>
         );
 
+        /* En el menú móvil los ítems entran escalonados; el retraso lo
+           calcula el CSS desde --indice, igual que en los revelados. */
         return animado ? (
-          <m.li key={item.href} variants={texto}>
+          <li
+            key={item.href}
+            data-entrada="texto"
+            style={{ "--indice": indice + 1 } as CSSProperties}
+          >
             {contenido}
-          </m.li>
+          </li>
         ) : (
           <li key={item.href}>{contenido}</li>
         );

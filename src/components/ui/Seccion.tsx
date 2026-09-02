@@ -1,12 +1,9 @@
-"use client";
-
-import { m } from "motion/react";
 import type { ReactNode } from "react";
-import { useRevelado } from "@/hooks/useRevelado";
-import { grupo, lateral, titulo as varianteTitulo } from "@/lib/motion";
+import type { Tipo } from "@/components/motion/Reveal";
+import { RevealGroup } from "@/components/motion/RevealGroup";
 
 type Props = {
-  /** Rótulo mono sobre el título. Opcional. */
+  /** Rótulo sobre el título. Opcional. */
   rotulo?: string;
   titulo?: string;
   children: ReactNode;
@@ -18,8 +15,6 @@ type Props = {
   id?: string;
   className?: string;
 };
-
-const cabecera = grupo();
 
 /**
  * Envoltura de sección: ancho máximo, respiración lateral y ritmo vertical
@@ -37,38 +32,41 @@ export function Seccion({
   id,
   className = "",
 }: Props) {
-  const revelado = useRevelado();
-
   const superficie = oscura
     ? "superficie-oscura bg-dark text-ink-invert"
     : alterna
       ? "bg-paper-alt"
       : "";
 
+  /* Los hijos se arman a mano, no con condicionales dentro del grupo:
+     RevealGroup reparte los gestos por posición y un `null` intermedio
+     correría el índice, dejando al título con el gesto del rótulo. */
+  const cabecera: ReactNode[] = [];
+  const gestos: Tipo[] = [];
+  if (rotulo) {
+    cabecera.push(
+      <p key="rotulo" className={`etiqueta ${oscura ? "text-accent" : "text-accent-deep"}`}>
+        {rotulo}
+      </p>,
+    );
+    gestos.push("lateral");
+  }
+  if (titulo) {
+    cabecera.push(
+      <h2 key="titulo" className="mt-4 text-2xl md:text-3xl">
+        {titulo}
+      </h2>,
+    );
+    gestos.push("titulo");
+  }
+
   return (
     <section id={id} className={`${superficie} ${className}`}>
       <div className="mx-auto w-full max-w-ancho px-6 py-24 md:py-40">
-        {(rotulo || titulo) && (
-          <m.div data-revelar="" variants={cabecera} {...revelado} className="mb-16">
-            {rotulo && (
-              <m.p
-                data-revelar=""
-                variants={lateral}
-                className={`etiqueta ${oscura ? "text-accent" : "text-accent-deep"}`}
-              >
-                {rotulo}
-              </m.p>
-            )}
-            {titulo && (
-              <m.h2
-                data-revelar=""
-                variants={varianteTitulo}
-                className="mt-4 text-2xl md:text-3xl"
-              >
-                {titulo}
-              </m.h2>
-            )}
-          </m.div>
+        {cabecera.length > 0 && (
+          <RevealGroup className="mb-16" tipos={gestos}>
+            {cabecera}
+          </RevealGroup>
         )}
         {children}
       </div>

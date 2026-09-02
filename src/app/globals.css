@@ -118,9 +118,12 @@
      Utilidades tipográficas
      ----------------------------------------------------------------------- */
 
-  /* Etiqueta en versalitas mono — ficha de datos, rótulos de sección */
+  /* Rótulo en versalitas — ficha de datos, rótulos de sección.
+     Va en la familia de cuerpo, no en la monoespaciada: en mono rompía con
+     el resto del texto y se leía como código, no como etiqueta secundaria.
+     El monoespaciado se queda solo donde aporta, que es en las cifras. */
   .etiqueta {
-    font-family: var(--font-mono);
+    font-family: var(--font-cuerpo);
     font-size: var(--text-xs);
     line-height: var(--text-xs--line-height);
     letter-spacing: var(--tracking-etiqueta);
@@ -159,7 +162,7 @@
     color: var(--color-ink-invert);
     padding: var(--spacing-3) var(--spacing-4);
     border-radius: var(--radius-sm);
-    font-family: var(--font-mono);
+    font-family: var(--font-cuerpo);
     font-size: var(--text-xs);
     letter-spacing: var(--tracking-etiqueta);
     text-transform: uppercase;
@@ -202,16 +205,86 @@
   /* -----------------------------------------------------------------------
      Revelado por scroll
 
-     Lo gobierna motion. El estado oculto viaja en línea desde el servidor;
-     si JavaScript no corre, se anula aquí y el contenido nace visible.
+     Cuatro gestos, uno por papel. El JavaScript solo pone `data-visible`
+     cuando el elemento cruza el umbral (src/hooks/useRevelar.ts); todo lo
+     demás —el estado oculto, la curva, la duración y el escalonado— es CSS.
+
+     El estado oculto vive dentro de una consulta: **solo se esconde lo que
+     alguien podrá revelar**. Sin JavaScript, o con prefers-reduced-motion,
+     estas reglas no aplican y el contenido nace visible sin necesidad de
+     anular nada con !important.
+
+     El escalonado de un grupo no lo orquesta nadie: el contenedor marca a
+     todos sus hijos a la vez y cada uno espera su turno por el
+     transition-delay que sale de --indice.
      ----------------------------------------------------------------------- */
 
-  @media (scripting: none) {
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
     [data-revelar] {
-      opacity: 1 !important;
-      transform: none !important;
-      clip-path: none !important;
-      --regla: 1 !important;
+      --retraso-revelado: calc(var(--indice, 0) * var(--stagger-grupo));
+      transition:
+        opacity var(--duracion-entrada) var(--ease-base) var(--retraso-revelado),
+        translate var(--duracion-entrada) var(--ease-base) var(--retraso-revelado),
+        scale var(--duracion-entrada) var(--ease-base) var(--retraso-revelado),
+        clip-path var(--duracion-titulo) var(--ease-base) var(--retraso-revelado);
+    }
+
+    /* Asentar: párrafos, filas de ficha, ítems de lista, botones. */
+    [data-revelar="texto"]:not([data-visible]) {
+      opacity: 0;
+      translate: 0 var(--desplazamiento-revelado);
+    }
+
+    /* Lateral: numerales y rótulos, que llegan desde la izquierda. */
+    [data-revelar="lateral"]:not([data-visible]) {
+      opacity: 0;
+      translate: calc(var(--desplazamiento-lateral) * -1) 0;
+    }
+
+    /* Revelar: el título sube por detrás de una máscara. */
+    [data-revelar="titulo"] {
+      clip-path: inset(0 0 0 0);
+    }
+
+    [data-revelar="titulo"]:not([data-visible]) {
+      opacity: 0;
+      clip-path: inset(0 0 100% 0);
+      translate: 0 var(--desplazamiento-revelado);
+    }
+
+    /* Panel: llega con una escala corta, como algo que se acerca. */
+    [data-revelar="panel"]:not([data-visible]) {
+      opacity: 0;
+      scale: var(--escala-panel);
+      translate: 0 var(--desplazamiento-revelado);
+    }
+
+    /* Imagen: el marco descubre desde abajo y la foto se asienta. */
+    [data-revelar="imagen"] {
+      transition: clip-path var(--duracion-imagen) var(--ease-base)
+        var(--retraso-revelado);
+    }
+
+    [data-revelar="imagen"]:not([data-visible]) {
+      clip-path: inset(100% 0 0 0);
+    }
+
+    [data-revelar="imagen"] .imagen-interior {
+      transition: scale var(--duracion-imagen) var(--ease-base) var(--retraso-revelado);
+    }
+
+    [data-revelar="imagen"]:not([data-visible]) .imagen-interior {
+      scale: var(--escala-imagen);
+    }
+
+    /* Trazar: la regla de 1px se dibuja de izquierda a derecha. */
+    .con-regla[data-revelar]::before {
+      transition: transform var(--duracion-regla) var(--ease-base)
+        var(--retraso-revelado);
+    }
+
+    .con-regla[data-revelar]:not([data-visible])::before {
+      transform: scaleX(0);
     }
   }
 
@@ -247,6 +320,14 @@
 
   [data-entrada="barra"] {
     animation-name: entrada-barra;
+  }
+
+  /* Aviso: mensajes de error de campo. Corto y sin desplazamiento lateral,
+     para que no parezca que el formulario se movió. */
+  [data-entrada="aviso"] {
+    animation-name: entrada-aviso-campo;
+    animation-duration: var(--duracion-corta);
+    animation-delay: 0ms;
   }
 
   /* Fotografías: el marco descubre desde abajo y la imagen se asienta. */
@@ -617,6 +698,13 @@
   from {
     opacity: 0;
     transform: translateY(-12px);
+  }
+}
+
+@keyframes entrada-aviso-campo {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--desplazamiento-revelado) / 2));
   }
 }
 
@@ -1060,7 +1148,9 @@
     height: var(--spacing-12);
     border: 1px solid var(--color-line-strong);
     border-radius: var(--radius-pill);
-    font-family: var(--font-etiqueta);
+    /* Era var(--font-etiqueta), un token que no existe: la declaración
+       resultaba inválida y la familia se heredaba en silencio. */
+    font-family: var(--font-cuerpo);
     font-size: var(--text-lg);
     line-height: 1;
     color: var(--color-ink);
@@ -1331,5 +1421,133 @@
   .logo-cliente:hover {
     filter: grayscale(0);
     opacity: 1;
+  }
+}
+
+/* =========================================================================
+   Selector de idioma
+
+   Dos o más siglas separadas por una barra fina. No se pinta con un solo
+   idioma —el componente devuelve null—, así que estas reglas duermen hasta
+   que haya un segundo.
+   ========================================================================= */
+
+@layer components {
+  .selector-idioma-opcion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--spacing-8);
+    min-height: var(--area-tactil);
+    font-family: var(--font-cuerpo);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-etiqueta);
+    color: var(--color-ink-muted);
+    transition: color var(--duracion-micro) var(--ease-base);
+  }
+
+  .selector-idioma-opcion:hover {
+    color: var(--color-ink);
+  }
+
+  /* El idioma activo no es un enlace muerto: sigue siéndolo, pero se
+     distingue por peso y color, no solo por color. */
+  .selector-idioma-opcion[aria-current] {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  .selector-idioma li + li {
+    border-inline-start: 1px solid var(--color-line);
+  }
+}
+
+/* =========================================================================
+   Parallax de fotografía
+
+   Ligado al scroll sin JavaScript: `animation-timeline: view()` avanza la
+   animación según lo que el elemento ha recorrido por la pantalla. Antes
+   esto costaba dos hooks de motion escribiendo un transform en cada cuadro.
+
+   Solo en escritorio y solo donde el navegador lo soporta. Donde no —hoy
+   Firefox— la foto se queda quieta, que es exactamente lo que pide
+   "parallax sutil" cuando hay dudas.
+   ========================================================================= */
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-parallax] .capa-parallax {
+      /* El 12 % de escala de más es lo que impide que el ±6 % de
+         desplazamiento deje ver el borde del marco. */
+      scale: 1.12;
+      animation: deriva-parallax linear both;
+      animation-timeline: view();
+    }
+  }
+}
+
+@keyframes deriva-parallax {
+  from {
+    translate: 0 -6%;
+  }
+  to {
+    translate: 0 6%;
+  }
+}
+
+/* =========================================================================
+   Indicador de sección activa
+
+   Un solo elemento de 1px que se desliza entre ítems. Nace con 1px de ancho
+   y se estira con scaleX en vez de animar `width`: así el gesto es solo
+   transform y no obliga al navegador a recalcular el layout de la barra en
+   cada cuadro.
+   ========================================================================= */
+
+@layer components {
+  .indicador-nav {
+    position: absolute;
+    inset-block-end: var(--spacing-2);
+    inset-inline-start: 0;
+    width: 1px;
+    height: 1px;
+    background-color: var(--color-accent);
+    transform-origin: left center;
+    translate: var(--x) 0;
+    scale: var(--ancho) 1;
+    transition:
+      translate var(--duracion-corta) var(--ease-base),
+      scale var(--duracion-corta) var(--ease-base);
+  }
+}
+
+/* =========================================================================
+   Menú móvil
+
+   Entra y sale por transición, no por keyframes: la salida tiene que poder
+   terminar antes de que React desmonte el panel, y eso lo decide
+   `transitionend` (ver src/hooks/usePresencia.ts).
+   ========================================================================= */
+
+@layer components {
+  .menu-movil {
+    opacity: 1;
+    transition: opacity var(--duracion-corta) var(--ease-base);
+  }
+
+  /* Cerrar un menú debe ser inmediato: la salida va más rápida que la
+     entrada y con la curva de salida. */
+  .menu-movil[data-estado="saliendo"] {
+    opacity: 0;
+    transition-duration: var(--duracion-micro);
+    transition-timing-function: var(--ease-salida);
+  }
+
+  /* El primer cuadro, antes de que usePresencia marque "entrando". */
+  @starting-style {
+    .menu-movil {
+      opacity: 0;
+    }
   }
 }
