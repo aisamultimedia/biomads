@@ -1,26 +1,1141 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* =========================================================================
+   Las reglas propias van dentro de @layer.
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+   Tailwind emite sus utilidades en `@layer utilities`. Cualquier CSS sin
+   capa gana a todo lo que sí la tiene, así que un `a { color: inherit }`
+   suelto anularía `text-ink-invert` en todos los enlaces del sitio.
+   Los resets van en `base` y los bloques propios en `components`: en ambos
+   casos una utilidad de Tailwind puede sobreescribirlos, que es lo que se
+   espera de un sistema de tokens.
+   ========================================================================= */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Sin suavizado nativo: lo gobierna Lenis, y los dos a la vez compiten.
+       Cuando Lenis no se monta —usuario con prefers-reduced-motion— el
+       desplazamiento instantáneo es justo lo que esa preferencia pide. */
+    scroll-behavior: auto;
+    /* Compensa la cabecera fija al saltar a un ancla */
+    scroll-padding-top: var(--altura-cabecera);
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-cuerpo);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Los títulos llevan Newsreader y su eje óptico automático */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-titulo);
+    font-optical-sizing: auto;
+    font-weight: var(--peso-titulo);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  ul,
+  ol,
+  dl,
+  dd,
+  figure {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-dark);
+  }
+
+  /* Foco: anillo propio de 2px. Nunca el outline azul del navegador,
+     nunca outline:none sin reemplazo. */
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: var(--grosor-foco) solid var(--anillo-foco);
+    outline-offset: var(--spacing-1);
+    border-radius: var(--radius-sm);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* -----------------------------------------------------------------------
+     Utilidades tipográficas
+     ----------------------------------------------------------------------- */
+
+  /* Etiqueta en versalitas mono — ficha de datos, rótulos de sección */
+  .etiqueta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: var(--text-xs--line-height);
+    letter-spacing: var(--tracking-etiqueta);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Cualquier dato, duración o cifra */
+  .dato {
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Medida de lectura. Nunca más ancha, ni en pantallas grandes. */
+  .medida {
+    max-width: var(--container-medida);
+  }
+
+  /* Enlace de salto al contenido */
+  .salto-contenido {
+    position: absolute;
+    left: var(--spacing-4);
+    top: var(--spacing-4);
+    z-index: 100;
+    transform: translateY(calc(-100% - var(--spacing-8)));
+    background-color: var(--color-dark);
+    color: var(--color-ink-invert);
+    padding: var(--spacing-3) var(--spacing-4);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-etiqueta);
+    text-transform: uppercase;
+    transition: transform var(--duracion-micro) var(--ease-base);
+  }
+
+  .salto-contenido:focus-visible {
+    transform: translateY(0);
+  }
+
+  /* -----------------------------------------------------------------------
+     Regla trazada
+
+     La línea estructural de 1px del sistema, dibujada de izquierda a
+     derecha. Es un pseudo-elemento cuyo scaleX lee --regla: motion anima
+     esa custom property de 0 a 1 en los revelados por scroll
+     (src/lib/motion.ts) y la secuencia de carga la anima con keyframes
+     (`data-regla-entrada`). Sin ninguna de las dos, la regla está dibujada.
+     ----------------------------------------------------------------------- */
+
+  .con-regla {
+    position: relative;
+  }
+
+  .con-regla::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background-color: var(--color-regla);
+    transform-origin: left center;
+    transform: scaleX(var(--regla, 1));
+  }
+
+  .con-regla--acento {
+    --color-regla: var(--color-accent);
+  }
+
+  /* -----------------------------------------------------------------------
+     Revelado por scroll
+
+     Lo gobierna motion. El estado oculto viaja en línea desde el servidor;
+     si JavaScript no corre, se anula aquí y el contenido nace visible.
+     ----------------------------------------------------------------------- */
+
+  @media (scripting: none) {
+    [data-revelar] {
+      opacity: 1 !important;
+      transform: none !important;
+      clip-path: none !important;
+      --regla: 1 !important;
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Entrada de contenido ya visible al cargar (hero y cabeceras de página).
+     CSS puro: no espera a que React hidrate, así que no retrasa el LCP.
+     El mismo vocabulario que los revelados, con --indice como posición en
+     la secuencia (pasos de --paso-entrada).
+     ----------------------------------------------------------------------- */
+
+  [data-entrada] {
+    animation-duration: var(--duracion-entrada);
+    animation-timing-function: var(--ease-base);
+    animation-fill-mode: both;
+    animation-delay: calc(var(--paso-entrada) * var(--indice, 0));
+  }
+
+  [data-entrada="texto"] {
+    animation-name: entrada-texto;
+  }
+
+  [data-entrada="lateral"] {
+    animation-name: entrada-lateral;
+  }
+
+  [data-entrada="panel"] {
+    animation-name: entrada-panel;
+  }
+
+  [data-entrada="anotacion"] {
+    animation-name: entrada-anotacion;
+  }
+
+  [data-entrada="barra"] {
+    animation-name: entrada-barra;
+  }
+
+  /* Fotografías: el marco descubre desde abajo y la imagen se asienta. */
+  [data-entrada="imagen"] {
+    animation-name: entrada-imagen;
+    animation-duration: var(--duracion-imagen);
+  }
+
+  [data-entrada="imagen"] .imagen-interior {
+    animation: entrada-escala var(--duracion-imagen) var(--ease-base) both;
+    animation-delay: calc(var(--paso-entrada) * var(--indice, 0));
+  }
+
+  /* La regla se traza en su paso de la secuencia. Va aparte de
+     [data-entrada] porque el mismo elemento puede asentarse y trazar. */
+  [data-regla-entrada]::before {
+    animation: trazar-regla var(--duracion-regla) var(--ease-base) both;
+    animation-delay: calc(var(--paso-entrada) * var(--indice, 0));
+  }
+
+  /* Marco de fotografía: recorta la máscara, la escala y el parallax. */
+  .marco-imagen {
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background-color: var(--color-paper-alt);
+  }
+
+  .imagen-revelada {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* -----------------------------------------------------------------------
+     Título del hero por líneas con máscara ascendente.
+     CSS puro: corre aunque JavaScript falle. --retraso-base lo sitúa dentro
+     de la secuencia de carga.
+     ----------------------------------------------------------------------- */
+
+  .titulo-lineas,
+  .titulo-lineas > .titulo-linea {
+    display: block;
+  }
+
+  .titulo-lineas > .titulo-linea > span {
+    display: block;
+    animation: entrada-linea var(--duracion-titulo) var(--ease-base) both;
+    animation-delay: calc(
+      var(--retraso-base, 0ms) + var(--stagger-titulo) * var(--indice, 0)
+    );
+  }
+
+  /* -----------------------------------------------------------------------
+     Subrayado de enlace que crece desde la izquierda
+     ----------------------------------------------------------------------- */
+
+  .enlace-subrayado {
+    background-image: linear-gradient(var(--color-accent), var(--color-accent));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 1px;
+    padding-bottom: var(--spacing-1);
+  }
+
+  @media (scripting: enabled) {
+    .enlace-subrayado {
+      background-size: 0% 1px;
+      transition: background-size var(--duracion-micro) var(--ease-base);
+    }
+
+    .enlace-subrayado:hover,
+    .enlace-subrayado:focus-visible,
+    .enlace-flecha:hover > .enlace-subrayado,
+    .enlace-flecha:focus-visible > .enlace-subrayado {
+      background-size: 100% 1px;
+    }
+  }
+
+  /* Enlace con flecha: el subrayado va bajo el texto, no bajo la flecha,
+     y la flecha avanza 4px al pasar el cursor. */
+  .enlace-flecha {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--spacing-2);
+  }
+
+  .enlace-flecha > .flecha {
+    display: inline-block;
+    transition: transform var(--duracion-micro) var(--ease-base);
+  }
+
+  .enlace-flecha:hover > .flecha,
+  .enlace-flecha:focus-visible > .flecha {
+    transform: translateX(var(--spacing-1));
+  }
+
+  /* -----------------------------------------------------------------------
+     Fondo de curvas de nivel del hero
+
+     Solo se anima transform. El bucle es continuo, así que va en linear:
+     una curva de aceleración haría latir un movimiento infinito. Se pausa
+     cuando el hero sale de pantalla.
+     ----------------------------------------------------------------------- */
+
+  .fondo-contornos {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    color: var(--color-line);
+  }
+
+  /* Cada capa mide el doble de ancho y lleva el patrón repetido, así que
+     desplazarla la mitad devuelve el dibujo a su punto de partida. */
+  .capa-contornos {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 200%;
+    height: 100%;
+    animation: deriva-contornos var(--duracion-ambiente) linear infinite;
+    will-change: transform;
+  }
+
+  .capa-contornos > svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .capa-contornos--rapida {
+    animation-duration: calc(var(--duracion-ambiente) * 0.62);
+    opacity: 0.5;
+  }
+
+  .fondo-contornos[data-pausado] .capa-contornos {
+    animation-play-state: paused;
+  }
+
+  @keyframes deriva-contornos {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+
+  /* -----------------------------------------------------------------------
+     Anotaciones flotantes sobre la fotografía del hero.
+     La capa exterior entra (data-entrada="anotacion"); esta, interior,
+     flota. Dos capas porque ambas animaciones tocan transform.
+     ----------------------------------------------------------------------- */
+
+  .etiqueta-flotante {
+    animation: flotar var(--duracion-flotar) ease-in-out infinite alternate;
+    animation-delay: calc(var(--duracion-flotar) * -0.33 * var(--fase, 0));
+    will-change: transform;
+  }
+
+  @keyframes flotar {
+    from { transform: translateY(-6px); }
+    to   { transform: translateY(6px); }
+  }
+
+  /* -----------------------------------------------------------------------
+     Cabecera fija
+
+     Al pasar 80px de desplazamiento se compacta: menos altura, fondo con
+     backdrop-filter y línea inferior de 1px.
+
+     La altura se transiciona porque la cabecera es `fixed`: su cambio de
+     alto no reflota el documento, solo se relayouta ella misma. En el resto
+     del sitio únicamente se animan transform, opacity y clip-path.
+
+     Lleva nombre propio de View Transition para quedar anclada mientras el
+     contenido cruza de una página a otra.
+     ----------------------------------------------------------------------- */
+
+  .cabecera {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 50;
+    padding-block: var(--spacing-4);
+    transition: padding-block var(--duracion-corta) var(--ease-base);
+    view-transition-name: cabecera;
+  }
+
+  /* La barra flotante. Se transiciona su relleno, no la posición del
+     documento: la cabecera es `fixed`, así que al compactarse no reflota
+     nada más que ella misma. */
+  .barra {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--spacing-6);
+    padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) var(--spacing-6);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-dark);
+    /* Color heredado explícito: cualquier texto dentro de la barra nace
+       claro, incluido el que solo leen los lectores de pantalla. */
+    color: var(--color-ink-invert);
+    transition: padding var(--duracion-corta) var(--ease-base);
+  }
+
+  @media (max-width: 1023px) {
+    /* Sin navegación desplegada, la barra es logo y acciones. */
+    .barra {
+      grid-template-columns: 1fr auto;
+      padding-inline: var(--spacing-4);
+    }
+  }
+
+  .cabecera[data-compacto] {
+    padding-block: var(--spacing-2);
+  }
+
+  .cabecera[data-compacto] .barra {
+    padding-block: var(--spacing-2);
+  }
+
+  /* -----------------------------------------------------------------------
+     Panel desplegable de la barra. Entra y sale con motion (`desplegable`).
+     ----------------------------------------------------------------------- */
+
+  .panel-desplegable {
+    position: absolute;
+    inset-inline-start: calc(var(--spacing-4) * -1);
+    inset-block-start: calc(100% + var(--spacing-3));
+    z-index: 10;
+    min-width: 17rem;
+    padding: var(--spacing-2);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-paper);
+  }
+
+  /* Un puente invisible entre el ítem y el panel: el cursor cruza el hueco
+     sin salirse del grupo. */
+  .panel-desplegable::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: calc(var(--spacing-3) * -1);
+    height: var(--spacing-3);
+  }
+
+  /* Reserva del espacio que ocupa la cabecera fija */
+  .compensa-cabecera {
+    padding-top: var(--altura-cabecera);
+  }
+
+  /* -----------------------------------------------------------------------
+     Icono de menú — dos trazos que se cruzan. Solo transform.
+     ----------------------------------------------------------------------- */
+
+  .icono-menu {
+    position: relative;
+    display: block;
+    width: var(--spacing-6);
+    height: var(--spacing-4);
+  }
+
+  .icono-menu > span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-ink);
+  }
+
+  .icono-menu--claro > span {
+    background-color: var(--color-ink-invert);
+    transition: transform var(--duracion-micro) var(--ease-base);
+  }
+
+  .icono-menu > span:nth-child(1) {
+    top: 0;
+  }
+
+  .icono-menu > span:nth-child(2) {
+    top: 100%;
+  }
+
+  .icono-menu.es-cerrar > span:nth-child(1) {
+    transform: translateY(var(--spacing-2)) rotate(45deg);
+  }
+
+  .icono-menu.es-cerrar > span:nth-child(2) {
+    transform: translateY(calc(var(--spacing-2) * -1)) rotate(-45deg);
+  }
+
+  /* -----------------------------------------------------------------------
+     Indicador de carga de botón.
+     Bajo prefers-reduced-motion queda estático: el estado sigue anunciado
+     por aria-busy y por el texto del propio botón.
+     ----------------------------------------------------------------------- */
+
+  .indicador-carga {
+    width: var(--spacing-2);
+    height: var(--spacing-2);
+    flex: none;
+    background-color: var(--color-accent);
+    border-radius: var(--radius-sm);
+    animation: latido-carga var(--duracion-entrada) var(--ease-base) infinite alternate;
+  }
+}
+
+/* =========================================================================
+   Keyframes y transiciones de documento — fuera de capa: las @keyframes y
+   los pseudo-elementos de View Transitions no participan del cascade layer.
+   ========================================================================= */
+
+/* --- Vocabulario de carga (espejo de src/lib/motion.ts) ---------------- */
+
+@keyframes entrada-texto {
+  from {
+    opacity: 0;
+    transform: translateY(var(--desplazamiento-revelado));
+  }
+}
+
+@keyframes entrada-lateral {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--desplazamiento-lateral) * -1));
+  }
+}
+
+@keyframes entrada-panel {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(var(--escala-panel));
+  }
+}
+
+@keyframes entrada-anotacion {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.9);
+  }
+}
+
+@keyframes entrada-barra {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes entrada-imagen {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes entrada-escala {
+  from {
+    transform: scale(var(--escala-imagen));
+  }
+}
+
+@keyframes trazar-regla {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes entrada-linea {
+  from {
+    clip-path: inset(110% 0 -10% 0);
+    transform: translateY(0.35em);
+  }
+  to {
+    clip-path: inset(-25% 0 -25% 0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes latido-carga {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- Transición entre páginas -------------------------------------------
+   Las clases las asigna <ViewTransition> en src/app/template.tsx. La página
+   vieja se va rápido y ligeramente hacia arriba; la nueva llega solo con
+   opacidad —el desplazamiento lo ponen sus propias entradas— y un poco
+   después, para que las dos se crucen sin sumar brillo. */
+
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(.pagina-sale) {
+  animation: salida-pagina 150ms var(--ease-salida) both;
+}
+
+::view-transition-new(.pagina-entra) {
+  animation: entrada-pagina var(--duracion-pagina) var(--ease-base) 80ms both;
+}
+
+/* La cabecera no se mueve: es el punto fijo que dice que cambió el
+   contenido, no la ventana. */
+::view-transition-group(cabecera) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(cabecera) {
+  display: none;
+}
+
+::view-transition-new(cabecera) {
+  animation: none;
+}
+
+@keyframes salida-pagina {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes entrada-pagina {
+  from {
+    opacity: 0;
+  }
+}
+
+/* =========================================================================
+   prefers-reduced-motion — se apaga todo. No hay versión suavizada.
+   El contenido aparece directamente en su estado final. Los revelados de
+   motion arrancan ya visibles (ver useRevelado) y MotionConfig apaga las
+   transformaciones del resto.
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .indicador-carga,
+  .capa-contornos,
+  .etiqueta-flotante {
+    animation: none !important;
+  }
+
+  .indicador-carga {
+    opacity: 1;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation: none !important;
+  }
+}
+
+/* =========================================================================
+   Hero a sangre completa con video de fondo
+
+   El texto va sobre imagen en movimiento, así que la legibilidad depende de
+   un velo. Es neutro —oscurece sin teñir de verde— y funcional: sin él el
+   blanco no alcanza 4.5:1 sobre el pasto, y con video el fondo cambia en
+   cada fotograma.
+   ========================================================================= */
+
+@layer components {
+  .hero-completo {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    min-height: 90svh;
+    overflow: hidden;
+    /* Se mete debajo de la cabecera flotante, que va sobre el video. */
+    margin-top: calc(var(--altura-cabecera) * -1);
+    padding-top: var(--altura-cabecera);
+  }
+
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+  }
+
+  .hero-velo {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: color-mix(in srgb, var(--color-velo) 42%, transparent);
+  }
+
+  .hero-velo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-velo) 92%, transparent) 0%,
+      color-mix(in srgb, var(--color-velo) 82%, transparent) 44%,
+      color-mix(in srgb, var(--color-velo) 42%, transparent) 74%,
+      transparent 100%
+    );
+  }
+
+  .hero-contenido {
+    position: relative;
+    width: 100%;
+    padding-block: var(--spacing-24);
+  }
+
+  /* Tarjeta de cifra: sólida, para que el contraste no dependa del video. */
+  .hero-cifra {
+    min-width: 15rem;
+    padding: var(--spacing-6);
+    border: 1px solid var(--color-line-invert);
+    border-radius: var(--radius-lg);
+    background-color: color-mix(in srgb, var(--color-velo) 86%, transparent);
+  }
+
+  /* -----------------------------------------------------------------------
+     Control de pausa del video. Discreto pero alcanzable: lo exige
+     WCAG 2.2.2 para cualquier movimiento automático de más de 5 s.
+     ----------------------------------------------------------------------- */
+
+  .hero-control-video {
+    position: absolute;
+    inset-block-end: var(--spacing-6);
+    inset-inline-end: var(--spacing-6);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--area-tactil);
+    height: var(--area-tactil);
+    border: 1px solid var(--color-line-invert);
+    border-radius: var(--radius-lg);
+    background-color: color-mix(in srgb, var(--color-velo) 70%, transparent);
+    color: var(--color-ink-invert);
+    transition: border-color var(--duracion-micro) var(--ease-base);
+  }
+
+  .hero-control-video:hover {
+    border-color: var(--color-accent);
+  }
+
+  .icono-video {
+    position: relative;
+    display: block;
+    width: var(--spacing-3);
+    height: var(--spacing-4);
+  }
+
+  .icono-video > span {
+    position: absolute;
+    inset-block: 0;
+    width: 3px;
+    background-color: currentColor;
+    transition: transform var(--duracion-micro) var(--ease-base);
+  }
+
+  .icono-video > span:first-child {
+    left: 0;
+  }
+
+  .icono-video > span:last-child {
+    right: 0;
+  }
+
+  /* En reproducción son dos barras (pausa); detenido se juntan y leen
+     como un bloque de "reanudar". */
+  .icono-video.es-play > span:first-child {
+    transform: translateX(2px);
+  }
+
+  .icono-video.es-play > span:last-child {
+    transform: translateX(-2px);
+  }
+}
+
+/* =========================================================================
+   Tema de la barra
+
+   Por defecto la barra es clara. Se pone oscura cuando la superficie que
+   tiene debajo lo es: el hero, una sección oscura o el pie. El primer
+   pintado lo decide `:has(.hero-completo)` sin JavaScript —así una página
+   sin hero nace clara y no parpadea—, y a partir de ahí manda
+   `data-sobre-oscuro`, que el scroll recalcula.
+   ========================================================================= */
+
+@layer components {
+  /* --- Claro: el estado por defecto --- */
+  .barra {
+    background-color: color-mix(in srgb, var(--color-paper) 88%, transparent);
+    border: 1px solid var(--color-line);
+    color: var(--color-ink);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition:
+      padding var(--duracion-cabecera) var(--ease-base),
+      background-color var(--duracion-cabecera) var(--ease-base),
+      border-color var(--duracion-cabecera) var(--ease-base),
+      color var(--duracion-cabecera) var(--ease-base);
+  }
+
+  .enlace-barra {
+    color: var(--color-ink-muted);
+  }
+
+  .enlace-barra:hover,
+  .enlace-barra.es-activo {
+    color: var(--color-ink);
+  }
+
+  .logo-sobre-oscuro {
+    display: none;
+  }
+
+  /* --- Oscuro: solo mientras la barra cubre el hero --- */
+  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .barra,
+  .cabecera[data-sobre-oscuro] .barra {
+    background-color: var(--color-dark);
+    border-color: transparent;
+    color: var(--color-ink-invert);
+    /* El anillo de foco conmuta con el tema, igual que .superficie-oscura. */
+    --anillo-foco: var(--color-accent);
+  }
+
+  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .enlace-barra,
+  .cabecera[data-sobre-oscuro] .enlace-barra {
+    color: var(--color-ink-invert-muted);
+  }
+
+  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .enlace-barra,
+  .cabecera[data-sobre-oscuro] .enlace-barra:hover,
+  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .enlace-barra,
+  .cabecera[data-sobre-oscuro] .enlace-barra.es-activo {
+    color: var(--color-ink-invert);
+  }
+
+  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .logo-sobre-claro,
+  .cabecera[data-sobre-oscuro] .logo-sobre-claro {
+    display: none;
+  }
+
+  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .logo-sobre-oscuro,
+  .cabecera[data-sobre-oscuro] .logo-sobre-oscuro {
+    display: block;
+  }
+
+  /* Los trazos del icono de menú siguen al color del texto de la barra. */
+  .barra .icono-menu > span {
+    background-color: currentColor;
+  }
+}
+
+/* =========================================================================
+   Aviso de cookies
+
+   Arriba a la derecha, bajo la barra. Pequeño y sin botón de texto: no
+   tapa el contenido ni atrapa el foco, porque es un aviso y no un diálogo.
+   ========================================================================= */
+
+@layer components {
+  .aviso-cookies {
+    position: fixed;
+    inset-block-start: calc(var(--altura-cabecera) + var(--spacing-2));
+    inset-inline-end: var(--spacing-6);
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    max-width: 22rem;
+    padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-6);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-paper);
+  }
+
+  .aviso-cookies-cerrar {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--area-tactil);
+    height: var(--area-tactil);
+    border-radius: var(--radius-pill);
+    color: var(--color-ink-muted);
+    transition: color var(--duracion-micro) var(--ease-base);
+  }
+
+  .aviso-cookies-cerrar:hover {
+    color: var(--color-ink);
+  }
+
+  .aviso-cookies-cerrar .icono-menu {
+    width: var(--spacing-4);
+  }
+
+  .aviso-cookies-cerrar .icono-menu > span {
+    background-color: currentColor;
+  }
+
+  @media (max-width: 480px) {
+    .aviso-cookies {
+      inset-inline: var(--spacing-4);
+      max-width: none;
+    }
+  }
+
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .aviso-cookies {
+      animation: entrada-aviso var(--duracion-entrada) var(--ease-base) both;
+    }
+  }
+}
+
+@keyframes entrada-aviso {
+  from {
+    opacity: 0;
+    transform: translateY(var(--spacing-4));
+  }
+}
+
+/* =========================================================================
+   Tarjeta de servicio y su ficha desplegable
+
+   La tarjeta entera es el disparador, no un enlace pequeño al final: si hay
+   que hacer clic, el objetivo debe ser todo lo que se está mirando. El pie
+   dice qué hay dentro —"marco normativo, entregable y duración"— porque un
+   "ver más" no incentiva nada.
+   ========================================================================= */
+
+@layer components {
+  .tarjeta-servicio {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-8);
+    text-align: left;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-paper);
+    transition:
+      border-color var(--duracion-micro) var(--ease-base),
+      translate var(--duracion-micro) var(--ease-base);
+  }
+
+  .tarjeta-servicio:hover {
+    border-color: var(--color-accent);
+    translate: 0 -2px;
+  }
+
+  .tarjeta-servicio-pie {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-4);
+    margin-top: var(--spacing-12);
+    padding-top: var(--spacing-6);
+    border-top: 1px solid var(--color-line);
+  }
+
+  /* El signo crece y gira un cuarto al pasar el cursor: anuncia que abre. */
+  .tarjeta-servicio-mas {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--spacing-12);
+    height: var(--spacing-12);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-etiqueta);
+    font-size: var(--text-lg);
+    line-height: 1;
+    color: var(--color-ink);
+    transition:
+      rotate var(--duracion-micro) var(--ease-base),
+      background-color var(--duracion-micro) var(--ease-base),
+      border-color var(--duracion-micro) var(--ease-base),
+      color var(--duracion-micro) var(--ease-base);
+  }
+
+  .tarjeta-servicio:hover .tarjeta-servicio-mas {
+    rotate: 90deg;
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-dark);
+  }
+
+  /* --- El panel --- */
+
+  .velo-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    padding: var(--spacing-6);
+    background-color: color-mix(in srgb, var(--color-velo) 72%, transparent);
+  }
+
+  .panel-servicio {
+    width: 100%;
+    max-width: var(--container-angosto);
+    margin-block: auto;
+    padding: var(--spacing-12);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-paper);
+  }
+
+  .panel-servicio-cerrar {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--area-tactil);
+    height: var(--area-tactil);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--color-ink);
+    transition: border-color var(--duracion-micro) var(--ease-base);
+  }
+
+  .panel-servicio-cerrar:hover {
+    border-color: var(--color-accent-deep);
+  }
+
+  .panel-servicio-cerrar .icono-menu > span {
+    background-color: currentColor;
+  }
+
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .velo-panel {
+      animation: entrada-velo var(--duracion-micro) var(--ease-base) both;
+    }
+
+    .panel-servicio {
+      animation: entrada-panel-servicio var(--duracion-entrada) var(--ease-base) both;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .panel-servicio {
+      padding: var(--spacing-8);
+    }
+  }
+}
+
+@keyframes entrada-velo {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes entrada-panel-servicio {
+  from {
+    opacity: 0;
+    transform: translateY(var(--spacing-6));
+  }
+}
+
+/* Ranura de certificado: el hueco ya dimensionado para los PDF que faltan. */
+@layer components {
+  .ranura-certificado {
+    display: flex;
+    flex-direction: column;
+    min-height: 9rem;
+    padding: var(--spacing-6);
+    border: 1px dashed var(--color-line-strong);
+    border-radius: var(--radius-lg);
+  }
+
+  .ranura-certificado > :last-child {
+    margin-top: auto;
+  }
 }

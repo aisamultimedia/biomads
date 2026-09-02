@@ -1,0 +1,202 @@
+/* =========================================================================
+   BIOMADS — Tokens de diseño
+   Única fuente de valores del sitio. Ningún color, tamaño, espaciado,
+   duración ni curva se escribe suelto dentro de un componente.
+
+   Se declaran dentro de @theme para que Tailwind 4 los exponga a la vez
+   como custom property en :root y como utilidad (bg-paper, text-ink, p-6…).
+   ========================================================================= */
+
+@theme {
+  /* --- Se anulan las escalas por defecto de Tailwind --------------------
+     Sin esto quedan disponibles utilidades fuera del sistema (bg-red-500,
+     p-5, shadow-lg, font-sans → system-ui). Anularlas convierte cualquier
+     valor fuera de token en un error visible en vez de un descuido. */
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --tracking-*: initial;
+  --leading-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --drop-shadow-*: initial;
+  --inset-shadow-*: initial;
+  --ease-*: initial;
+  --spacing-*: initial;
+  --spacing: initial;
+  --container-*: initial;
+
+  /* --- Color ---------------------------------------------------------- */
+
+  /* superficies */
+  --color-paper:      #FAF9F6; /* base, nunca blanco puro */
+  --color-paper-alt:  #F1F3EE; /* bloques alternos */
+  --color-dark:       #12261B; /* footer y bloques invertidos */
+
+  /* texto */
+  --color-ink:        #1B3D2A; /* principal — 11.41:1 sobre paper (AAA) */
+  --color-ink-muted:  #4A5D50; /* secundario — 6.71:1 sobre paper (AA) */
+  --color-ink-invert: #F1F3EE; /* sobre dark — 14.25:1 (AAA) */
+  /* Añadido: secundario sobre superficie oscura. --ink-muted solo alcanza
+     2.25:1 sobre --dark y no se puede usar ahí. Medido: 7.67:1 (AAA). */
+  --color-ink-invert-muted: #AEB6AF;
+
+  /* estructura */
+  --color-line:       #DCDFD6; /* divisiones decorativas, 1px */
+  /* Añadido: borde con significado (campos de formulario, controles).
+     WCAG 1.4.11 exige 3:1 y --line queda en 1.28:1. Medido: 3.12:1. */
+  --color-line-strong: #7B8E80;
+  /* Añadido: división sobre superficie oscura. --line se lee como un trazo
+     blanco sobre --dark (11.81:1). Medido: 1.33:1, la misma relación visual
+     que --line sobre --paper. */
+  --color-line-invert: #283B30;
+  /* Velo del hero. Oscurece sin teñir: --dark tiñe de verde y sobre video
+     se nota. Sigue sin ser negro puro, como manda el sistema. */
+  --color-velo: #0E1210;
+
+  /* acento */
+  --color-accent:      #4CAF50; /* verde del logo — 2.64:1 sobre paper.
+                                   NUNCA en texto ni como fondo de bloque.
+                                   Solo subrayados, viñetas, bordes, estado. */
+  --color-accent-deep: #2E7D3E; /* acento legible — 4.84:1 sobre paper (AA) */
+
+  /* --- Tipografía ------------------------------------------------------ */
+  --font-titulo: var(--fuente-newsreader), Georgia, "Times New Roman", serif;
+  --font-cuerpo: var(--fuente-switzer), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono:   var(--fuente-jetbrains), "SFMono-Regular", Consolas, monospace;
+
+  /* Preflight de Tailwind apunta el <html> a una pila de sistema que
+     incluye Roboto y Segoe UI. Se redirige a los tokens para que ninguna
+     fuente fuera del sistema pueda llegar a renderizarse. */
+  --default-font-family: var(--font-cuerpo);
+  --default-mono-font-family: var(--font-mono);
+
+  /* Escala de razón 1.25 anclada en 17px */
+  --text-xs:   13px;  /* rótulos en versalitas */
+  --text-xs--line-height: 1.45;
+  --text-xs--letter-spacing: 0.02em;
+
+  --text-sm:   15px;
+  --text-sm--line-height: 1.6;
+
+  /* Peldaño propio para la interfaz: botones y controles. Ni cuerpo (17)
+     ni rótulo (13). */
+  --text-boton: 16px;
+  --text-boton--line-height: 1;
+  --text-boton--letter-spacing: 0.005em;
+
+  --text-base: 17px;  /* cuerpo */
+  --text-base--line-height: 1.6;
+
+  --text-lg:   21px;
+  --text-lg--line-height: 1.5;
+
+  --text-xl:   27px;
+  --text-xl--line-height: 1.2;
+
+  --text-2xl:  33px;
+  --text-2xl--line-height: 1.2;
+
+  --text-3xl:  42px;
+  --text-3xl--line-height: 1.1;
+  --text-3xl--letter-spacing: 0;
+
+  --text-4xl:  52px;
+  --text-4xl--line-height: 1.1;
+  --text-4xl--letter-spacing: 0;
+
+  --text-5xl:  65px;  /* hero */
+  --text-5xl--line-height: 1.05;
+  --text-5xl--letter-spacing: 0;
+
+  --tracking-mono:     0.02em; /* el mono siempre en positivo */
+  --tracking-etiqueta: 0.1em;  /* versalitas de ficha */
+  --tracking-titulo:  0;       /* los títulos van sin interletrado */
+
+  /* --- Espaciado — escala de 8px, nada fuera de ella -------------------- */
+  /* El 0 debe existir: utilidades como inset-0, p-0 o gap-0 lo resuelven por
+     esta clave. Sin ella compilan a calc(var(--spacing) * 0), que al estar
+     --spacing anulado es inválido y la propiedad se descarta en silencio. */
+  --spacing-0:  0px;
+  --spacing-1:  4px;
+  --spacing-2:  8px;
+  --spacing-3:  12px;
+  --spacing-4:  16px;
+  --spacing-6:  24px;
+  --spacing-8:  32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-24: 96px;   /* ritmo vertical entre secciones — móvil */
+  --spacing-32: 128px;
+  --spacing-40: 160px;  /* ritmo vertical entre secciones — escritorio */
+
+  /* --- Medidas --------------------------------------------------------- */
+  --container-medida: 68ch;  /* lectura: entre 62 y 72 caracteres */
+  --container-ancho:  1200px;
+  --container-angosto: 880px;
+
+  /* --- Formas ---------------------------------------------------------- */
+  --radius-sm: 2px; /* elementos pequeños */
+  --radius-md: 4px; /* contenedores */
+  /* Solo para las piezas grandes del hero. No es una píldora: sigue siendo
+     un rectángulo con esquina blanda. El resto del sitio no lo usa. */
+  --radius-lg: 20px;
+  /* Píldora. Sustituye la regla original de "nada redondeado tipo píldora"
+     por decisión del cliente: los botones son la pieza que más se toca y
+     ahora la forma los distingue del resto de contenedores. */
+  --radius-pill: 999px;
+
+  /* --- Movimiento ------------------------------------------------------
+     Dos curvas: la de entrada para todo lo que llega y la de salida para lo
+     que se va. El porqué de cada valor está en MOTION.md; src/lib/motion.ts
+     los refleja en JavaScript para motion. Si cambia uno, cambian los dos. */
+  --ease-base:   cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-salida: cubic-bezier(0.4, 0, 1, 1);
+
+  --duracion-micro:    180ms; /* hover, foco, pulsación, subrayados */
+  --duracion-corta:    250ms; /* paneles, cabecera, salidas */
+  --duracion-entrada:  600ms; /* texto y paneles */
+  --duracion-titulo:   700ms; /* máscara de títulos */
+  --duracion-regla:    800ms; /* trazo de reglas */
+  --duracion-imagen:  1000ms; /* máscara y escala de fotografías */
+  --duracion-pagina:   250ms; /* entrada de página; la salida dura 150ms */
+  --duracion-ambiente:  90s;  /* deriva del fondo de contornos */
+  --duracion-flotar:    12s;  /* balanceo de las anotaciones del hero */
+
+  --stagger-titulo:  80ms; /* líneas del h1 */
+  --stagger-grupo:   60ms; /* hermanos de un grupo revelado por scroll */
+  --paso-entrada:    70ms; /* índices de la secuencia de carga */
+
+  --desplazamiento-revelado: 16px; /* asentar: texto y paneles */
+  --desplazamiento-lateral:  12px; /* numerales y rótulos */
+  --escala-imagen: 1.08;
+  --escala-panel:  0.98;
+
+  /* --- Interfaz -------------------------------------------------------- */
+  --peso-titulo: 700;   /* los títulos van en bold */
+
+  --grosor-foco: 2px;
+  --area-tactil: 44px; /* mínimo táctil en móvil */
+  --altura-cabecera: 96px;
+  --altura-cabecera-compacta: 64px;
+}
+
+/* Color del anillo de foco y de las reglas trazadas. Se redefinen sobre
+   superficie oscura: --accent-deep solo alcanza 3.12:1 sobre --dark,
+   mientras --accent llega a 5.73:1. El anillo siempre supera el 3:1 que
+   exige WCAG 1.4.11. La regla sobre --dark usa --line-invert. */
+:root {
+  --anillo-foco: var(--color-accent-deep);
+  --color-regla: var(--color-line);
+}
+
+.superficie-oscura {
+  --anillo-foco: var(--color-accent);
+  --color-regla: var(--color-line-invert);
+}
+
+/* Un panel claro dentro de una superficie oscura recupera sus valores. */
+.superficie-clara {
+  --anillo-foco: var(--color-accent-deep);
+  --color-regla: var(--color-line);
+}
