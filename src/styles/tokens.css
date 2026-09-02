@@ -112,6 +112,9 @@
   --tracking-mono:     0.02em; /* el mono siempre en positivo */
   --tracking-etiqueta: 0.1em;  /* versalitas de ficha */
   --tracking-titulo:  0;       /* los títulos van sin interletrado */
+  /* Descriptor del hero: cuerpo en caja baja, apretado dos puntos. Es una
+     frase, no un rótulo, así que no lleva ni el mono ni las versalitas. */
+  --tracking-descriptor: -0.02em;
 
   /* --- Espaciado — escala de 8px, nada fuera de ella -------------------- */
   /* El 0 debe existir: utilidades como inset-0, p-0 o gap-0 lo resuelven por
@@ -145,6 +148,10 @@
      por decisión del cliente: los botones son la pieza que más se toca y
      ahora la forma los distingue del resto de contenedores. */
   --radius-pill: 999px;
+
+  /* Grosor del trazo de los iconos. Uno solo para todo el juego: lo que los
+     hace leerse como familia es el grosor compartido, no el dibujo. */
+  --trazo-icono: 1.5;
 
   /* --- Movimiento ------------------------------------------------------
      Dos curvas: la de entrada para todo lo que llega y la de salida para lo

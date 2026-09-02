@@ -6,8 +6,6 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      /* Página interna de trabajo: no tiene por qué salir en buscadores. */
-      disallow: ["/estilo"],
     },
     sitemap: `${sitioUrl()}/sitemap.xml`,
   };

@@ -50,8 +50,8 @@ type PropsBoton = PropsComunes &
 
 type PropsEnlace = PropsComunes &
   Omit<ComponentProps<typeof Link>, keyof PropsComunes | "href"> & {
-    /** Ruta del sitio, o un ancla de la propia página. */
-    href: Route | `#${string}`;
+    /** Ruta del sitio, o un ancla: de esta página o de la portada. */
+    href: Route | `#${string}` | `/#${string}`;
     externo?: false;
   };
 
@@ -105,9 +105,11 @@ export function Boton(props: PropsBoton | PropsEnlace | PropsExterno) {
     );
   }
 
-  /* Un ancla de la misma página no pasa por el enrutador: sería una
-     navegación que no cambia de página y perdería el desplazamiento suave. */
-  if (typeof resto.href === "string" && resto.href.startsWith("#")) {
+  /* Ninguna ancla pasa por el enrutador. La de esta página porque sería una
+     navegación que no cambia de página y perdería el desplazamiento suave;
+     la de la portada ("/#seccion", desde una ficha de detalle) porque el
+     enrutador tipado no la reconoce como ruta. */
+  if (typeof resto.href === "string" && resto.href.includes("#")) {
     const { href, ...atributos } = resto as { href: string } & ComponentProps<"a">;
     return (
       <a href={href} className={clases} {...atributos}>

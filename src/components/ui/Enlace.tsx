@@ -25,7 +25,8 @@ type PropsComunes = {
 
 type PropsInterno = PropsComunes &
   Omit<ComponentProps<typeof Link>, keyof PropsComunes | "href"> & {
-    href: Route;
+    /** Ruta del sitio, o un ancla: de esta página o de la portada. */
+    href: Route | `#${string}` | `/#${string}`;
     externo?: false;
   };
 
@@ -68,6 +69,18 @@ export function Enlace(props: PropsInterno | PropsExterno) {
         rel={nuevaPestana ? "noopener noreferrer" : undefined}
         {...(atributos as ComponentProps<"a">)}
       >
+        {contenido}
+      </a>
+    );
+  }
+
+  /* Ninguna ancla pasa por el enrutador. La de esta página porque sería una
+     navegación que no cambia de página y perdería el desplazamiento suave;
+     la de la portada ("/#seccion", desde una ficha de detalle) porque el
+     enrutador tipado no la reconoce como ruta. */
+  if (href.includes("#")) {
+    return (
+      <a href={href} className={clases} {...(atributos as ComponentProps<"a">)}>
         {contenido}
       </a>
     );

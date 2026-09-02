@@ -73,11 +73,11 @@ src/
 ├── components/
 │   ├── layout/     cabecera, pie, navegación, menú móvil, cookies
 │   ├── motion/     vocabulario de entradas y revelados
-│   ├── secciones/  hero, servicios, proyectos, formulario
-│   └── ui/         botón, enlace, campo, ficha, foto, sección
-├── content/        servicios, proyectos, respaldo  ← la verdad del sitio
+│   ├── secciones/  hero, etapas, servicios, proyectos, clientes, formulario
+│   └── ui/         botón, enlace, campo, ficha, foto, icono, sección
+├── content/        servicios, proyectos, respaldo, institucional, clientes  ← la verdad del sitio
 ├── fotos/          fotografía de campo procesada
-├── logo/           piezas del logo
+├── logo/           piezas del logo (y clientes/ para la banda de logos)
 ├── lib/            configuración, validación, movimiento
 └── styles/         tokens.css
 ```
@@ -86,25 +86,38 @@ src/
 inventan cifras, certificaciones, años de experiencia ni testimonios. Si algo
 no está ahí, no entra al sitio.
 
-`src/lib/site.ts` tiene la bandera `permisos.nombrarClientes`: en `false`
-mientras no llegue la autorización escrita para nombrar y mostrar logos de
-Autopista Río Magdalena, IBAL y Grupo Energía Bogotá.
+`src/lib/site.ts` tiene la bandera `permisos.nombrarClientes`. Está en `true`
+desde que BIOMADS entregó los tres logos —Autopista Río Magdalena, IBAL y
+Grupo Energía Bogotá— para publicarlos. Ponerla en `false` retira la banda
+entera sin dejar hueco.
+
+**Rutas.** La portada es la página; solo quedan aparte las fichas de detalle
+(`/proyectos`, `/proyectos/[slug]`, `/servicios/[slug]`) para quien llegue por
+buscador o comparta un enlace. Los índices `/nosotros`, `/servicios` y
+`/contacto` se borraron porque repetían lo que la portada ya dice, y `/estilo`
+—la página interna de tokens— también: estaba pública.
 
 ---
 
 ## Scripts de preparación de recursos
 
-Regeneran los binarios a partir de los originales. **Necesitan la carpeta
-`Foto/` y `Logo-Biomads.png` un nivel por encima del proyecto**, que no están
-en el repositorio por peso. Los resultados sí están versionados, así que un
-clon nuevo compila sin ejecutarlos.
+Regeneran los binarios a partir de los originales. **Necesitan las carpetas
+`Foto/` y `Logos/` y el archivo `Logo-Biomads.png` un nivel por encima del
+proyecto**, que no están en el repositorio por peso. Los resultados sí están
+versionados, así que un clon nuevo compila sin ejecutarlos.
 
 ```bash
-node scripts/preparar-fotos.mjs   # PNG de 3,5 MB → JPEG servibles
-node scripts/preparar-video.mjs   # 21,6 MB → 1,6 MB + póster
-node scripts/preparar-logo.mjs    # recorta guías y arma las variantes
-node scripts/preparar-og.mjs      # imagen para compartir (1200×630)
+node scripts/preparar-fotos.mjs           # PNG de 3,5 MB → JPEG servibles
+node scripts/preparar-video.mjs           # 21,6 MB → 0,9 MB + póster
+node scripts/preparar-logo.mjs            # recorta guías y arma las variantes
+node scripts/preparar-logos-clientes.mjs  # iguala por área los tres logos de cliente
+node scripts/preparar-og.mjs              # imagen para compartir (1200×630)
 ```
+
+**Sobre el video.** Una sola pista H.264. VP9 y AV1 se probaron los dos y
+salen más pesados con esta imagen —follaje en movimiento a tasa baja es el
+peor caso para ellos—, así que no hay `<source>` alternativo. El peso bajó a
+la mitad recortando resolución y cadencia, no cambiando de códec.
 
 ---
 
@@ -119,8 +132,16 @@ En orden de urgencia:
 2. **Metodología.** El brief no documenta diseño de muestreo, esfuerzo ni
    equipos. Lo único publicado sobre método es cómo se ejecutó en cada
    proyecto, atribuido a ese proyecto.
-3. **Autorización escrita** para nombrar a los tres clientes del portafolio.
-4. **Constancias de ejecución** en PDF con texto seleccionable: las ranuras
+3. **Descripción de las cinco etapas del estudio ambiental.** Hoy solo
+   existen los rótulos y así se publican. Cuando lleguen, entran bajo cada
+   nombre en `src/content/institucional.ts` y la banda no cambia de forma.
+4. **Confirmar la autorización escrita** de los tres clientes. Los logos ya
+   están publicados por instrucción de BIOMADS; si alguna no está en firme,
+   `permisos.nombrarClientes` los retira.
+5. **Fecha exacta de constitución.** El hero publica los años de experiencia
+   como diferencia de años contra 2017. Con el mes, la cifra deja de poder
+   adelantarse en uno.
+6. **Constancias de ejecución** en PDF con texto seleccionable: las ranuras
    ya están dimensionadas en la sección de proyectos.
-5. **Datos operativos:** dirección, NIT, redes, horario.
-6. **Logo en vector (SVG).** Hoy se recorta del PNG entregado.
+7. **Datos operativos:** dirección, NIT, redes, horario.
+8. **Logo en vector (SVG).** Hoy se recorta del PNG entregado.

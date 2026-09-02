@@ -34,7 +34,7 @@ export function SiguientePaso({ titulo, children, alterna = false }: Props) {
 
         <Reveal indice={2}>
           <div className="flex flex-wrap gap-4">
-            <Boton href="/contacto">Solicitar propuesta</Boton>
+            <Boton href="/#contacto">Solicitar propuesta</Boton>
             <Boton href={whatsapp} variante="secundario" externo>
               Escribir por WhatsApp
             </Boton>

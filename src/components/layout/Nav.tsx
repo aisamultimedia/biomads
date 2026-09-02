@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { m } from "motion/react";
+import { useSeccionActiva } from "@/hooks/useSeccionActiva";
 import { texto } from "@/lib/motion";
 import { navegacion, type ItemNav } from "@/lib/site";
 
@@ -23,11 +22,6 @@ type Props = {
   onNavegar?: () => void;
 };
 
-/** ¿La ruta actual corresponde a este ítem? */
-function esActivo(ruta: string, href: string) {
-  return href === "/" ? ruta === "/" : ruta === href || ruta.startsWith(`${href}/`);
-}
-
 export function Nav({
   items = navegacion,
   orientacion = "horizontal",
@@ -36,7 +30,7 @@ export function Nav({
   animado = false,
   onNavegar,
 }: Props) {
-  const ruta = usePathname();
+  const seccionActiva = useSeccionActiva();
   const vertical = orientacion === "vertical";
 
   const colorActivo = invertido ? "text-ink-invert" : "text-ink";
@@ -47,13 +41,16 @@ export function Nav({
   return (
     <ul className={vertical ? "flex flex-col" : "flex items-center gap-8"}>
       {items.map((item) => {
-        const activo = esActivo(ruta, item.href);
+        const activo = seccionActiva === item.href;
+        /* Ancla de la misma página: <a> y no <Link>. El enrutador trataría
+           esto como una navegación que no cambia de página y se perdería el
+           desplazamiento suave. */
         const contenido = (
           <>
-            <Link
+            <a
               href={item.href}
               onClick={onNavegar}
-              aria-current={activo ? "page" : undefined}
+              aria-current={activo ? "true" : undefined}
               className={[
                 "relative inline-flex items-center",
                 "min-h-[var(--area-tactil)]",
@@ -69,23 +66,7 @@ export function Nav({
               ].join(" ")}
             >
               {item.rotulo}
-            </Link>
-
-            {vertical && tamano === "grande" && item.hijos && (
-              <ul className="mb-4 ml-6 flex flex-col border-l border-line pl-6">
-                {item.hijos.map((hijo) => (
-                  <li key={hijo.href}>
-                    <Link
-                      href={hijo.href as typeof item.href}
-                      onClick={onNavegar}
-                      className="flex min-h-[var(--area-tactil)] items-center text-ink-muted transition-colors duration-[var(--duracion-micro)] ease-base hover:text-ink"
-                    >
-                      {hijo.rotulo}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
+            </a>
           </>
         );
 

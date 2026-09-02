@@ -104,7 +104,7 @@ Cuatro contrataciones, cuatro frentes distintos. **Vale la pena pedirle a BIOMAD
 - **Modelo de trabajo:** mixto. Personal permanente más profesionales, especialistas, proveedores, contratistas, conductores y operarios según las necesidades de cada proyecto.
 - **Regiones con proyectos ejecutados:** Antioquia, Huila.
 - **Certificaciones:** ninguna vigente. **RUP en proceso.** No presentarlo como obtenido.
-- **Clientes en portafolio:** Autopista Río Magdalena, IBAL, Grupo Energía Bogotá. `[FALTA]` autorización de nombre y logo.
+- **Clientes en portafolio:** Autopista Río Magdalena, IBAL, Grupo Energía Bogotá. El cliente entregó los tres logos el 2 de septiembre de 2026 para publicarlos; se muestran solo con su nombre, sin alcance ni año, porque el portafolio no los documenta.
 
 ---
 
@@ -134,10 +134,30 @@ Cuatro contrataciones, cuatro frentes distintos. **Vale la pena pedirle a BIOMAD
 
 **Visión.** Ser una empresa líder a nivel nacional en soluciones ambientales integrales, reconocida por su innovación, excelencia operativa y compromiso con el desarrollo sostenible.
 
-**Valores.** Excelencia técnica · Sostenibilidad activa · Integridad y transparencia · Innovación ambiental · Compromiso social.
+**Valores corporativos.** El cliente entregó la descripción de cada uno el 2 de septiembre de 2026; antes de esa fecha solo constaban los nombres.
 
-**Política de calidad.** Planificar, ejecutar y supervisar proyectos ambientales con altos estándares de calidad, sostenibilidad y responsabilidad; procesos eficientes y mejora continua, garantizando el cumplimiento de la normatividad ambiental vigente y la satisfacción de los clientes.
+1. **Excelencia técnica.** Compromiso con altos estándares de calidad, precisión e innovación en cada proyecto.
+2. **Sostenibilidad activa.** Promovemos el uso responsable de los recursos naturales y el desarrollo sostenible.
+3. **Integridad y transparencia.** Actuamos con ética, responsabilidad y cumplimiento normativo en todas nuestras operaciones.
+4. **Innovación ambiental.** Aplicamos soluciones técnicas avanzadas y eficientes para enfrentar los desafíos ambientales.
+5. **Compromiso social.** Generamos impacto positivo en las comunidades y fomentamos el respeto por el entorno.
 
+**Política de calidad.** Texto completo entregado por el cliente el 2 de septiembre de 2026:
+
+> En BIOMADS nos comprometemos a planificar, ejecutar y supervisar proyectos ambientales con altos estándares de calidad, sostenibilidad y responsabilidad.
+>
+> Implementamos procesos eficientes y mejora continua, garantizando el cumplimiento de la normatividad ambiental vigente y la satisfacción de nuestros clientes, contribuyendo al desarrollo sostenible y la protección del medio ambiente.
+
+**Objetivos de la política de calidad.**
+
+- Cumplir con la normativa técnica y ambiental aplicable.
+- Desarrollar soluciones ambientales integrales y sostenibles.
+- Optimizar procesos.
+- Promover la mejora continua.
+- Garantizar la satisfacción de nuestros clientes.
+
+> La visión dice "líder a nivel nacional". Es una aspiración declarada, no alcance operativo: se publica siempre rotulada como **visión** y separada de las regiones con proyectos ejecutados, que siguen siendo Antioquia y Huila.
+>
 > Este bloque existe y puede vivir en una sección secundaria de "Nosotros" o en un desplegable. **No abre la página** y no es argumento de venta: es lo mismo que dice toda consultora del sector.
 
 ---
@@ -148,7 +168,7 @@ En orden de urgencia:
 
 1. **Las cuatro preguntas sin responder del brief** (sección 5): para qué quieren la web, quién decide del otro lado, qué debe pensar esa persona al salir del sitio, qué les parece mal comunicado en su sector. Sin esto el copy se escribe a ciegas.
 2. **Fotografía propia de campo.** El Quimbo, las vías del Huila, cualquier jornada de monitoreo. Equipo trabajando, no paisajes. Es el activo visual que decide si el sitio se ve creíble o se ve como plantilla.
-3. **Autorización escrita** para nombrar y mostrar logo de Autopista Río Magdalena, IBAL y Grupo Energía Bogotá.
+3. **Confirmar la autorización escrita** de Autopista Río Magdalena, IBAL y Grupo Energía Bogotá. Los logos ya están publicados por instrucción de BIOMADS; la bandera `permisos.nombrarClientes` los retira si alguna no está en firme.
 4. **Ficha del caso Autopista Río Magdalena** con el mismo formato de los otros dos.
 5. **Datos operativos:** dirección, NIT, redes, horario.
 6. **Fotos y cargos del equipo permanente**, si aceptan mostrarse. Cinco caras con nombre hacen más por la credibilidad de una empresa de diez personas que cualquier párrafo.

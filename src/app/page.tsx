@@ -2,13 +2,18 @@ import type { Metadata } from "next";
 import { Boton } from "@/components/ui/Boton";
 import { Enlace } from "@/components/ui/Enlace";
 import { Foto } from "@/components/ui/Foto";
+import { Icono } from "@/components/ui/Icono";
 import { Seccion } from "@/components/ui/Seccion";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealGroup } from "@/components/motion/RevealGroup";
+import { Clientes } from "@/components/secciones/Clientes";
+import { EtapasEstudio } from "@/components/secciones/EtapasEstudio";
 import { FichaServicio } from "@/components/secciones/FichaServicio";
 import { FormularioContacto } from "@/components/secciones/FormularioContacto";
 import { Hero } from "@/components/secciones/Hero";
+import { MarcoInstitucional } from "@/components/secciones/MarcoInstitucional";
 import { TarjetaCaso } from "@/components/secciones/TarjetaCaso";
+import { quienesSomos } from "@/content/institucional";
 import { proyectos } from "@/content/proyectos";
 import { diferencial, equipo, regiones } from "@/content/respaldo";
 import { serviciosDetallados, serviciosListados } from "@/content/servicios";
@@ -25,10 +30,10 @@ export const metadata: Metadata = {
 /**
  * Página única.
  *
- * Todo el recorrido vive aquí, en secciones ancladas: nosotros, servicios,
- * proyectos y contacto. Las páginas de detalle siguen existiendo para quien
- * llegue por buscador o comparta un enlace, pero la visita normal no sale de
- * esta pantalla.
+ * Todo el recorrido vive aquí, en secciones ancladas: nosotros, las etapas
+ * del estudio ambiental, servicios, proyectos y contacto. Las páginas de
+ * detalle siguen existiendo para quien llegue por buscador o comparta un
+ * enlace, pero la visita normal no sale de esta pantalla.
  */
 export default function Home() {
   return (
@@ -40,12 +45,16 @@ export default function Home() {
           ================================================================ */}
       <Seccion
         id="nosotros"
-        rotulo="Nosotros"
+        rotulo="¿Quiénes somos?"
         titulo="Somos unos diez. El equipo lo arma el proyecto"
       >
         <div className="grid gap-16 md:grid-cols-2 md:gap-24">
           <div>
             <Reveal as="p" className="medida text-lg text-ink">
+              {quienesSomos}
+            </Reveal>
+
+            <Reveal as="p" indice={1} className="medida mt-6 text-ink-muted">
               {diferencial.fortaleza}
             </Reveal>
 
@@ -71,12 +80,6 @@ export default function Home() {
                 {equipo.especialistas.join(" · ")}
               </p>
             </Reveal>
-
-            <Reveal className="mt-12">
-              <Boton href="/nosotros" variante="secundario">
-                Misión, visión y habilitaciones
-              </Boton>
-            </Reveal>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
@@ -101,7 +104,16 @@ export default function Home() {
             />
           </div>
         </div>
+
+        {/* Misión, visión, valores y política. Al final de la sección, nunca
+            abriéndola: es lo mismo que declara toda consultora del sector. */}
+        <MarcoInstitucional />
       </Seccion>
+
+      {/* ================================================================
+          Las cinco etapas del estudio ambiental, en banda oscura.
+          ================================================================ */}
+      <EtapasEstudio />
 
       {/* ================================================================
           Servicios — título y resumen a la vista; la ficha, al abrir.
@@ -126,8 +138,9 @@ export default function Home() {
         <div className="mt-24 grid gap-16 md:grid-cols-2 md:gap-24">
           <RevealGroup as="ul" regla className="flex flex-col" itemClassName="py-5">
             {serviciosListados.map((servicio) => (
-              <span key={servicio} className="block text-lg text-ink">
-                {servicio}
+              <span key={servicio.nombre} className="flex items-center gap-4 text-lg text-ink">
+                <Icono nombre={servicio.icono} className="text-accent-deep" />
+                {servicio.nombre}
               </span>
             ))}
           </RevealGroup>
@@ -135,9 +148,8 @@ export default function Home() {
           <Reveal>
             <p className="etiqueta text-ink-muted">También prestamos</p>
             <p className="medida mt-4 text-ink-muted">
-              Estos frentes no tienen ficha publicada. Antes de comprometernos revisamos
-              si el proyecto está dentro de nuestras competencias, recursos y
-              condiciones: si no lo está, lo decimos.
+              Sin ficha publicada. Si el frente no está dentro de nuestras
+              competencias, lo decimos.
             </p>
             <div className="mt-8">
               <Boton href="#contacto" variante="secundario">
@@ -163,9 +175,8 @@ export default function Home() {
         <Reveal regla className="mt-24 pt-8">
           <p className="etiqueta text-ink-muted">Certificados y constancias</p>
           <p className="medida mt-4 text-ink-muted">
-            Las constancias de ejecución se publican aquí, en PDF con texto
-            seleccionable. Mientras tanto las enviamos por correo a quien las pida para
-            un proceso de contratación.
+            Se publican aquí en PDF. Mientras tanto las enviamos por correo a quien
+            las pida.
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -187,6 +198,11 @@ export default function Home() {
       </Seccion>
 
       {/* ================================================================
+          Clientes. Solo logos: el portafolio no documenta estos encargos.
+          ================================================================ */}
+      <Clientes />
+
+      {/* ================================================================
           Contacto.
           ================================================================ */}
       <Seccion
@@ -199,33 +215,50 @@ export default function Home() {
           <div>
             <Reveal as="p" className="medida text-lg text-ink">
               Con el alcance y la autoridad ante la que responde alcanza para armar una
-              propuesta. Si el frente no es nuestro, se lo decimos de una vez.
+              propuesta.
             </Reveal>
 
             <Reveal regla className="mt-12 pt-6">
               <p className="etiqueta text-ink-muted">Directo, sin formulario</p>
+              {/* El icono va fuera del enlace: dentro ampliaría el área
+                  pulsable con una zona que no parece parte del enlace. */}
               <ul className="mt-6 flex flex-col gap-6">
-                <li>
-                  <Enlace href={whatsapp} externo className="dato text-xl">
-                    {empresa.telefono}
-                  </Enlace>
-                  <p className="mt-1 text-sm text-ink-muted">Llamada o WhatsApp</p>
+                <li className="flex items-start gap-4">
+                  <Icono nombre="telefono" className="mt-1 text-accent-deep" />
+                  <span>
+                    <Enlace href={whatsapp} externo className="dato text-xl">
+                      {empresa.telefono}
+                    </Enlace>
+                    <span className="mt-1 block text-sm text-ink-muted">
+                      Llamada o WhatsApp
+                    </span>
+                  </span>
                 </li>
-                <li>
-                  <Enlace href={mailto} externo className="text-xl">
-                    {empresa.correo}
-                  </Enlace>
-                  <p className="mt-1 text-sm text-ink-muted">Correo de gerencia</p>
+                <li className="flex items-start gap-4">
+                  <Icono nombre="correo" className="mt-1 text-accent-deep" />
+                  <span>
+                    <Enlace href={mailto} externo className="text-xl">
+                      {empresa.correo}
+                    </Enlace>
+                    <span className="mt-1 block text-sm text-ink-muted">
+                      Correo de gerencia
+                    </span>
+                  </span>
                 </li>
               </ul>
             </Reveal>
 
             <Reveal regla className="mt-12 pt-6">
               <p className="etiqueta text-ink-muted">Dónde estamos</p>
-              <p className="mt-4 text-ink">{empresa.sede}</p>
-              <p className="mt-1 text-sm text-ink-muted">
-                Proyectos ejecutados en {regiones.join(" y ")}.
-              </p>
+              <div className="mt-4 flex items-start gap-4">
+                <Icono nombre="ubicacion" className="mt-1 text-accent-deep" />
+                <p>
+                  <span className="text-ink">{empresa.sede}</span>
+                  <span className="mt-1 block text-sm text-ink-muted">
+                    Proyectos ejecutados en {regiones.join(" y ")}.
+                  </span>
+                </p>
+              </div>
             </Reveal>
           </div>
 

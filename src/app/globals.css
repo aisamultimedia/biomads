@@ -128,6 +128,14 @@
     font-weight: 500;
   }
 
+  /* Descriptor del hero. No es un rótulo sino una frase, así que va en la
+     tipografía de cuerpo y en caja baja; el interletrado negativo la
+     compacta para que no compita con el título que tiene debajo. */
+  .descriptor {
+    font-family: var(--font-cuerpo);
+    letter-spacing: var(--tracking-descriptor);
+  }
+
   /* Cualquier dato, duración o cifra */
   .dato {
     font-family: var(--font-mono);
@@ -323,6 +331,34 @@
     display: inline-flex;
     align-items: baseline;
     gap: var(--spacing-2);
+  }
+
+  /* -----------------------------------------------------------------------
+     Área táctil de los enlaces sueltos
+
+     Con un puntero fino, un enlace de texto de 24 px de alto se acierta sin
+     problema. Con el dedo no: las pautas de plataforma piden 44×44 y los
+     enlaces de este sitio se quedaban entre 23 y 40. Solo crecen donde se
+     tocan, que es donde el problema existe.
+
+     El logo de la cabecera entra aquí por lo mismo: es una imagen de 28 px
+     dentro de un enlace, y era el objetivo más pequeño de la barra.
+     ----------------------------------------------------------------------- */
+
+  @media (pointer: coarse) {
+    .enlace-subrayado,
+    .enlace-flecha,
+    .enlace-logotipo {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--area-tactil);
+    }
+
+    /* El de la flecha alinea por la base para que el subrayado del texto y
+       la flecha compartan línea; centrarlo la descolocaría. */
+    .enlace-flecha {
+      align-items: baseline;
+    }
   }
 
   .enlace-flecha > .flecha {
@@ -771,15 +807,6 @@
     padding-block: var(--spacing-24);
   }
 
-  /* Tarjeta de cifra: sólida, para que el contraste no dependa del video. */
-  .hero-cifra {
-    min-width: 15rem;
-    padding: var(--spacing-6);
-    border: 1px solid var(--color-line-invert);
-    border-radius: var(--radius-lg);
-    background-color: color-mix(in srgb, var(--color-velo) 86%, transparent);
-  }
-
   /* -----------------------------------------------------------------------
      Control de pausa del video. Discreto pero alcanzable: lo exige
      WCAG 2.2.2 para cualquier movimiento automático de más de 5 s.
@@ -843,15 +870,22 @@
 /* =========================================================================
    Tema de la barra
 
-   Por defecto la barra es clara. Se pone oscura cuando la superficie que
-   tiene debajo lo es: el hero, una sección oscura o el pie. El primer
-   pintado lo decide `:has(.hero-completo)` sin JavaScript —así una página
-   sin hero nace clara y no parpadea—, y a partir de ahí manda
+   La barra es clara siempre. Antes conmutaba a oscura sobre el hero y sobre
+   las secciones oscuras; se invirtió por decisión del cliente —el claro
+   contrasta mejor contra el video que el verde oscuro— y de paso desapareció
+   la mitad de la lógica: ya no hay dos juegos de color de texto, ni dos
+   archivos de logo, ni un anillo de foco que conmute.
+
+   Lo único que sigue adaptándose es el fondo: sobre superficie oscura la
+   barra se vuelve sólida y sube el contraste del borde. Translúcida sobre
+   el video se teñía de verde y el borde desaparecía.
+
+   El primer pintado lo decide `:has(.hero-completo)` sin JavaScript —así una
+   página sin hero nace translúcida y no parpadea—, y a partir de ahí manda
    `data-sobre-oscuro`, que el scroll recalcula.
    ========================================================================= */
 
 @layer components {
-  /* --- Claro: el estado por defecto --- */
   .barra {
     background-color: color-mix(in srgb, var(--color-paper) 88%, transparent);
     border: 1px solid var(--color-line);
@@ -861,8 +895,7 @@
     transition:
       padding var(--duracion-cabecera) var(--ease-base),
       background-color var(--duracion-cabecera) var(--ease-base),
-      border-color var(--duracion-cabecera) var(--ease-base),
-      color var(--duracion-cabecera) var(--ease-base);
+      border-color var(--duracion-cabecera) var(--ease-base);
   }
 
   .enlace-barra {
@@ -874,40 +907,10 @@
     color: var(--color-ink);
   }
 
-  .logo-sobre-oscuro {
-    display: none;
-  }
-
-  /* --- Oscuro: solo mientras la barra cubre el hero --- */
   body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .barra,
   .cabecera[data-sobre-oscuro] .barra {
-    background-color: var(--color-dark);
-    border-color: transparent;
-    color: var(--color-ink-invert);
-    /* El anillo de foco conmuta con el tema, igual que .superficie-oscura. */
-    --anillo-foco: var(--color-accent);
-  }
-
-  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .enlace-barra,
-  .cabecera[data-sobre-oscuro] .enlace-barra {
-    color: var(--color-ink-invert-muted);
-  }
-
-  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .enlace-barra,
-  .cabecera[data-sobre-oscuro] .enlace-barra:hover,
-  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .enlace-barra,
-  .cabecera[data-sobre-oscuro] .enlace-barra.es-activo {
-    color: var(--color-ink-invert);
-  }
-
-  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .logo-sobre-claro,
-  .cabecera[data-sobre-oscuro] .logo-sobre-claro {
-    display: none;
-  }
-
-  body:has(.hero-completo) .cabecera:not([data-tema-resuelto]) .logo-sobre-oscuro,
-  .cabecera[data-sobre-oscuro] .logo-sobre-oscuro {
-    display: block;
+    background-color: var(--color-paper);
+    border-color: var(--color-line-strong);
   }
 
   /* Los trazos del icono de menú siguen al color del texto de la barra. */
@@ -919,24 +922,40 @@
 /* =========================================================================
    Aviso de cookies
 
-   Arriba a la derecha, bajo la barra. Pequeño y sin botón de texto: no
-   tapa el contenido ni atrapa el foco, porque es un aviso y no un diálogo.
+   En móvil, barra al ancho de la pantalla que sube desde abajo: es donde
+   está el pulgar y no tapa el contenido que se está leyendo. En escritorio,
+   una píldora pequeña abajo a la izquierda, del ancho de su texto.
+
+   Nunca es un diálogo: no atrapa el foco ni bloquea la página. Lo único que
+   el sitio guarda es la respuesta a este aviso, y así lo dice.
    ========================================================================= */
 
 @layer components {
   .aviso-cookies {
     position: fixed;
-    inset-block-start: calc(var(--altura-cabecera) + var(--spacing-2));
-    inset-inline-end: var(--spacing-6);
     z-index: 60;
     display: flex;
     align-items: center;
     gap: var(--spacing-4);
-    max-width: 22rem;
-    padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-6);
-    border: 1px solid var(--color-line-strong);
-    border-radius: var(--radius-lg);
     background-color: var(--color-paper);
+    /* Móvil: pegada al borde inferior, de lado a lado. El borde superior es
+       el único que se ve, así que los otros tres sobran. */
+    inset-block-end: 0;
+    inset-inline: 0;
+    padding: var(--spacing-4) var(--spacing-3) var(--spacing-4) var(--spacing-6);
+    padding-block-end: max(var(--spacing-4), env(safe-area-inset-bottom));
+    border-block-start: 1px solid var(--color-line-strong);
+  }
+
+  @media (min-width: 640px) {
+    .aviso-cookies {
+      inset-block-end: var(--spacing-6);
+      inset-inline: var(--spacing-6) auto;
+      max-width: 26rem;
+      padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) var(--spacing-6);
+      border: 1px solid var(--color-line-strong);
+      border-radius: var(--radius-pill);
+    }
   }
 
   .aviso-cookies-cerrar {
@@ -963,17 +982,26 @@
     background-color: currentColor;
   }
 
-  @media (max-width: 480px) {
-    .aviso-cookies {
-      inset-inline: var(--spacing-4);
-      max-width: none;
-    }
-  }
-
   @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
     .aviso-cookies {
-      animation: entrada-aviso var(--duracion-entrada) var(--ease-base) both;
+      animation: entrada-aviso-movil var(--duracion-entrada) var(--ease-base) both;
     }
+
+    @media (min-width: 640px) {
+      .aviso-cookies {
+        animation-name: entrada-aviso;
+      }
+    }
+  }
+}
+
+/* Móvil: entra desde fuera de la pantalla, que es lo que se pidió. En
+   escritorio la píldora ya está separada del borde, así que un empujón
+   corto basta y evita que cruce media pantalla. */
+@keyframes entrada-aviso-movil {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
   }
 }
 
@@ -1057,20 +1085,43 @@
     inset: 0;
     z-index: 70;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    overflow-y: auto;
     padding: var(--spacing-6);
     background-color: color-mix(in srgb, var(--color-velo) 72%, transparent);
   }
 
+  /* El panel se queda dentro de la pantalla y desplaza por dentro. Antes
+     crecía hasta 1179 px en una ventana de 900: desplazaba el velo, así que
+     el título se iba y el botón de cerrar con él. Ahora la cabecera es fija
+     y solo se mueve el cuerpo. */
   .panel-servicio {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     max-width: var(--container-angosto);
-    margin-block: auto;
-    padding: var(--spacing-12);
+    max-height: 88vh;
+    max-height: 88dvh;
     border-radius: var(--radius-lg);
     background-color: var(--color-paper);
+    /* Recorta el cuerpo desplazable contra las esquinas redondeadas. */
+    overflow: hidden;
+  }
+
+  .panel-servicio-cabecera {
+    display: flex;
+    flex: none;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-6);
+    padding: var(--spacing-12) var(--spacing-12) var(--spacing-8);
+  }
+
+  .panel-servicio-cuerpo {
+    overflow-y: auto;
+    /* El desplazamiento no se propaga a la página que hay detrás. */
+    overscroll-behavior: contain;
+    padding: 0 var(--spacing-12) var(--spacing-12);
   }
 
   .panel-servicio-cerrar {
@@ -1105,8 +1156,12 @@
   }
 
   @media (max-width: 640px) {
-    .panel-servicio {
-      padding: var(--spacing-8);
+    .panel-servicio-cabecera {
+      padding: var(--spacing-8) var(--spacing-8) var(--spacing-6);
+    }
+
+    .panel-servicio-cuerpo {
+      padding: 0 var(--spacing-8) var(--spacing-8);
     }
   }
 }
@@ -1137,5 +1192,144 @@
 
   .ranura-certificado > :last-child {
     margin-top: auto;
+  }
+}
+
+/* =========================================================================
+   Etapas del estudio ambiental
+
+   Cinco pasos en fila sobre superficie oscura. El hilo entre círculos es lo
+   que dice que hay orden: sin él serían cinco servicios sueltos y el
+   portafolio los declara como etapas de un mismo proceso.
+   ========================================================================= */
+
+@layer components {
+  .etapa-estudio {
+    position: relative;
+  }
+
+  .etapa-estudio-icono {
+    display: grid;
+    place-items: center;
+    width: var(--spacing-12);
+    height: var(--spacing-12);
+    border: 1px solid var(--color-line-invert);
+    border-radius: var(--radius-pill);
+    /* El acento sobre --dark llega a 5.8:1: de sobra para un grafismo.
+       Sigue sin usarse como texto ni como relleno del bloque. */
+    color: var(--color-accent);
+  }
+
+  /* El hilo une un círculo con el siguiente. En columna baja por el eje de
+     los círculos; en fila va de borde a borde, no solo por el hueco entre
+     columnas: los rótulos son más anchos que los círculos y cruzar
+     únicamente el `gap` dejaba un guión suelto en mitad de la nada. */
+  .etapa-estudio:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    inset-block-start: var(--spacing-12);
+    inset-block-end: calc(var(--spacing-6) * -1);
+    inset-inline-start: calc(var(--spacing-12) / 2);
+    border-inline-start: 1px solid var(--color-line-invert);
+  }
+
+  @media (min-width: 768px) {
+    .etapa-estudio:not(:last-child)::after {
+      inset-block: calc(var(--spacing-12) / 2) auto;
+      inset-inline: calc(var(--spacing-12) + var(--spacing-4)) calc(var(--spacing-4) * -1);
+      border-inline-start: 0;
+      border-block-start: 1px solid var(--color-line-invert);
+    }
+  }
+}
+
+/* =========================================================================
+   Marco institucional
+
+   Misión, visión, valores y política de calidad. Es lo mismo que dice toda
+   consultora del sector, así que ocupa poco y la política —el texto más
+   largo y el que menos gente lee— vive plegada dentro de un <details>.
+   ========================================================================= */
+
+@layer components {
+  .politica {
+    border-block-start: 1px solid var(--color-line);
+  }
+
+  /* El triángulo por defecto es del navegador y no hereda ni el color ni la
+     tipografía del sitio. Se quita y el estado lo dice el signo propio. */
+  .politica > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-6);
+    min-height: var(--area-tactil);
+    padding-block: var(--spacing-4);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .politica > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .politica-signo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--spacing-8);
+    height: var(--spacing-8);
+    flex: none;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--color-ink);
+    transition: color var(--duracion-micro) var(--ease-base),
+      border-color var(--duracion-micro) var(--ease-base);
+  }
+
+  .politica > summary:hover .politica-signo {
+    border-color: var(--color-accent-deep);
+    color: var(--color-accent-deep);
+  }
+
+  /* Las dos barras del signo. La vertical gira hasta desaparecer sobre la
+     horizontal: de + a −. Solo transform, y se apaga con reduced-motion. */
+  .politica-signo::before,
+  .politica-signo::after {
+    content: "";
+    position: absolute;
+    inset-inline: var(--spacing-2);
+    border-block-start: 1px solid currentColor;
+  }
+
+  .politica-signo::after {
+    rotate: 90deg;
+    transition: rotate var(--duracion-corta) var(--ease-base);
+  }
+
+  .politica[open] .politica-signo::after {
+    rotate: 0deg;
+  }
+}
+
+/* =========================================================================
+   Banda de clientes
+
+   Tres logos ajenos, cada uno con su propio color de marca. En gris no
+   compiten entre sí ni con la paleta del sitio; recuperan su color al
+   pasar el cursor, que es cuando alguien los está mirando de verdad.
+   ========================================================================= */
+
+@layer components {
+  .logo-cliente {
+    filter: grayscale(1);
+    opacity: 0.75;
+    transition: filter var(--duracion-corta) var(--ease-base),
+      opacity var(--duracion-corta) var(--ease-base);
+  }
+
+  .logo-cliente:hover {
+    filter: grayscale(0);
+    opacity: 1;
   }
 }

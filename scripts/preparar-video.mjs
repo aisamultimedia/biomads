@@ -2,14 +2,21 @@
  * Prepara el video de fondo del hero.
  *
  * El original pesa 22,6 MB a 10,9 Mbps: inservible como fondo web. Se
- * generan tres piezas en `public/video/`:
+ * generan dos piezas en `public/video/`:
  *
- *   hero.mp4     H.264. Se descartó el VP9: con esta imagen salía más
- *                pesado que el H.264, y el H.264 lo reproduce todo.
- *   hero-poster.jpg  primer fotograma, se ve mientras carga y es lo único
- *                    que se muestra si el usuario pidió menos movimiento
+ *   hero.mp4         H.264, mudo. Un fondo va mudo siempre.
+ *   hero-poster.jpg  primer fotograma. Se ve mientras carga y es lo único
+ *                    que se muestra si el usuario pidió menos movimiento.
  *
- * Sin pista de audio: un fondo va mudo siempre.
+ * **Sobre el códec.** Se probaron VP9 y AV1 y los dos salen MÁS pesados que
+ * el H.264 con esta imagen: AV1 (libsvtav1, preset 6) da 2,1 MB en su ajuste
+ * más agresivo frente a 0,9 MB del H.264. El follaje en movimiento es justo
+ * el caso donde los códecs modernos no rinden a tasas bajas. Así que una
+ * sola pista, y la reproduce todo el mundo.
+ *
+ * Lo que sí bajó el peso a la mitad —de 1,67 MB a 0,89 MB— fue reducir
+ * resolución y cadencia. El video vive detrás de un velo al 72 %: el detalle
+ * que se pierde no llega a verse.
  *
  *   node scripts/preparar-video.mjs
  */
@@ -29,16 +36,19 @@ const correr = (args) => execFileSync("ffmpeg", args, { stdio: ["ignore", "ignor
 
 console.log(`original: ${mb(origen)} MB`);
 
-/* Escala a 1600 de ancho: por encima de eso, un fondo desenfocado por el
-   velo no aporta nada y sí pesa. */
-const escala = "scale=1600:-2";
+/* 1280 de ancho y 24 fps. El velo del hero se come el detalle fino, así que
+   la resolución de más solo pesa; y una panorámica lenta a 24 no se
+   distingue de una a 30. Entre los dos recortan un 29 % del archivo. */
+const escala = "scale=1280:-2,fps=24";
 
 const mp4 = resolve(destino, "hero.mp4");
 correr([
   "-y", "-i", origen,
   "-an",
   "-vf", escala,
-  "-c:v", "libx264", "-crf", "34", "-preset", "slow",
+  /* CRF 36 en vez de 34: comparados fotograma a fotograma se distinguen a
+     duras penas en el follaje, y bajo el velo no se distinguen. */
+  "-c:v", "libx264", "-crf", "36", "-preset", "slow",
   "-pix_fmt", "yuv420p", "-movflags", "+faststart",
   mp4,
 ]);

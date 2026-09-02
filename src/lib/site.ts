@@ -14,53 +14,59 @@ export const empresa = {
   telefonoE164: "+573115276301",
 } as const;
 
+/**
+ * Años transcurridos desde la constitución.
+ *
+ * Se calcula, no se escribe: así no queda un número congelado que hay que
+ * acordarse de subir cada enero. Se resuelve en compilación, de modo que
+ * cambia con cada despliegue.
+ *
+ * Es una diferencia de años, y el brief no dice el mes de constitución: si
+ * la sociedad se constituyó en diciembre de 2017, hasta diciembre el número
+ * real es uno menos. Por eso el año aparece siempre al lado, para que la
+ * cifra sea comprobable. Con la fecha exacta esto se vuelve preciso.
+ */
+export function aniosDesdeConstitucion(): number {
+  return new Date().getFullYear() - empresa.constitucion;
+}
+
 export const whatsapp = `https://wa.me/${empresa.telefonoE164.replace("+", "")}`;
 export const mailto = `mailto:${empresa.correo}`;
 
 /**
- * Banderas de contenido pendiente de autorización del cliente.
+ * Banderas de contenido sujeto a autorización del cliente.
  * Ver CONTENIDO.md → "Lo que hay que pedirle a BIOMADS", punto 3.
- * No poner en true sin autorización escrita.
  */
 export const permisos = {
-  /** Nombrar y mostrar logo de Autopista Río Magdalena, IBAL y Grupo Energía Bogotá. */
-  nombrarClientes: false,
+  /**
+   * Nombrar y mostrar logo de Autopista Río Magdalena, IBAL y Grupo Energía
+   * Bogotá. Activada el 2 de septiembre de 2026, cuando BIOMADS entregó los
+   * tres logos para publicarlos. Si la autorización escrita de alguno de los
+   * tres no llegara a estar en firme, basta volver a `false`: la banda
+   * desaparece del sitio sin dejar hueco.
+   */
+  nombrarClientes: true,
 } as const;
 
 export type ItemNav = {
-  /** Ancla de la página única, o ruta para las páginas de detalle. */
-  href: string;
+  /** Ancla de la página única. */
+  href: `#${string}`;
   rotulo: string;
-  /** Páginas hijas. Se despliegan en la barra y se anidan en el menú móvil. */
-  hijos?: readonly { href: string; rotulo: string; nota?: string }[];
 };
 
+/**
+ * Navegación: cuatro anclas de la misma página y nada más.
+ *
+ * Los desplegables que llevaban a las fichas de servicio y de proyecto se
+ * quitaron: en un sitio de una sola página abrían un submenú para sacar al
+ * visitante de ella. Las fichas siguen existiendo y se alcanzan desde su
+ * sección —el popover del servicio y la tarjeta del proyecto—, que es donde
+ * la ficha viene a cuento.
+ */
 export const navegacion: readonly ItemNav[] = [
   { href: "#nosotros", rotulo: "Nosotros" },
-  {
-    href: "#servicios",
-    rotulo: "Servicios",
-    hijos: [
-      {
-        href: "/servicios/monitoreo-fauna",
-        rotulo: "Monitoreo de fauna",
-        nota: "Caracterización para el estudio ambiental",
-      },
-      {
-        href: "/servicios/flora-epifita",
-        rotulo: "Flora epífita reubicada",
-        nota: "Mantenimiento y seguimiento con registros",
-      },
-    ],
-  },
-  {
-    href: "#proyectos",
-    rotulo: "Proyectos",
-    hijos: [
-      { href: "/proyectos/solinter-2017", rotulo: "SOLINTER", nota: "Huila · 2017 · 6 meses" },
-      { href: "/proyectos/ges-2018", rotulo: "GES", nota: "El Quimbo · 2018 · 8 meses" },
-    ],
-  },
+  { href: "#servicios", rotulo: "Servicios" },
+  { href: "#proyectos", rotulo: "Proyectos" },
   { href: "#contacto", rotulo: "Contacto" },
 ] as const;
 

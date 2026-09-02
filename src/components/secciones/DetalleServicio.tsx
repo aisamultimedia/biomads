@@ -47,7 +47,7 @@ export function DetalleServicio({ servicio, lineasTitulo, autoridad, medio }: Pr
       {/* ---------------- Cabecera ---------------- */}
       <section className="mx-auto w-full max-w-ancho px-6 pb-24 pt-16 md:pb-40 md:pt-24">
         <Entrada as="p" tipo="lateral" className="etiqueta text-accent-deep">
-          <Enlace href="/servicios">Servicios</Enlace>
+          <Enlace href="/#servicios">Servicios</Enlace>
         </Entrada>
 
         <TituloPorLineas

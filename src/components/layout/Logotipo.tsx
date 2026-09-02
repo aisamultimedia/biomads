@@ -6,13 +6,6 @@ import logoOscuro from "@/logo/logo-header.png";
 type Props = {
   /** Sobre superficie oscura: la palabra va en --ink-invert. */
   invertido?: boolean;
-  /**
-   * Pinta las dos variantes y deja que el CSS muestre la que toque. Lo usa
-   * la barra, que cambia de tema al pasar el hero. Son ~12 kB cada una y el
-   * alternativo —cambiar el `src` con JavaScript— parpadearía en cada
-   * cambio de tema.
-   */
-  adaptable?: boolean;
   /** Alto en píxeles. El ancho sale de la proporción del archivo. */
   alto?: number;
   /**
@@ -33,40 +26,30 @@ type Props = {
  */
 export function Logotipo({
   invertido = false,
-  adaptable = false,
   alto = 34,
   prioridad = false,
   className = "",
 }: Props) {
-  const pieza = (fuente: StaticImageData, clase: string) => (
-    <Image
-      src={fuente}
-      alt="BIOMADS"
-      height={alto}
-      width={Math.round((fuente.width * alto) / fuente.height)}
-      priority={prioridad}
-      className={`w-auto transition-opacity duration-[var(--duracion-micro)] ease-base group-hover:opacity-80 ${clase}`}
-      style={{ height: alto }}
-    />
-  );
+  /* Antes la barra pintaba las dos variantes y el CSS escondía una, porque
+     conmutaba de tema al pasar el hero. Ahora la barra es clara siempre:
+     una sola pieza, ~12 kB menos y una petición menos. */
+  const fuente: StaticImageData = invertido ? logoClaro : logoOscuro;
 
   return (
     <Link
       href="/"
-      className={`group inline-flex items-center ${className}`}
+      className={`enlace-logotipo group inline-flex items-center ${className}`}
       aria-label="BIOMADS — ir al inicio"
     >
-      {adaptable ? (
-        <>
-          {pieza(logoOscuro, "logo-sobre-claro")}
-          {/* La segunda no aporta nombre: sería leerlo dos veces. */}
-          <span aria-hidden="true" className="contents">
-            {pieza(logoClaro, "logo-sobre-oscuro")}
-          </span>
-        </>
-      ) : (
-        pieza(invertido ? logoClaro : logoOscuro, "")
-      )}
+      <Image
+        src={fuente}
+        alt="BIOMADS"
+        height={alto}
+        width={Math.round((fuente.width * alto) / fuente.height)}
+        priority={prioridad}
+        className="w-auto transition-opacity duration-[var(--duracion-micro)] ease-base group-hover:opacity-80"
+        style={{ height: alto }}
+      />
     </Link>
   );
 }

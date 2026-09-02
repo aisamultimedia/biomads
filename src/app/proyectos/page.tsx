@@ -35,10 +35,13 @@ export default function Pagina() {
           lineas={["Lo que hemos ejecutado,", "con nombre y duración"]}
         />
 
+        {/* Antes esta entradilla abría con las cuatro recontrataciones de un
+            mismo cliente. Se retiró por decisión del cliente: la relación
+            existe y está en CONTENIDO.md, pero no es lo que se destaca. */}
         <Entrada as="p" indice={4} className="medida mt-8 text-lg text-ink-muted">
-          Dos proyectos con ficha completa y un cliente que nos ha vuelto a contratar
-          cuatro veces. Publicamos lo que podemos sustentar: no hay contador de
-          proyectos ni años acumulados en esta página.
+          Dos proyectos con ficha completa: encargo, dificultad, cómo se resolvió y
+          duración contractual. Publicamos lo que podemos sustentar, así que aquí no
+          hay contador de proyectos ni de años acumulados.
         </Entrada>
 
         <div className="mt-16">

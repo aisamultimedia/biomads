@@ -94,19 +94,22 @@ export function Header() {
               <nav aria-label="Principal" className="hidden lg:block">
                 <NavBarra />
               </nav>
+              {/* Mismo alto que el del centro a propósito: solo uno de los
+                  dos se ve, pero con altos distintos el optimizador genera
+                  dos URL y el navegador baja las dos. */}
               <div className="lg:hidden">
-                <Logotipo adaptable alto={26} />
+                <Logotipo alto={28} />
               </div>
             </div>
 
             {/* Centro: el logo, como en una marca de producto */}
             <div className="hidden justify-center lg:flex">
-              <Logotipo adaptable alto={28} />
+              <Logotipo alto={28} />
             </div>
 
             {/* Derecha: el paso siguiente, siempre visible */}
             <div className="flex items-center justify-end gap-4">
-              <Boton href="/contacto" variante="acento" className="hidden sm:inline-flex">
+              <Boton href="#contacto" variante="acento" className="hidden sm:inline-flex">
                 Contacto
               </Boton>
 

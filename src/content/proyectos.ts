@@ -58,13 +58,13 @@ export const proyectos: readonly Proyecto[] = [
 ];
 
 /**
- * Relación recurrente con un mismo cliente. Es el dato más fuerte del brief:
- * cuatro contrataciones en cuatro frentes distintos.
+ * Relación recurrente con un mismo cliente: cuatro contrataciones en cuatro
+ * frentes distintos.
  *
- * El nombre del cliente (Autopista Río Magdalena) está detrás de
- * `permisos.nombrarClientes` en src/lib/site.ts. Mientras no llegue la
- * autorización escrita, el hecho se cuenta sin nombrarlo: los cuatro frentes
- * son verificables y no dependen del nombre.
+ * **Hoy no se publica en ninguna parte.** El cliente pidió dejar de
+ * destacarla, así que el componente que la mostraba se borró. Los datos se
+ * conservan aquí porque están en CONTENIDO.md y son verificables: si mañana
+ * se decide recuperarla, no hay que volver a levantarlos del brief.
  */
 export const relacionRecurrente = {
   nombreCliente: "Autopista Río Magdalena",

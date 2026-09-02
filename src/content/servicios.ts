@@ -7,8 +7,11 @@
  * entregable.
  */
 
+import type { NombreIcono } from "@/components/ui/Icono";
+
 export type ServicioDetallado = {
   slug: "monitoreo-fauna" | "flora-epifita";
+  icono: NombreIcono;
   titulo: string;
   /** Frase corta para listados y navegación. */
   resumen: string;
@@ -35,6 +38,7 @@ export type ServicioDetallado = {
 export const serviciosDetallados: readonly ServicioDetallado[] = [
   {
     slug: "monitoreo-fauna",
+    icono: "huella",
     titulo: "Monitoreo y estudio de biodiversidad de fauna",
     resumen:
       "Caracterización y monitoreo de fauna como soporte de los estudios ambientales del proyecto.",
@@ -56,6 +60,7 @@ export const serviciosDetallados: readonly ServicioDetallado[] = [
   },
   {
     slug: "flora-epifita",
+    icono: "epifita",
     titulo: "Mantenimiento y seguimiento de flora epífita reubicada",
     resumen:
       "Seguimiento con registros verificables después del traslado, no solo la reubicación inicial.",
@@ -80,15 +85,18 @@ export const serviciosDetallados: readonly ServicioDetallado[] = [
 /**
  * Servicios que se prestan y solo se pueden nombrar. El brief no entrega
  * alcance ni entregables para ninguno.
+ *
+ * El icono acompaña al nombre; no aporta información que el nombre no
+ * tenga, porque no hay ninguna que se pueda publicar.
  */
-export const serviciosListados: readonly string[] = [
-  "Actividad forestal",
-  "Planes de compensación ambiental",
-  "Inventarios forestales",
-  "Flora y fauna",
-  "Educación ambiental",
-  "Desarrollo sostenible",
-  "Asesoría y gestión ambiental",
+export const serviciosListados: readonly { icono: NombreIcono; nombre: string }[] = [
+  { icono: "arbol", nombre: "Actividad forestal" },
+  { icono: "compensacion", nombre: "Planes de compensación ambiental" },
+  { icono: "portapapeles", nombre: "Inventarios forestales" },
+  { icono: "prismaticos", nombre: "Flora y fauna" },
+  { icono: "libro", nombre: "Educación ambiental" },
+  { icono: "ciclo", nombre: "Desarrollo sostenible" },
+  { icono: "conversacion", nombre: "Asesoría y gestión ambiental" },
 ];
 
 /** Etapas de los estudios ambientales declaradas en el portafolio. */

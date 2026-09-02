@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { Boton } from "@/components/ui/Boton";
+import { Icono } from "@/components/ui/Icono";
 import type { ServicioDetallado } from "@/content/servicios";
 import type { Proyecto } from "@/content/proyectos";
 
@@ -90,7 +91,12 @@ export function FichaServicio({ servicio, numero, caso }: Props) {
         aria-controls={idPanel}
         className="tarjeta-servicio"
       >
-        <span className="dato text-sm text-accent-deep">{numero}</span>
+        {/* Numeral e icono en la misma línea: el numeral ordena las dos
+            tarjetas y el icono dice de qué va antes de leer el título. */}
+        <span className="flex items-center justify-between gap-4">
+          <span className="dato text-sm text-accent-deep">{numero}</span>
+          <Icono nombre={servicio.icono} tamano={28} className="text-accent-deep" />
+        </span>
 
         <span className="mt-6 block font-titulo text-xl text-ink md:text-2xl">
           {servicio.titulo}
@@ -120,7 +126,9 @@ export function FichaServicio({ servicio, numero, caso }: Props) {
             className="panel-servicio"
             onClick={(evento) => evento.stopPropagation()}
           >
-            <div className="flex items-start justify-between gap-6">
+            {/* Cabecera fija: el título y el botón de cerrar no se van con
+                el desplazamiento del cuerpo. */}
+            <div className="panel-servicio-cabecera">
               <div>
                 <p className="dato text-sm text-accent-deep">{numero}</p>
                 <h3 className="mt-4 font-titulo text-2xl text-ink md:text-3xl">
@@ -136,39 +144,41 @@ export function FichaServicio({ servicio, numero, caso }: Props) {
               </button>
             </div>
 
-            <p className="medida mt-8 text-lg text-ink">{servicio.elVacio}</p>
+            <div className="panel-servicio-cuerpo">
+              <p className="medida text-lg text-ink">{servicio.elVacio}</p>
 
-            <dl className="mt-12 grid gap-8 md:grid-cols-2">
-              {bloques.map((bloque) => (
-                <div key={bloque.rotulo} className="border-t border-line pt-4">
-                  <dt className="etiqueta text-ink-muted">{bloque.rotulo}</dt>
-                  <dd className="mt-2 text-sm text-ink">{bloque.texto}</dd>
-                </div>
-              ))}
-            </dl>
+              <dl className="mt-12 grid gap-8 md:grid-cols-2">
+                {bloques.map((bloque) => (
+                  <div key={bloque.rotulo} className="border-t border-line pt-4">
+                    <dt className="etiqueta text-ink-muted">{bloque.rotulo}</dt>
+                    <dd className="mt-2 text-sm text-ink">{bloque.texto}</dd>
+                  </div>
+                ))}
+              </dl>
 
-            <div className="mt-12 border-t border-line pt-6">
-              <p className="etiqueta text-ink-muted">Método aplicado en campo</p>
-              <p className="medida mt-3 text-sm text-ink">{servicio.metodologia}</p>
-              <p className="dato mt-3 text-xs text-ink-muted">
-                {servicio.metodologiaFuente}
-              </p>
-            </div>
+              <div className="mt-12 border-t border-line pt-6">
+                <p className="etiqueta text-ink-muted">Método aplicado en campo</p>
+                <p className="medida mt-3 text-sm text-ink">{servicio.metodologia}</p>
+                <p className="dato mt-3 text-xs text-ink-muted">
+                  {servicio.metodologiaFuente}
+                </p>
+              </div>
 
-            {caso && (
-              <p className="mt-8 text-sm text-ink-muted">
-                Última ejecución: <span className="dato">{caso.duracion}</span> en{" "}
-                {caso.ubicacion}.
-              </p>
-            )}
+              {caso && (
+                <p className="mt-8 text-sm text-ink-muted">
+                  Última ejecución: <span className="dato">{caso.duracion}</span> en{" "}
+                  {caso.ubicacion}.
+                </p>
+              )}
 
-            <div className="mt-12 flex flex-wrap gap-4">
-              <Boton href="#contacto" variante="acento">
-                Cuéntenos su proyecto
-              </Boton>
-              <Boton href={`/servicios/${servicio.slug}`} variante="secundario">
-                Ver la página completa
-              </Boton>
+              <div className="mt-12 flex flex-wrap gap-4">
+                <Boton href="#contacto" variante="acento">
+                  Cuéntenos su proyecto
+                </Boton>
+                <Boton href={`/servicios/${servicio.slug}`} variante="secundario">
+                  Ver la página completa
+                </Boton>
+              </div>
             </div>
           </div>
         </div>
