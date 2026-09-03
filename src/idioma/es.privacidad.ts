@@ -155,8 +155,8 @@ export const privacidadEs: Diccionario["privacidad"] = {
       titulo: "Cookies y almacenamiento local",
       parrafos: [
         "Este sitio no usa cookies de seguimiento ni herramientas de analítica, y no carga scripts de terceros que rastreen su navegación.",
-        "Lo único que guarda en su navegador, mediante almacenamiento local, es su respuesta al aviso de cookies y, si la cambia, la elección de idioma. Ninguno de los dos datos sale de su navegador ni permite identificarle. Puede borrarlos desde la configuración del navegador.",
-        "Si algún día añadiéramos medición de audiencia, lo diríamos aquí y en el aviso, y solo se activaría con su consentimiento.",
+        "Lo único que guarda en su navegador, mediante almacenamiento local, es la elección de idioma cuando usted la cambia. Ese dato no sale de su navegador ni permite identificarle. Puede borrarlo desde la configuración del navegador.",
+        "Por eso el sitio no muestra un aviso de cookies: no hay nada que consentir. Si algún día añadiéramos medición de audiencia, lo diríamos aquí y solo se activaría con su consentimiento.",
       ],
     },
     {

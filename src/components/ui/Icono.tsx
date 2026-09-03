@@ -34,12 +34,6 @@ export type NombreIcono =
   | "libro"
   | "ciclo"
   | "conversacion"
-  /* Estructura permanente */
-  | "gerencia"
-  | "administracion"
-  | "sig"
-  | "carpeta"
-  | "bandera"
   /* Contacto */
   | "correo"
   | "telefono"
@@ -226,50 +220,6 @@ const trazos: Record<NombreIcono, React.ReactNode> = {
       <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H9l-5 4V5.5Z" />
       <path d="M8 8.5h8" />
       <path d="M8 12h5" />
-    </>
-  ),
-
-  /* Maletín: la gerencia. */
-  gerencia: (
-    <>
-      <rect x="3" y="7" width="18" height="13" rx="2" />
-      <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-      <path d="M3 12h18" />
-    </>
-  ),
-
-  /* Libro de cuentas: la dirección administrativa. */
-  administracion: (
-    <>
-      <rect x="4" y="3" width="16" height="18" rx="2" />
-      <path d="M8 7.5h8" />
-      <path d="M8 11.5h8" />
-      <path d="M8 15.5h5" />
-    </>
-  ),
-
-  /* Mapa plegado: coordinación ambiental y SIG. */
-  sig: (
-    <>
-      <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" />
-      <path d="M9 4v14" />
-      <path d="M15 6v14" />
-    </>
-  ),
-
-  /* Carpeta: el trámite y el archivo. */
-  carpeta: (
-    <>
-      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <path d="M3 11h18" />
-    </>
-  ),
-
-  /* Bandera: quien lidera el frente. */
-  bandera: (
-    <>
-      <path d="M5 21V4" />
-      <path d="M5 4h12l-2.5 4L17 12H5" />
     </>
   ),
 

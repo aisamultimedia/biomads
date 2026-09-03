@@ -39,14 +39,6 @@ export type ClaveValor =
   | "innovacion"
   | "social";
 
-/** Cargos de la estructura permanente; el icono de cada uno vive en src/content/institucional.ts. */
-export type ClavePerfil =
-  | "gerente"
-  | "director-administrativo"
-  | "coordinador-ambiental"
-  | "auxiliar-administrativa"
-  | "lider-proyectos";
-
 export type ClaveEtapa =
   | "identificacion"
   | "evaluacion"
@@ -148,8 +140,6 @@ export type Diccionario = {
     titulo: string;
     quienesSomos: string;
     fortaleza: string;
-    estructuraRotulo: string;
-    perfiles: PorClave<ClavePerfil>;
   };
 
   institucional: {
@@ -427,11 +417,6 @@ export type Diccionario = {
     /** Termina justo antes del enlace al correo. */
     dudasTexto: string;
     volver: string;
-  };
-  cookies: {
-    region: string;
-    texto: string;
-    cerrar: string;
   };
 
   /** Textos alternativos. Describen lo que se ve, no lo que se querría ver. */

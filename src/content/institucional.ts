@@ -1,4 +1,4 @@
-import type { ClaveEtapa, ClavePerfil, ClaveValor } from "@/idioma";
+import type { ClaveEtapa, ClaveValor } from "@/idioma";
 import type { NombreIcono } from "@/components/ui/Icono";
 
 /**
@@ -11,18 +11,6 @@ import type { NombreIcono } from "@/components/ui/Icono";
  * De CONTENIDO.md → "Institucional (del portafolio)" y "Estudios
  * ambientales".
  */
-
-/**
- * Estructura permanente: los cinco cargos del portafolio, con un icono cada
- * uno. Los nombres viven en el diccionario, bajo `nosotros.perfiles`.
- */
-export const perfilesPermanentes: readonly { clave: ClavePerfil; icono: NombreIcono }[] = [
-  { clave: "gerente", icono: "gerencia" },
-  { clave: "director-administrativo", icono: "administracion" },
-  { clave: "coordinador-ambiental", icono: "sig" },
-  { clave: "auxiliar-administrativa", icono: "carpeta" },
-  { clave: "lider-proyectos", icono: "bandera" },
-];
 
 export const valores: readonly { clave: ClaveValor; icono: NombreIcono }[] = [
   { clave: "excelencia", icono: "excelencia" },

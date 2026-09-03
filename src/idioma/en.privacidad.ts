@@ -143,8 +143,8 @@ export const privacidadEn: Diccionario["privacidad"] = {
       titulo: "Cookies and local storage",
       parrafos: [
         "This site does not use tracking cookies or analytics tools, and it does not load third-party scripts that track your browsing.",
-        "The only things it stores in your browser, through local storage, are your answer to the cookie notice and, if you change it, your choice of language. Neither leaves your browser or makes it possible to identify you. You can delete them from your browser settings.",
-        "If we ever added audience measurement, we would say so here and in the notice, and it would only be activated with your consent.",
+        "The only thing it stores in your browser, through local storage, is your choice of language when you change it. That data never leaves your browser and cannot identify you. You can delete it from your browser settings.",
+        "That is why the site shows no cookie banner: there is nothing to consent to. If we ever added audience measurement, we would say so here and it would only be activated with your consent.",
       ],
     },
     {

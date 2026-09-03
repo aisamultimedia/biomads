@@ -61,7 +61,7 @@ export const en: Diccionario = {
 
   hero: {
     descriptor: "Strategic partners in environmental management and corporate sustainability",
-    titulo: ["Environmental studies", "built to withstand", "the regulator's review."],
+    titulo: ["Environmental studies", "and management for", "infrastructure works."],
     bajada:
       "Wildlife monitoring, follow-up of relocated flora and management of environmental obligations for infrastructure projects.",
     ctaPrincipal: "Tell us about your project",
@@ -85,14 +85,6 @@ export const en: Diccionario = {
       "We are BIOMADS, a team that designs and delivers forward-looking projects for the sustainable development of society and the environment.",
     fortaleza:
       "Our main strength is the ability to adapt to the specific needs of each project, assembling a multidisciplinary team of professionals and specialists. That lets us offer tailored solutions and stay close to the client throughout the project.",
-    estructuraRotulo: "Permanent structure",
-    perfiles: {
-      gerente: "General manager",
-      "director-administrativo": "Administrative director",
-      "coordinador-ambiental": "Environmental / GIS coordinator",
-      "auxiliar-administrativa": "Administrative assistant",
-      "lider-proyectos": "Project lead",
-    },
   },
 
   institucional: {
@@ -434,18 +426,13 @@ export const en: Diccionario = {
     seccionesRotulo: "Sections",
     llamadaOWhatsapp: "call or WhatsApp",
     constituidaEn: "Incorporated in",
-    notaCookies: "We do not use tracking cookies; only your answer to the notice is stored.",
+    notaCookies: "We do not use tracking cookies or analytics.",
     politicaDatos: "Personal data policy",
     desarrollado: "Website developed in {anio}",
     lema: "Dejando huella",
   },
 
   privacidad: privacidadEn,
-  cookies: {
-    region: "Cookie notice",
-    texto: "We do not use tracking cookies.",
-    cerrar: "Understood, close the notice",
-  },
 
   fotos: {
     "cuadrilla-ladera":

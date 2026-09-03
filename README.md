@@ -33,6 +33,8 @@ Vercel → *Settings → Environment Variables*.
 | `CONTACTO_REMITENTE` | Remitente verificado en Resend, del dominio propio | Junto con la anterior |
 | `CONTACTO_DESTINO` | A dónde llegan los mensajes | No. Por defecto `gerencia@biomads.com` |
 
+**No hay aviso de cookies**, por decisión del cliente el 2 de septiembre de 2026: el sitio no pone cookies ni carga analítica, así que no había nada que consentir y el aviso solo estorbaba. Lo único que guarda en el navegador es el idioma elegido, en `localStorage`; la nota del pie y la política lo dicen. Si algún día se añade medición, hay que volver a poner un consentimiento antes de cargar el script.
+
 **Qué lleva el formulario.** Nombre, empresa, correo, teléfono (opcional), tipo de servicio, mensaje y la casilla de autorización de tratamiento de datos (Ley 1581 de 2012), que enlaza a `/[idioma]/privacidad`. La autorización viaja en el correo con fecha y hora, como constancia. Hay un campo trampa para robots (`sitio_web`): si llega relleno, la ruta responde «enviado» y no envía nada. Validación en `src/lib/validacion.ts`, la misma en el navegador y en el servidor; devuelve códigos, y el texto lo pone el diccionario.
 
 **Sin `RESEND_API_KEY` el sitio funciona igual.** `/api/contacto` responde 503
@@ -73,7 +75,7 @@ Graph, y solo se lee en tiempo de compilación.
 src/
 ├── app/            rutas, API de contacto, sitemap, robots, imagen social
 ├── components/
-│   ├── layout/     cabecera, pie, navegación, menú móvil, cookies
+│   ├── layout/     cabecera, pie, navegación, menú móvil
 │   ├── motion/     vocabulario de entradas y revelados
 │   ├── secciones/  hero, promesa, etapas, servicios, proyectos, galería, clientes, formulario
 │   └── ui/         botón, enlace, campo, ficha, foto, icono, sección

@@ -64,9 +64,9 @@ export function Footer({ idioma }: { idioma: Idioma }) {
 
         {/* Cierre en tres columnas: la razón social a la izquierda, el lema
             en el centro como firma —nunca como argumento de venta— y el año
-            del sitio a la derecha. Debajo, la nota de cookies y la política:
-            viven aquí de forma permanente porque el aviso flotante se retira
-            solo y lo que dice no puede dejar de estar disponible. */}
+            del sitio a la derecha. Debajo, la nota de cookies y la política.
+            No hay aviso flotante: el sitio no pone cookies, así que no hay
+            nada que consentir; la nota lo dice y la política lo detalla. */}
         <Reveal regla className="mt-24 pt-8">
           <div className="grid gap-6 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-8">
             <p className="text-sm text-ink-invert-muted">

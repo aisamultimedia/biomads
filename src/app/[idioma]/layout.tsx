@@ -3,7 +3,6 @@ import { JetBrains_Mono, Newsreader } from "next/font/google";
 import localFont from "next/font/local";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { AvisoCookies } from "@/components/layout/AvisoCookies";
 import { BotonSubir } from "@/components/layout/BotonSubir";
 import { DesplazamientoSuave } from "@/components/layout/DesplazamientoSuave";
 import { Revelador } from "@/components/motion/Revelador";
@@ -122,7 +121,6 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[id
 
         <BotonSubir etiqueta={t.nav.volverArriba} />
 
-        <AvisoCookies textos={t.cookies} />
       </body>
     </html>
   );

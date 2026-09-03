@@ -35,6 +35,11 @@ type Props = {
  * acaba de elegir no se le va a los dos segundos.
  */
 
+/** Desplazamiento horizontal de un hijo dentro de la pista, medido con rects. */
+function posicionEnPista(pista: HTMLElement, hijo: HTMLElement): number {
+  return hijo.getBoundingClientRect().left - pista.getBoundingClientRect().left + pista.scrollLeft;
+}
+
 /** Píxeles de desplazamiento a partir de los cuales un gesto es arrastre y no clic. */
 const UMBRAL_ARRASTRE = 6;
 
@@ -143,7 +148,11 @@ export function Galeria({ textos, fotos }: Props) {
       const pista = pistaRef.current;
       const destino = pista?.querySelector<HTMLElement>(`[data-indice="${indice}"]`);
       if (!pista || !destino) return;
-      pista.scrollTo({ left: destino.offsetLeft, behavior: suave() });
+      /* Posición de la diapositiva dentro de la pista medida con rects, que
+         no dependen de cuál sea el ancestro posicionado. Con `offsetLeft`
+         el destino se pasaba una foto entera cuando la pista no era el
+         `offsetParent` y se quedaba corto cuando lo era. */
+      pista.scrollTo({ left: posicionEnPista(pista, destino), behavior: suave() });
     },
     [suave],
   );
@@ -197,12 +206,13 @@ export function Galeria({ textos, fotos }: Props) {
       /* Encaje en la diapositiva más cercana al soltar. `movido` se
          conserva hasta el clic que sigue, para anularlo. */
       const diapositivas = [...pista.querySelectorAll<HTMLElement>("[data-indice]")];
+      const posicion = (d: HTMLElement) => posicionEnPista(pista, d);
       const cercana = diapositivas.reduce((mejor, d) =>
-        Math.abs(d.offsetLeft - pista.scrollLeft) < Math.abs(mejor.offsetLeft - pista.scrollLeft)
+        Math.abs(posicion(d) - pista.scrollLeft) < Math.abs(posicion(mejor) - pista.scrollLeft)
           ? d
           : mejor,
       );
-      pista.scrollTo({ left: cercana.offsetLeft, behavior: suave() });
+      pista.scrollTo({ left: posicion(cercana), behavior: suave() });
     };
 
     window.addEventListener("pointermove", mover);

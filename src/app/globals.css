@@ -1047,99 +1047,6 @@
 }
 
 /* =========================================================================
-   Aviso de cookies
-
-   En móvil, barra al ancho de la pantalla que sube desde abajo: es donde
-   está el pulgar y no tapa el contenido que se está leyendo. En escritorio,
-   una píldora pequeña abajo a la izquierda, del ancho de su texto.
-
-   Nunca es un diálogo: no atrapa el foco ni bloquea la página. Lo único que
-   el sitio guarda es la respuesta a este aviso, y así lo dice.
-   ========================================================================= */
-
-@layer components {
-  .aviso-cookies {
-    position: fixed;
-    z-index: 60;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-4);
-    background-color: var(--color-paper);
-    /* Móvil: pegada al borde inferior, de lado a lado. El borde superior es
-       el único que se ve, así que los otros tres sobran. */
-    inset-block-end: 0;
-    inset-inline: 0;
-    padding: var(--spacing-4) var(--spacing-3) var(--spacing-4) var(--spacing-6);
-    padding-block-end: max(var(--spacing-4), env(safe-area-inset-bottom));
-    border-block-start: 1px solid var(--color-line-strong);
-  }
-
-  @media (min-width: 640px) {
-    .aviso-cookies {
-      inset-block-end: var(--spacing-6);
-      inset-inline: var(--spacing-6) auto;
-      max-width: 26rem;
-      padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) var(--spacing-6);
-      border: 1px solid var(--color-line-strong);
-      border-radius: var(--radius-pill);
-    }
-  }
-
-  .aviso-cookies-cerrar {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    width: var(--area-tactil);
-    height: var(--area-tactil);
-    border-radius: var(--radius-pill);
-    color: var(--color-ink-muted);
-    transition: color var(--duracion-micro) var(--ease-base);
-  }
-
-  .aviso-cookies-cerrar:hover {
-    color: var(--color-ink);
-  }
-
-  .aviso-cookies-cerrar .icono-menu {
-    width: var(--spacing-4);
-  }
-
-  .aviso-cookies-cerrar .icono-menu > span {
-    background-color: currentColor;
-  }
-
-  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-    .aviso-cookies {
-      animation: entrada-aviso-movil var(--duracion-entrada) var(--ease-base) both;
-    }
-
-    @media (min-width: 640px) {
-      .aviso-cookies {
-        animation-name: entrada-aviso;
-      }
-    }
-  }
-}
-
-/* Móvil: entra desde fuera de la pantalla, que es lo que se pidió. En
-   escritorio la píldora ya está separada del borde, así que un empujón
-   corto basta y evita que cruce media pantalla. */
-@keyframes entrada-aviso-movil {
-  from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-}
-
-@keyframes entrada-aviso {
-  from {
-    opacity: 0;
-    transform: translateY(var(--spacing-4));
-  }
-}
-
-/* =========================================================================
    Tarjeta de servicio y su ficha desplegable
 
    La tarjeta entera es el disparador, no un enlace pequeño al final: si hay
@@ -1708,12 +1615,6 @@
     }
   }
 
-  /* Móvil: el aviso de cookies ocupa el borde inferior a lo ancho. */
-  @media (max-width: 639px) {
-    body:has(.aviso-cookies) .boton-subir {
-      inset-block-end: calc(var(--spacing-6) + 5rem);
-    }
-  }
 }
 
 /* =========================================================================
@@ -2195,6 +2096,7 @@
   }
 
   .galeria-pista {
+    position: relative;
     display: flex;
     gap: var(--spacing-4);
     overflow-x: auto;
@@ -2619,8 +2521,6 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Estructura permanente: cargo con icono                              */
-/* ------------------------------------------------------------------ */
 
 @layer components {
   .perfil-permanente {
@@ -2710,7 +2610,6 @@
   @media (prefers-reduced-motion: reduce) {
     .valor:hover .valor-icono,
     .via-directa:hover .via-directa-icono,
-    .perfil-permanente:hover .perfil-permanente-icono,
     .etapa-estudio:hover .etapa-estudio-icono,
     .tarjeta-institucional:hover,
     .tarjeta-proyecto:hover,
@@ -3007,5 +2906,56 @@
   to {
     scale: 1;
     opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Slider de Nosotros                                                  */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  .diapositivas-pista {
+    position: relative;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    border-radius: var(--radius-lg);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .diapositivas-pista::-webkit-scrollbar {
+    display: none;
+  }
+
+  .diapositivas-diapositiva {
+    flex: none;
+    width: 100%;
+    scroll-snap-align: start;
+  }
+
+  .diapositivas-marco {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background-color: var(--color-paper-alt);
+  }
+
+  .diapositivas-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.05);
+    transition: transform calc(var(--duracion-galeria) / 4) var(--ease-base);
+  }
+
+  .diapositivas-diapositiva[data-activa] .diapositivas-imagen {
+    transform: scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .diapositivas-imagen {
+      transform: none;
+      transition: none;
+    }
   }
 }

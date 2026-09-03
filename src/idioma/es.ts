@@ -49,7 +49,11 @@ export const es: Diccionario = {
 
   hero: {
     descriptor: "Aliados estratégicos en gestión ambiental y sostenibilidad empresarial",
-    titulo: ["Estudios ambientales", "hechos para la revisión", "de la autoridad."],
+    /* Titular con las palabras por las que se busca el servicio —estudios
+       ambientales, gestión ambiental, infraestructura— y la sede, que es el
+       ancla local. Antes decía «hechos para la revisión de la autoridad»;
+       el cliente pidió cambiarlo. */
+    titulo: ["Estudios y gestión", "ambiental para obras", "de infraestructura."],
     bajada:
       "Monitoreos de fauna, seguimiento de flora reubicada y gestión de obligaciones ambientales para proyectos de infraestructura.",
     ctaPrincipal: "Cuéntenos su proyecto",
@@ -73,14 +77,6 @@ export const es: Diccionario = {
       "Somos BIOMADS, un equipo especializado en diseñar y ejecutar proyectos vanguardia que permitan el desarrollo sostenible de la sociedad y el medio ambiente.",
     fortaleza:
       "Nuestra principal fortaleza es la capacidad de adaptarnos a las necesidades específicas de cada proyecto, articulando un equipo multidisciplinario de profesionales y especialistas. Esto nos permite ofrecer soluciones personalizadas y mantener un acompañamiento cercano durante el desarrollo de los proyectos.",
-    estructuraRotulo: "Estructura permanente",
-    perfiles: {
-      gerente: "Gerente",
-      "director-administrativo": "Director administrativo",
-      "coordinador-ambiental": "Coordinador ambiental / SIG",
-      "auxiliar-administrativa": "Auxiliar administrativa",
-      "lider-proyectos": "Líder de proyectos",
-    },
   },
 
   institucional: {
@@ -423,18 +419,13 @@ export const es: Diccionario = {
     seccionesRotulo: "Secciones",
     llamadaOWhatsapp: "llamada o WhatsApp",
     constituidaEn: "Constituida en",
-    notaCookies: "No usamos cookies de seguimiento; solo se guarda su respuesta al aviso.",
+    notaCookies: "No usamos cookies de seguimiento ni analítica.",
     politicaDatos: "Política de tratamiento de datos personales",
     desarrollado: "Sitio web desarrollado en {anio}",
     lema: "Dejando huella",
   },
 
   privacidad: privacidadEs,
-  cookies: {
-    region: "Aviso sobre cookies",
-    texto: "No usamos cookies de seguimiento.",
-    cerrar: "Entendido, cerrar el aviso",
-  },
 
   fotos: {
     "cuadrilla-ladera":

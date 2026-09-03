@@ -1,14 +1,13 @@
 import { Boton } from "@/components/ui/Boton";
 import { Enlace } from "@/components/ui/Enlace";
-import { Foto } from "@/components/ui/Foto";
 import { Icono } from "@/components/ui/Icono";
-import { perfilesPermanentes } from "@/content/institucional";
 import { Seccion } from "@/components/ui/Seccion";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealGroup } from "@/components/motion/RevealGroup";
 import { Clientes } from "@/components/secciones/Clientes";
 import { EtapasEstudio } from "@/components/secciones/EtapasEstudio";
 import { FichaServicio } from "@/components/secciones/FichaServicio";
+import { Diapositivas } from "@/components/secciones/Diapositivas";
 import { FormularioContacto } from "@/components/secciones/FormularioContacto";
 import { Galeria } from "@/components/secciones/Galeria";
 import { Hero } from "@/components/secciones/Hero";
@@ -21,9 +20,7 @@ import { serviciosDetallados, serviciosListados } from "@/content/servicios";
 import { diccionario, comoIdioma } from "@/idioma";
 import { opcionesDeServicio } from "@/lib/formulario";
 import { empresa, mailto, whatsapp } from "@/lib/site";
-import controlFitosanitario from "@/fotos/control-fitosanitario.jpg";
-import cuadrillaLadera from "@/fotos/cuadrilla-ladera.jpg";
-import mantenimientoIndividuo from "@/fotos/mantenimiento-individuo.jpg";
+import { fotosNosotros } from "@/content/nosotros";
 
 /**
  * Página única.
@@ -56,50 +53,15 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
               {t.nosotros.fortaleza}
             </Reveal>
 
-            {/* Los cinco cargos con su icono. La lista de especialistas
-                que se vinculan por proyecto y la nota de la tarjeta
-                profesional se retiraron por decisión del cliente. */}
-            <Reveal regla className="mt-12 pt-6">
-              <p className="etiqueta text-ink-muted">{t.nosotros.estructuraRotulo}</p>
-              <ul className="mt-6 grid gap-4 sm:grid-cols-2">
-                {perfilesPermanentes.map((perfil) => (
-                  <li key={perfil.clave} className="perfil-permanente">
-                    <span className="perfil-permanente-icono" aria-hidden="true">
-                      <Icono nombre={perfil.icono} tamano={22} />
-                    </span>
-                    <span className="text-ink">{t.nosotros.perfiles[perfil.clave]}</span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
           </div>
 
-          {/* Tres fotos en composición escalonada: la ancha arriba con
-              parallax, y debajo dos verticales con la segunda descolgada,
-              para que el bloque no se lea como una rejilla de catálogo. */}
-          <div className="grid grid-cols-2 gap-6 md:gap-8">
-            <Foto
-              className="col-span-2"
-              imagen={cuadrillaLadera}
-              alt={t.fotos["cuadrilla-ladera"]}
-              proporcion="3/2"
-              sizes="(min-width: 768px) 45vw, 90vw"
-              parallax
-            />
-            <Foto
-              imagen={mantenimientoIndividuo}
-              alt={t.fotos["mantenimiento-individuo"]}
-              proporcion="4/5"
-              sizes="(min-width: 768px) 22vw, 45vw"
-            />
-            <Foto
-              className="mt-12 md:mt-16"
-              imagen={controlFitosanitario}
-              alt={t.fotos["control-fitosanitario"]}
-              proporcion="4/5"
-              sizes="(min-width: 768px) 22vw, 45vw"
-            />
-          </div>
+          {/* Seis fotos de equipo en un slider a una por vista. La lista de
+              cargos, la de especialistas y la nota de la tarjeta
+              profesional se retiraron por decisión del cliente: el texto
+              dice quiénes somos y las fotos lo enseñan. */}
+          <Reveal indice={2}>
+            <Diapositivas fotos={fotosNosotros} textos={t.galeria} alts={t.fotos} />
+          </Reveal>
         </div>
 
         {/* Misión, visión, valores y política. Al final de la sección, nunca
