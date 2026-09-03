@@ -62,26 +62,23 @@ export function Footer({ idioma }: { idioma: Idioma }) {
           </nav>
         </RevealGroup>
 
-        {/* Cierre en tres columnas: la razón social a la izquierda, el lema
-            en el centro como firma —nunca como argumento de venta— y el año
-            del sitio a la derecha. Debajo, la nota de cookies y la política.
-            No hay aviso flotante: el sitio no pone cookies, así que no hay
-            nada que consentir; la nota lo dice y la política lo detalla. */}
+        {/* Cierre: razón social y política a la izquierda, año del sitio a
+            la derecha. El lema y la nota de cookies se retiraron por
+            decisión del cliente; la política sigue diciendo que el sitio no
+            pone cookies. */}
         <Reveal regla className="mt-24 pt-8">
-          <div className="grid gap-6 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-8">
+          <div className="flex flex-col gap-6 md:flex-row md:items-baseline md:justify-between">
             <p className="text-sm text-ink-invert-muted">
               {empresa.razonSocial} · {empresa.sede} · {t.pie.constituidaEn}{" "}
               <span className="dato">{empresa.constitucion}</span>
+              <span className="mt-2 block">
+                <Enlace href={`/${idioma}/privacidad`}>{t.pie.politicaDatos}</Enlace>
+              </span>
             </p>
-            <p className="pie-lema">{t.pie.lema}</p>
-            <p className="text-sm text-ink-invert-muted md:text-right">
+            <p className="text-sm text-ink-invert-muted">
               {interpolar(t.pie.desarrollado, { anio: sitioDesarrolladoEn })}
             </p>
           </div>
-          <p className="mt-8 text-sm text-ink-invert-muted">
-            {t.pie.notaCookies}{" "}
-            <Enlace href={`/${idioma}/privacidad`}>{t.pie.politicaDatos}</Enlace>
-          </p>
         </Reveal>
       </div>
     </footer>

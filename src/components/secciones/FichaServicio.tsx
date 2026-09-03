@@ -137,6 +137,10 @@ export function FichaServicio({
             role="dialog"
             aria-modal="true"
             aria-label={ficha.titulo}
+            /* Lenis captura la rueda en todo el documento y la aplica a la
+               página, bloqueada mientras el panel está abierto: sin este
+               atributo el panel no se desplazaba con el ratón. */
+            data-lenis-prevent=""
             className="panel-servicio"
             onClick={(evento) => evento.stopPropagation()}
           >

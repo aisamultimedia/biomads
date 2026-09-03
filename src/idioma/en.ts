@@ -426,10 +426,8 @@ export const en: Diccionario = {
     seccionesRotulo: "Sections",
     llamadaOWhatsapp: "call or WhatsApp",
     constituidaEn: "Incorporated in",
-    notaCookies: "We do not use tracking cookies or analytics.",
     politicaDatos: "Personal data policy",
     desarrollado: "Website developed in {anio}",
-    lema: "Dejando huella",
   },
 
   privacidad: privacidadEn,

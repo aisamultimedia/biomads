@@ -382,12 +382,10 @@ export type Diccionario = {
     seccionesRotulo: string;
     llamadaOWhatsapp: string;
     constituidaEn: string;
-    notaCookies: string;
     /** Enlace a /privacidad, junto a la nota de cookies. */
     politicaDatos: string;
     /** Lleva {anio}. */
     desarrollado: string;
-    lema: string;
   };
 
   /**

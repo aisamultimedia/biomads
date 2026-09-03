@@ -86,6 +86,7 @@ export function MenuMovil({ abierto, onCerrar, idioma }: Props) {
       data-estado={estado}
       // Mismo corte que el botón que lo abre (lg): en tablet también
       // hace falta.
+      data-lenis-prevent=""
       className="menu-movil fixed inset-0 z-50 flex flex-col bg-paper px-6 pb-12 pt-24 lg:hidden"
     >
           <button

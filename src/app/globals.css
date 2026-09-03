@@ -2555,21 +2555,6 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Pie: el lema como firma centrada                                    */
-/* ------------------------------------------------------------------ */
-
-@layer components {
-  .pie-lema {
-    font-family: var(--font-titulo);
-    font-size: var(--text-2xl);
-    font-style: italic;
-    letter-spacing: var(--tracking-titulo);
-    color: var(--color-ink-invert);
-    text-align: center;
-  }
-}
-
-/* ------------------------------------------------------------------ */
 /* Hover: valores y vías de contacto                                   */
 /* ------------------------------------------------------------------ */
 

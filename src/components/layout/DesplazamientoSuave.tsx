@@ -64,6 +64,11 @@ export function DesplazamientoSuave() {
     function alEnfocar(evento: FocusEvent) {
       const objetivo = evento.target as HTMLElement | null;
       if (!objetivo) return;
+      /* Dentro de un panel, visor o menú —contenedores con su propio
+         scroll, marcados con data-lenis-prevent— el foco no debe mover la
+         página: un panel más alto que la ventana parecía «fuera» y Lenis
+         desplazaba la página bloqueada 100 px al abrirlo. */
+      if (objetivo.closest("[data-lenis-prevent]")) return;
       const caja = objetivo.getBoundingClientRect();
       const fuera = caja.top < 0 || caja.bottom > window.innerHeight;
       if (fuera) lenis.scrollTo(objetivo, { immediate: true });

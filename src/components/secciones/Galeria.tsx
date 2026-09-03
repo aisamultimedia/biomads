@@ -446,6 +446,7 @@ function Visor({
         role="dialog"
         aria-modal="true"
         aria-label={textos.visor}
+        data-lenis-prevent=""
         className="visor"
         onClick={(evento) => evento.stopPropagation()}
       >

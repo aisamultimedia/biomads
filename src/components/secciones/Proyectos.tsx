@@ -155,6 +155,10 @@ export function Proyectos({ idioma, textos, unidades, fotos }: Props) {
             role="dialog"
             aria-modal="true"
             aria-label={textos.casos[proyecto.slug].clienteCorto}
+            /* Lenis captura la rueda en todo el documento y la aplica a la
+               página, bloqueada mientras el panel está abierto: sin este
+               atributo el panel no se desplazaba con el ratón. */
+            data-lenis-prevent=""
             className="panel-proyecto"
             onClick={(evento) => evento.stopPropagation()}
           >
