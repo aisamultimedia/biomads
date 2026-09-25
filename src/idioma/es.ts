@@ -300,9 +300,14 @@ export const es: Diccionario = {
 
   contacto: {
     rotulo: "Contacto",
-    titulo: "Cuéntenos qué tiene que radicar",
-    intro:
-      "Con el alcance y la autoridad ante la que responde alcanza para armar una propuesta.",
+    /* Era «Cuéntenos qué tiene que radicar», con una entradilla que
+       añadía «con el alcance y la autoridad ante la que responde alcanza
+       para armar una propuesta». Las dos se retiraron por decisión del
+       cliente: radicar es jerga de trámite y la entradilla pedía deberes
+       antes de dejar escribir. El título repite ahora el del botón del
+       hero, que es el que trae aquí a casi todo el mundo, y la sección
+       entra directa a las vías de contacto. */
+    titulo: "Cuéntenos su proyecto",
     directoRotulo: "Directo, sin formulario",
     telefonoNota: "Llamada o WhatsApp",
     correoNota: "Correo de gerencia",
@@ -318,8 +323,7 @@ export const es: Diccionario = {
       servicioElegir: "Elija una opción",
       servicioOtro: "Otro o no estoy seguro",
       mensaje: "Mensaje",
-      mensajeAyuda:
-        "El alcance y la autoridad ante la que responde nos bastan para empezar.",
+      mensajeAyuda: "Con un par de líneas sobre lo que necesita, nos basta para empezar.",
       datosAntes:
         "Autorizo a BIOMADS S.A.S a tratar los datos de este formulario para responder a mi solicitud, según su",
       datosEnlace: "política de tratamiento de datos personales",
@@ -355,7 +359,7 @@ export const es: Diccionario = {
         telefonoInvalido: "El teléfono debe tener entre 7 y 15 dígitos.",
         servicioVacio: "Elija el tipo de servicio. Si no está seguro, marque «Otro».",
         servicioDesconocido: "Elija una de las opciones de la lista.",
-        mensajeVacio: "Cuéntenos qué necesita radicar o ejecutar.",
+        mensajeVacio: "Cuéntenos qué necesita.",
         mensajeCorto: "Con un poco más de detalle podemos responderle mejor.",
         mensajeLargo: "Es demasiado largo para este formulario. Resuma aquí y adjunte el resto por correo.",
         datosSinAutorizar: "Necesitamos su autorización para tratar los datos y poder responderle.",

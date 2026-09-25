@@ -2245,6 +2245,29 @@
 }
 
 /* -------------------------------------------------------------------------
+   Columna de datos de contacto
+
+   El teléfono, el correo y la sede, al lado de un formulario que mide el
+   triple. Llevaba una entradilla encima y aun así terminaba antes; retirada
+   esa entradilla por decisión del cliente, se quedaba en el primer tercio y
+   dejaba media sección en blanco.
+
+   Fijarla no añade contenido ni mueve nada de sitio: los datos siguen a la
+   vista mientras se rellena el formulario, que es cuando hacen falta. El
+   align-self hace falta porque la rejilla estira sus hijos por defecto, y un
+   hijo del alto de la fila no tiene por dónde desplazarse.
+   ------------------------------------------------------------------------- */
+
+@layer components {
+  @media (min-width: 768px) {
+    .columna-contacto {
+      position: sticky;
+      top: calc(var(--altura-cabecera) + var(--spacing-12));
+      align-self: start;
+    }
+  }
+}
+/* -------------------------------------------------------------------------
    Compromisos de la política integral
 
    Cinco frases cortas. En una sola columna y seguidas se leían como la

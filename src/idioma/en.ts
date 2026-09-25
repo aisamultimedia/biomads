@@ -289,9 +289,7 @@ export const en: Diccionario = {
 
   contacto: {
     rotulo: "Contact",
-    titulo: "Tell us what you need to file",
-    intro:
-      "The scope and the authority you answer to are enough to put together a proposal.",
+    titulo: "Tell us about your project",
     directoRotulo: "Direct, no form",
     telefonoNota: "Call or WhatsApp",
     correoNota: "Management email",
@@ -307,8 +305,7 @@ export const en: Diccionario = {
       servicioElegir: "Choose an option",
       servicioOtro: "Other, or not sure",
       mensaje: "Message",
-      mensajeAyuda:
-        "The scope and the authority you answer to are enough for us to get started.",
+      mensajeAyuda: "A couple of lines about what you need is enough to get started.",
       datosAntes:
         "I authorise BIOMADS S.A.S to process the data in this form in order to respond to my request, under its",
       datosEnlace: "personal data policy",
@@ -344,7 +341,7 @@ export const en: Diccionario = {
         telefonoInvalido: "The phone number must have between 7 and 15 digits.",
         servicioVacio: "Choose the type of service. If you are not sure, pick “Other”.",
         servicioDesconocido: "Choose one of the options in the list.",
-        mensajeVacio: "Tell us what you need to file or carry out.",
+        mensajeVacio: "Tell us what you need.",
         mensajeCorto: "With a little more detail we can give you a better answer.",
         mensajeLargo: "It is too long for this form. Summarise here and send the rest by email.",
         datosSinAutorizar: "We need your authorisation to process the data in order to reply.",

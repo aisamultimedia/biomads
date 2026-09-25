@@ -140,12 +140,13 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
           ================================================================ */}
       <Seccion id="contacto" rotulo={t.contacto.rotulo} titulo={t.contacto.titulo}>
         <div className="grid gap-16 md:grid-cols-[1fr_1.2fr] md:gap-24">
-          <div>
-            <Reveal as="p" className="medida text-lg text-ink">
-              {t.contacto.intro}
-            </Reveal>
-
-            <Reveal regla className="mt-12 pt-6">
+          <div className="columna-contacto">
+            {/* Sin entradilla: la que había —«con el alcance y la autoridad
+                ante la que responde alcanza para armar una propuesta»— se
+                retiró por decisión del cliente. La columna arranca en las
+                vías directas, así que este primer bloque ya no lleva el
+                margen superior que lo separaba del párrafo. */}
+            <Reveal regla className="pt-6">
               <p className="etiqueta text-ink-muted">{t.contacto.directoRotulo}</p>
               {/* El icono va fuera del enlace: dentro ampliaría el área
                   pulsable con una zona que no parece parte del enlace. */}

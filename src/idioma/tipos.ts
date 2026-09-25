@@ -253,7 +253,6 @@ export type Diccionario = {
   contacto: {
     rotulo: string;
     titulo: string;
-    intro: string;
     directoRotulo: string;
     telefonoNota: string;
     correoNota: string;
