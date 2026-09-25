@@ -6,17 +6,15 @@ import { Reveal } from "@/components/motion/Reveal";
 import { RevealGroup } from "@/components/motion/RevealGroup";
 import { Clientes } from "@/components/secciones/Clientes";
 import { EtapasEstudio } from "@/components/secciones/EtapasEstudio";
-import { FichaServicio } from "@/components/secciones/FichaServicio";
+import { TarjetaCategoria } from "@/components/secciones/TarjetaCategoria";
 import { Diapositivas } from "@/components/secciones/Diapositivas";
 import { FormularioContacto } from "@/components/secciones/FormularioContacto";
 import { Galeria } from "@/components/secciones/Galeria";
 import { Hero } from "@/components/secciones/Hero";
 import { MarcoInstitucional } from "@/components/secciones/MarcoInstitucional";
 import { PromesaMarca } from "@/components/secciones/PromesaMarca";
-import { Proyectos } from "@/components/secciones/Proyectos";
-import { proyectos } from "@/content/proyectos";
 import { regiones } from "@/content/respaldo";
-import { serviciosDetallados, serviciosListados } from "@/content/servicios";
+import { categoriasServicio } from "@/content/servicios";
 import { diccionario, comoIdioma } from "@/idioma";
 import { opcionesDeServicio } from "@/lib/formulario";
 import { empresa, mailto, whatsapp } from "@/lib/site";
@@ -25,10 +23,20 @@ import { fotosNosotros } from "@/content/nosotros";
 /**
  * Página única.
  *
- * Todo el recorrido vive aquí, en secciones ancladas: nosotros, las etapas
- * del estudio ambiental, servicios, proyectos y contacto. Las páginas de
- * detalle siguen existiendo para quien llegue por buscador o comparta un
- * enlace, pero la visita normal no sale de esta pantalla.
+ * Todo el recorrido vive aquí, en secciones ancladas: nosotros, la forma de
+ * abordar un proyecto, servicios y contacto. Las páginas de detalle de los
+ * dos servicios con ficha siguen existiendo para quien llegue por buscador o
+ * comparta un enlace, pero la visita normal no sale de esta pantalla.
+ *
+ * La sección de proyectos se retiró por decisión del cliente. Estaba entre
+ * servicios y la galería de campo, así que el recorrido cierra ahora
+ * servicios → galería → clientes → contacto.
+ *
+ * Con una sección menos hubo que recolocar una superficie: servicios pasó
+ * de la alterna al papel. La galería y la banda de clientes comparten
+ * superficie a propósito —separadas solo por una regla— y proyectos era el
+ * bloque de papel que las separaba de servicios; sin él, tres superficies
+ * alternas seguidas habrían fundido todo el cierre de la página en una.
  */
 export default async function Portada({ params }: PageProps<"/[idioma]">) {
   const { idioma: segmento } = await params;
@@ -55,7 +63,7 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
 
           </div>
 
-          {/* Seis fotos de equipo en un slider a una por vista. La lista de
+          {/* Fotos de equipo en un slider a una por vista. La lista de
               cargos, la de especialistas y la nota de la tarjeta
               profesional se retiraron por decisión del cliente: el texto
               dice quiénes somos y las fotos lo enseñan. */}
@@ -64,8 +72,19 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
           </Reveal>
         </div>
 
-        {/* Misión, visión, valores y política. Al final de la sección, nunca
-            abriéndola: es lo mismo que declara toda consultora del sector. */}
+        {/* El propósito cierra la sección a ancho completo, fuera de la
+            rejilla. El cliente entregó tres párrafos donde antes había dos,
+            y el tercero dentro de la columna la estiraba bastante por
+            debajo de la foto: en tablet dejaba un palmo de blanco a la
+            derecha. Fuera, la columna vuelve a la altura del slider y el
+            párrafo gana el peso que le toca, que es el de la conclusión. */}
+        <Reveal as="p" regla className="medida mt-16 pt-8 text-lg text-ink">
+          {t.nosotros.proposito}
+        </Reveal>
+
+        {/* Misión, visión, valores y política integral. Al final de la
+            sección, nunca abriéndola: es lo mismo que declara toda
+            consultora del sector. */}
         <MarcoInstitucional idioma={idioma} />
       </Seccion>
 
@@ -75,49 +94,28 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
       <PromesaMarca idioma={idioma} />
 
       {/* ================================================================
-          Las cinco etapas del estudio ambiental, en banda oscura.
+          Las cinco etapas del método, en banda oscura. Es la continuación
+          de la promesa: primero qué se promete, luego cómo se aborda.
           ================================================================ */}
       <EtapasEstudio idioma={idioma} />
 
       {/* ================================================================
-          Servicios — título y resumen a la vista; la ficha, al abrir.
+          Servicios — las cuatro categorías que cubren todo el alcance.
           ================================================================ */}
-      <Seccion id="servicios" alterna rotulo={t.servicios.rotulo} titulo={t.servicios.titulo}>
-        <div className="grid gap-8 md:grid-cols-2">
-          {serviciosDetallados.map((servicio, i) => (
-            <FichaServicio
-              key={servicio.slug}
-              servicio={servicio}
+      <Seccion id="servicios" rotulo={t.servicios.rotulo} titulo={t.servicios.titulo}>
+        <RevealGroup as="ul" tipo="panel" className="grid items-stretch gap-6 md:grid-cols-2">
+          {categoriasServicio.map((categoria, i) => (
+            <TarjetaCategoria
+              key={categoria.clave}
+              categoria={categoria}
               numero={String(i + 1).padStart(2, "0")}
-              caso={proyectos.find((p) => p.slug === servicio.casoRelacionado)}
               textos={t.servicios}
-              proyectos={t.proyectos}
-              unidades={t.unidades}
               idioma={idioma}
             />
           ))}
-        </div>
-
-        {/* Los siete servicios sin ficha, en dos columnas. El rótulo
-            «También prestamos» y su nota se retiraron por decisión del
-            cliente: queda la lista y la llamada a consultar. */}
-        <RevealGroup
-          as="ul"
-          regla
-          className="mt-24 grid md:grid-cols-2 md:gap-x-16"
-          itemClassName="servicio-listado"
-        >
-          {serviciosListados.map((servicio) => (
-            <span key={servicio.clave} className="servicio-listado-fila">
-              <Icono nombre={servicio.icono} className="servicio-listado-icono" />
-              <span className="servicio-listado-texto">
-                {t.servicios.listados[servicio.clave]}
-              </span>
-            </span>
-          ))}
         </RevealGroup>
 
-        <Reveal className="mt-12">
+        <Reveal className="mt-16">
           <Boton href="#contacto" variante="secundario">
             {t.servicios.consultarAlcance}
           </Boton>
@@ -125,22 +123,7 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
       </Seccion>
 
       {/* ================================================================
-          Proyectos. Las constancias en PDF, cuando lleguen, se publican
-          en la ficha de cada proyecto; no se piden desde el sitio.
-          ================================================================ */}
-      <Seccion id="proyectos" rotulo={t.proyectos.rotulo} titulo={t.proyectos.titulo}>
-        <Proyectos
-          idioma={idioma}
-          textos={t.proyectos}
-          unidades={t.unidades}
-          fotos={t.fotos}
-        />
-
-      </Seccion>
-
-      {/* ================================================================
-          Galería de campo: la prueba visual de la ejecución, justo después
-          de los proyectos que la sustentan.
+          Galería de campo: la prueba visual de la ejecución.
           ================================================================ */}
       <Seccion id="galeria" alterna rotulo={t.galeria.rotulo} titulo={t.galeria.titulo}>
         <p className="medida -mt-8 mb-16 text-ink-muted">{t.galeria.texto}</p>

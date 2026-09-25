@@ -53,7 +53,10 @@ export function Seccion({
   }
   if (titulo) {
     cabecera.push(
-      <h2 key="titulo" className="mt-4 text-2xl md:text-3xl">
+      /* max-w-titulo-seccion: los títulos cortos siguen en una línea y
+         los largos —el de «Quiénes somos» ahora tiene 72 caracteres— rompen
+         en dos en vez de correr el ancho entero del contenedor. */
+      <h2 key="titulo" className="mt-4 max-w-titulo-seccion text-2xl md:text-3xl">
         {titulo}
       </h2>,
     );

@@ -5,16 +5,23 @@ import { valores } from "@/content/institucional";
 import { diccionario, type Idioma } from "@/idioma";
 
 /**
- * Misión, visión, valores y política de calidad.
+ * Misión, visión, valores y política integral.
  *
  * Va al final de Nosotros, nunca al principio: es lo mismo que declara toda
  * consultora del sector, así que no puede ser lo primero que alguien lee.
  * Existe porque en una licitación lo piden.
  *
  * Los valores son cinco frases cortas con icono, no un párrafo. La política
- * de calidad —el texto más largo del bloque y el que menos gente lee— va
- * plegada en un <details>: sigue en el HTML para quien la busque o la
- * indexe, sin ocupar pantalla para quien no.
+ * —el texto más largo del bloque y el que menos gente lee— va plegada en un
+ * <details>: sigue en el HTML para quien la busque o la indexe, sin ocupar
+ * pantalla para quien no.
+ *
+ * Era «Política de calidad» y pasó a ser integral —calidad, ambiente y
+ * seguridad y salud en el trabajo, bajo ISO 9001, 14001 y 45001—. Con el
+ * cambio llegaron cinco compromisos donde antes había cinco objetivos: la
+ * lista es la misma pieza, pero va en dos columnas desde sm. En una sola
+ * columna, cinco frases largas seguidas de la viñeta de acento se leían
+ * como la continuación del párrafo que tienen encima.
  */
 export function MarcoInstitucional({ idioma }: { idioma: Idioma }) {
   const t = diccionario(idioma).institucional;
@@ -76,15 +83,12 @@ export function MarcoInstitucional({ idioma }: { idioma: Idioma }) {
               </p>
             ))}
 
-            <p className="etiqueta mt-12 text-ink-muted">{t.objetivosRotulo}</p>
-            <ul className="mt-4 flex flex-col gap-2">
-              {t.objetivos.map((objetivo) => (
-                <li key={objetivo} className="flex items-baseline gap-3 text-ink">
-                  <span
-                    aria-hidden="true"
-                    className="h-2 w-2 flex-none translate-y-[-0.15em] rounded-sm bg-accent"
-                  />
-                  {objetivo}
+            <p className="etiqueta mt-12 text-ink-muted">{t.compromisosRotulo}</p>
+            <ul className="compromisos">
+              {t.compromisos.map((compromiso) => (
+                <li key={compromiso} className="compromiso">
+                  <span aria-hidden="true" className="compromiso-marca" />
+                  {compromiso}
                 </li>
               ))}
             </ul>

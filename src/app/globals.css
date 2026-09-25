@@ -1047,83 +1047,18 @@
 }
 
 /* =========================================================================
-   Tarjeta de servicio y su ficha desplegable
+   Velo de panel
 
-   La tarjeta entera es el disparador, no un enlace pequeño al final: si hay
-   que hacer clic, el objetivo debe ser todo lo que se está mirando. El pie
-   dice qué hay dentro —"marco normativo, entregable y duración"— porque un
-   "ver más" no incentiva nada.
+   El fondo oscurecido sobre el que se abre un panel modal. Lo llevaban la
+   ficha de servicio y la de proyecto, las dos retiradas; hoy el único que lo
+   usa es el visor de la galería (.velo-visor), y las reglas se quedan aquí
+   porque el velo es la pieza compartida, no parte del visor.
+
+   Entra y sale por transición: la salida tiene que terminar antes de que
+   React desmonte el panel (ver src/hooks/usePresencia.ts).
    ========================================================================= */
 
 @layer components {
-  .tarjeta-servicio {
-    display: block;
-    width: 100%;
-    padding: var(--spacing-8);
-    text-align: left;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-paper);
-    transition:
-      border-color var(--duracion-micro) var(--ease-base),
-      translate var(--duracion-micro) var(--ease-base);
-  }
-
-  .tarjeta-servicio:hover {
-    border-color: var(--color-accent);
-    translate: 0 -5px;
-  }
-
-  .tarjeta-servicio:hover .tarjeta-servicio-pie {
-    border-top-color: var(--color-accent);
-  }
-
-  .tarjeta-servicio-pie {
-    transition: border-top-color var(--duracion-micro) var(--ease-base);
-  }
-
-  .tarjeta-servicio-pie {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-4);
-    margin-top: var(--spacing-12);
-    padding-top: var(--spacing-6);
-    border-top: 1px solid var(--color-line);
-  }
-
-  /* El signo crece y gira un cuarto al pasar el cursor: anuncia que abre. */
-  .tarjeta-servicio-mas {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    width: var(--spacing-12);
-    height: var(--spacing-12);
-    border: 1px solid var(--color-line-strong);
-    border-radius: var(--radius-pill);
-    /* Era var(--font-etiqueta), un token que no existe: la declaración
-       resultaba inválida y la familia se heredaba en silencio. */
-    font-family: var(--font-cuerpo);
-    font-size: var(--text-lg);
-    line-height: 1;
-    color: var(--color-ink);
-    transition:
-      rotate var(--duracion-micro) var(--ease-base),
-      background-color var(--duracion-micro) var(--ease-base),
-      border-color var(--duracion-micro) var(--ease-base),
-      color var(--duracion-micro) var(--ease-base);
-  }
-
-  .tarjeta-servicio:hover .tarjeta-servicio-mas {
-    rotate: 90deg;
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-    color: var(--color-dark);
-  }
-
-  /* --- El panel --- */
-
   .velo-panel {
     position: fixed;
     inset: 0;
@@ -1135,77 +1070,26 @@
     background-color: color-mix(in srgb, var(--color-velo) 72%, transparent);
   }
 
-  /* El panel se queda dentro de la pantalla y desplaza por dentro. Antes
-     crecía hasta 1179 px en una ventana de 900: desplazaba el velo, así que
-     el título se iba y el botón de cerrar con él. Ahora la cabecera es fija
-     y solo se mueve el cuerpo. */
-  .panel-servicio {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: var(--container-angosto);
-    max-height: 88vh;
-    max-height: 88dvh;
-    border-radius: var(--radius-lg);
-    background-color: var(--color-paper);
-    /* Recorta el cuerpo desplazable contra las esquinas redondeadas. */
-    overflow: hidden;
-  }
-
-  .panel-servicio-cabecera {
-    display: flex;
-    flex: none;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--spacing-6);
-    padding: var(--spacing-12) var(--spacing-12) var(--spacing-8);
-  }
-
-  .panel-servicio-cuerpo {
-    overflow-y: auto;
-    /* El desplazamiento no se propaga a la página que hay detrás. */
-    overscroll-behavior: contain;
-    padding: 0 var(--spacing-12) var(--spacing-12);
-  }
-
-  .panel-servicio-cerrar {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    width: var(--area-tactil);
-    height: var(--area-tactil);
-    border: 1px solid var(--color-line-strong);
-    border-radius: var(--radius-pill);
-    color: var(--color-ink);
-    transition: border-color var(--duracion-micro) var(--ease-base);
-  }
-
-  .panel-servicio-cerrar:hover {
-    border-color: var(--color-accent-deep);
-  }
-
-  .panel-servicio-cerrar .icono-menu > span {
-    background-color: currentColor;
-  }
-
   @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
     .velo-panel {
       animation: entrada-velo var(--duracion-micro) var(--ease-base) both;
     }
-
-    .panel-servicio {
-      animation: entrada-panel-servicio var(--duracion-entrada) var(--ease-base) both;
-    }
   }
 
-  @media (max-width: 640px) {
-    .panel-servicio-cabecera {
-      padding: var(--spacing-8) var(--spacing-8) var(--spacing-6);
-    }
+  .velo-panel[data-estado] {
+    opacity: 1;
+    transition: opacity var(--duracion-corta) var(--ease-base);
+  }
 
-    .panel-servicio-cuerpo {
-      padding: 0 var(--spacing-8) var(--spacing-8);
+  .velo-panel[data-estado="saliendo"] {
+    opacity: 0;
+    transition-duration: var(--duracion-micro);
+    transition-timing-function: var(--ease-salida);
+  }
+
+  @starting-style {
+    .velo-panel[data-estado] {
+      opacity: 0;
     }
   }
 }
@@ -1213,13 +1097,6 @@
 @keyframes entrada-velo {
   from {
     opacity: 0;
-  }
-}
-
-@keyframes entrada-panel-servicio {
-  from {
-    opacity: 0;
-    transform: translateY(var(--spacing-6));
   }
 }
 
@@ -1844,199 +1721,6 @@
 }
 
 /* =========================================================================
-   Tarjeta de proyecto y su ficha
-
-   La tarjeta entera es el disparador, igual que la de servicio: si hay que
-   hacer clic, el objetivo debe ser todo lo que se está mirando.
-
-   La ficha se abre encima, en la misma página. Donde el navegador tiene
-   View Transitions, la imagen de la tarjeta se transforma en la del panel;
-   donde no, el panel entra con su propia animación y el resultado sigue
-   siendo correcto.
-   ========================================================================= */
-
-@layer components {
-  .tarjeta-proyecto {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    text-align: start;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-paper);
-    transition:
-      border-color var(--duracion-micro) var(--ease-base),
-      translate var(--duracion-micro) var(--ease-base);
-  }
-
-  .tarjeta-proyecto:hover {
-    border-color: var(--color-accent);
-    translate: 0 -5px;
-  }
-
-  .tarjeta-proyecto:hover .tarjeta-proyecto-tag {
-    border-color: var(--color-accent-deep);
-    color: var(--color-accent-deep);
-  }
-
-  .tarjeta-proyecto-marco {
-    display: block;
-    overflow: hidden;
-    aspect-ratio: 3 / 2;
-    background-color: var(--color-paper-alt);
-  }
-
-  .tarjeta-proyecto-imagen {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* La foto se acerca al pasar el cursor. Solo escala: nada que dispare
-     layout, y el marco ya recorta. */
-  .tarjeta-proyecto-imagen {
-    transition: scale var(--duracion-imagen) var(--ease-base);
-  }
-
-  .tarjeta-proyecto:hover .tarjeta-proyecto-imagen {
-    scale: var(--escala-imagen);
-  }
-
-  .tarjeta-proyecto-cuerpo {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding: var(--spacing-6);
-  }
-
-  @media (min-width: 768px) {
-    .tarjeta-proyecto-cuerpo {
-      padding: var(--spacing-8);
-    }
-  }
-
-  /* Tag de servicio: dice de qué frente es el proyecto antes de leer nada
-     más, que es lo que permite compararlos de un vistazo. */
-  .tarjeta-proyecto-tag {
-    align-self: flex-start;
-    padding: var(--spacing-1) var(--spacing-3);
-    border: 1px solid var(--color-line-strong);
-    border-radius: var(--radius-pill);
-    font-family: var(--font-cuerpo);
-    font-size: var(--text-xs);
-    font-weight: 500;
-    letter-spacing: var(--tracking-etiqueta);
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
-  }
-
-  .tarjeta-proyecto-pie {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-4);
-    margin-block-start: auto;
-    padding-block-start: var(--spacing-8);
-  }
-
-  .tarjeta-proyecto:hover .tarjeta-servicio-mas {
-    rotate: 90deg;
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-    color: var(--color-dark);
-  }
-
-  .tarjeta-proyecto-tag {
-    transition:
-      border-color var(--duracion-micro) var(--ease-base),
-      color var(--duracion-micro) var(--ease-base);
-  }
-
-  /* --- El panel --- */
-
-  .panel-proyecto {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: var(--container-angosto);
-    max-height: 88vh;
-    max-height: 88dvh;
-    border-radius: var(--radius-lg);
-    background-color: var(--color-paper);
-    overflow: hidden;
-  }
-
-  .panel-proyecto-cabecera {
-    display: flex;
-    flex: none;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--spacing-6);
-    padding: var(--spacing-8) var(--spacing-8) var(--spacing-6);
-  }
-
-  .panel-proyecto-cuerpo {
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding: 0 var(--spacing-8) var(--spacing-8);
-  }
-
-  @media (min-width: 768px) {
-    .panel-proyecto-cabecera {
-      padding: var(--spacing-12) var(--spacing-12) var(--spacing-6);
-    }
-
-    .panel-proyecto-cuerpo {
-      padding: 0 var(--spacing-12) var(--spacing-12);
-    }
-  }
-
-  .panel-proyecto-marco {
-    overflow: hidden;
-    aspect-ratio: 16 / 9;
-    border-radius: var(--radius-md);
-    background-color: var(--color-paper-alt);
-  }
-
-  /* El velo entra y sale por transición: la salida tiene que terminar antes
-     de que React desmonte el panel (ver src/hooks/usePresencia.ts). */
-  .velo-panel[data-estado] {
-    opacity: 1;
-    transition: opacity var(--duracion-corta) var(--ease-base);
-  }
-
-  .velo-panel[data-estado="saliendo"] {
-    opacity: 0;
-    transition-duration: var(--duracion-micro);
-    transition-timing-function: var(--ease-salida);
-  }
-
-  @starting-style {
-    .velo-panel[data-estado] {
-      opacity: 0;
-    }
-  }
-}
-
-/* Donde hay View Transitions, la imagen manda y el resto se funde. La
-   duración es la del sistema, no la que trae el navegador por defecto. */
-::view-transition-old(proyecto-imagen),
-::view-transition-new(proyecto-imagen) {
-  animation-duration: var(--duracion-entrada);
-  animation-timing-function: var(--ease-base);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
-  }
-}
-
-/* =========================================================================
    Galería de campo
 
    Pista con scroll-snap: el gesto táctil y el encaje son del sistema. Las
@@ -2469,53 +2153,133 @@
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* Lista de servicios sin ficha                                        */
-/* ------------------------------------------------------------------ */
+/* =========================================================================
+   Tarjeta de categoría de servicio
+
+   Sustituye a dos piezas que había antes: la tarjeta desplegable de los dos
+   servicios con ficha y la lista de siete nombres sueltos que iba debajo. El
+   cliente reorganizó todo el alcance en cuatro categorías, así que las
+   cuatro pesan lo mismo y ninguna se lee como la principal.
+
+   Conserva el lenguaje de la tarjeta que sustituye —borde de 1px, radio
+   grande, relleno de 32px, fondo de papel— pero no su levantamiento al pasar
+   el cursor: la tarjeta ya no abre nada y el gesto prometería un clic que no
+   existe. Lo que reacciona es lo que sí es enlace, que son los ítems con
+   ficha propia.
+   ========================================================================= */
 
 @layer components {
-  /* Cada fila responde al cursor: el icono gira y se adelanta, el texto
-     se desplaza 6px y todo toma el acento. Solo transform y color. */
-  .servicio-listado {
-    padding-block: var(--spacing-4);
-  }
-
-  .servicio-listado-fila {
+  .tarjeta-categoria {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    /* Estira a la altura de su fila: la categoría de cuatro ítems marca el
+       alto y su pareja lo iguala, así que los bordes quedan alineados. */
+    height: 100%;
+    padding: var(--spacing-8);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-paper);
+  }
+
+  /* El título reserva su hueco inferior y la lista se pega al fondo con
+     `margin-block-start: auto`. Es lo que evita el espacio vacío al pie de
+     la tarjeta más corta de cada fila: el sobrante se reparte entre título y
+     regla, donde se lee como aire, y no debajo del último ítem, donde se lee
+     como un hueco. */
+  .categoria-titulo {
+    margin-block-end: var(--spacing-8);
+  }
+
+  .categoria-items {
+    display: flex;
+    flex-direction: column;
+    /* 16px y no 12: con el relleno del enlace, es lo que deja las áreas
+       táctiles de dos ítems seguidos sin solaparse. */
     gap: var(--spacing-4);
-    min-height: var(--area-tactil);
-    font-size: var(--text-lg);
+    margin-block-start: auto;
+    padding-block-start: var(--spacing-6);
+    border-block-start: 1px solid var(--color-line);
+  }
+
+  .categoria-item {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-3);
     color: var(--color-ink);
-    transition: color var(--duracion-micro) var(--ease-base);
   }
 
-  .servicio-listado-icono {
+  /* Cuadradito de acento, el mismo marcador que usan los compromisos de la
+     política integral: una lista de frentes y una de compromisos son la
+     misma clase de lista y no tienen por qué señalarse distinto. */
+  .categoria-marca,
+  .compromiso-marca {
     flex: none;
-    color: var(--color-accent-deep);
-    transition: transform var(--duracion-corta) var(--ease-base);
+    width: var(--spacing-2);
+    height: var(--spacing-2);
+    /* Sube un pelo para alinearse con la primera línea de texto y no con
+       su base, que es donde cae por ser `align-items: baseline`. */
+    translate: 0 -0.15em;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-accent);
   }
 
-  .servicio-listado-texto {
-    transition: transform var(--duracion-corta) var(--ease-base);
+  /* Los ítems con ficha son enlaces y traen el subrayado y la flecha de
+     .enlace-flecha, que es `inline-flex`. Aquí vuelve a `inline`: en flex,
+     el texto es un solo hijo que ocupa el ancho disponible, así que al
+     romper en dos líneas —«Monitoreo y caracterización de fauna y flora» lo
+     hace en móvil— la flecha se quedaba suelta contra el borde derecho en
+     vez de ir detrás de la última palabra. El subrayado no se entera: es un
+     degradado de fondo y se dibuja por línea.
+
+     El relleno vertical no mueve nada —es un elemento en línea— pero sí
+     agranda el área pulsable, que en un enlace de una sola línea se quedaba
+     en 26 px. */
+  .categoria-item .enlace-flecha {
+    display: inline;
+    padding-block: var(--spacing-2);
   }
 
-  .servicio-listado:hover .servicio-listado-fila {
-    color: var(--color-accent-deep);
+  .categoria-item .enlace-flecha > .flecha {
+    margin-inline-start: var(--spacing-2);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Compromisos de la política integral
+
+   Cinco frases cortas. En una sola columna y seguidas se leían como la
+   continuación del párrafo que tienen encima; en dos, con su regla, se leen
+   como la lista que son. La quinta ocupa la fila entera para que no quede
+   una celda vacía al final de la rejilla.
+   ------------------------------------------------------------------------- */
+
+@layer components {
+  .compromisos {
+    display: grid;
+    gap: var(--spacing-4) var(--spacing-8);
+    margin-block-start: var(--spacing-6);
+    /* Más ancho que la medida de lectura porque son dos columnas: a 57ch
+       cada una se quedaba en 28 caracteres y todas las frases rompían. */
+    max-width: var(--container-angosto);
   }
 
-  .servicio-listado:hover .servicio-listado-icono {
-    transform: translateX(2px) rotate(-10deg) scale(1.12);
+  .compromiso {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-3);
+    padding-block-start: var(--spacing-3);
+    border-block-start: 1px solid var(--color-line);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
   }
 
-  .servicio-listado:hover .servicio-listado-texto {
-    transform: translateX(6px);
-  }
+  @media (min-width: 640px) {
+    .compromisos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 
-  @media (prefers-reduced-motion: reduce) {
-    .servicio-listado:hover .servicio-listado-icono,
-    .servicio-listado:hover .servicio-listado-texto {
-      transform: none;
+    .compromiso:last-child {
+      grid-column: 1 / -1;
     }
   }
 }
@@ -2596,9 +2360,7 @@
     .valor:hover .valor-icono,
     .via-directa:hover .via-directa-icono,
     .etapa-estudio:hover .etapa-estudio-icono,
-    .tarjeta-institucional:hover,
-    .tarjeta-proyecto:hover,
-    .tarjeta-servicio:hover {
+    .tarjeta-institucional:hover {
       translate: none;
       scale: none;
       rotate: none;

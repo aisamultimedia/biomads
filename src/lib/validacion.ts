@@ -1,4 +1,4 @@
-import type { ClaveServicio, ClaveServicioListado } from "@/idioma/tipos";
+import type { ClaveCategoriaServicio } from "@/idioma/tipos";
 
 /**
  * Validación del formulario de contacto.
@@ -13,29 +13,30 @@ import type { ClaveServicio, ClaveServicioListado } from "@/idioma/tipos";
  */
 
 /**
- * Lo que se puede elegir en "tipo de servicio": los dos servicios con ficha,
- * los siete del listado y una salida para quien no sabe cuál es el suyo.
- * Es la lista de valores admitidos; el servidor rechaza cualquier otro.
+ * Lo que se puede elegir en "tipo de servicio": las cuatro categorías de
+ * servicio y una salida para quien no sabe cuál es la suya. Es la lista de
+ * valores admitidos; el servidor rechaza cualquier otro.
+ *
+ * Eran nueve —dos servicios con ficha más siete nombres sueltos— y pasaron a
+ * cuatro cuando el cliente reorganizó el alcance en categorías. El
+ * desplegable tiene que ofrecer lo mismo que la sección de servicios dice
+ * que se hace: con las nueve viejas, quien eligiera «Flora y fauna» habría
+ * estado eligiendo algo que ya no figura en ningún sitio del web.
  */
 export const CLAVES_SERVICIO = [
-  "monitoreo-fauna",
-  "flora-epifita",
-  "actividad-forestal",
-  "compensacion",
-  "inventarios",
-  "flora-fauna",
-  "educacion",
-  "desarrollo-sostenible",
-  "asesoria",
+  "biodiversidad",
+  "forestal",
+  "estudios",
+  "sostenibilidad",
   "otro",
 ] as const;
 
 export type ClaveServicioFormulario = (typeof CLAVES_SERVICIO)[number];
 
-/* Si aparece un servicio nuevo en el diccionario y no se añade arriba, esto
-   deja de compilar. Es la única razón de que exista. */
+/* Si aparece una categoría nueva en el diccionario y no se añade arriba,
+   esto deja de compilar. Es la única razón de que exista. */
 type ServicioSinOpcion = Exclude<
-  ClaveServicio | ClaveServicioListado | "otro",
+  ClaveCategoriaServicio | "otro",
   ClaveServicioFormulario
 >;
 const _todosLosServiciosTienenOpcion: ServicioSinOpcion extends never ? true : never = true;

@@ -10,7 +10,7 @@ import { idiomaPreferido, preferenciasDeCabecera } from "@/idioma/negociar";
  * sistema, seguiría cayendo en el anterior.
  *
  * Solo la raíz. Las páginas interiores no se redirigen por idioma del
- * navegador: quien comparte `/es/proyectos` quiere que se abra en español,
+ * navegador: quien comparte `/es/privacidad` quiere que se abra en español,
  * y un rastreador con `Accept-Language: en` indexaría la versión inglesa
  * de cada URL española. La elección explícita del visitante la recuerda el
  * selector, en el cliente.

@@ -199,6 +199,17 @@
      max-w-[42ch] y max-w-[52ch] repartidas por seis componentes: mismos
      papeles, valores distintos y sin nombre. */
   --container-titulo:   20ch; /* cuánto corre un titular antes de romper */
+  /* Dos medidas más de titular, las dos por el mismo motivo: los titulares
+     nuevos son más largos que los que había y a 20ch se partían por su
+     cuenta, por encima del corte que decide quien escribe.
+       · titulo-hero, para el h1 partido a mano línea por línea. No ensancha
+         nada: el ancho real lo fija la línea más larga del array, y esto
+         solo evita que esa línea vuelva a romperse.
+       · titulo-seccion, para los h2. Los cortos siguen cabiendo en una
+         línea; el de «Quiénes somos», que ahora tiene 72 caracteres, rompe
+         en dos en vez de correr los 1200px del contenedor. */
+  --container-titulo-hero:    26ch;
+  --container-titulo-seccion: 42ch;
   --container-bajada:   52ch; /* entradilla del hero, a 21px */
   --container-estrecho: 42ch; /* pies de foto y columnas secundarias */
   --container-ancho:  1200px;

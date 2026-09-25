@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { Boton } from "@/components/ui/Boton";
 import { Enlace } from "@/components/ui/Enlace";
 import { FichaDatos } from "@/components/ui/FichaDatos";
 import { Seccion } from "@/components/ui/Seccion";
@@ -8,7 +7,6 @@ import { Reveal } from "@/components/motion/Reveal";
 import { RevealGroup } from "@/components/motion/RevealGroup";
 import { TituloPorLineas } from "@/components/motion/TituloPorLineas";
 import { SiguientePaso } from "./SiguientePaso";
-import { proyectos } from "@/content/proyectos";
 import { serviciosDetallados, type ServicioDetallado } from "@/content/servicios";
 import { diccionario, type Idioma } from "@/idioma";
 
@@ -22,8 +20,15 @@ type Props = {
 /**
  * Página de un servicio con ficha completa.
  *
- * Orden: cuándo se necesita · marco normativo · cómo se ejecuta ·
- * entregable · duración · caso relacionado. Todo sale de CONTENIDO.md.
+ * Orden: cuándo se necesita · marco normativo · entregable · duración ·
+ * cómo se ejecuta. Todo sale de CONTENIDO.md.
+ *
+ * Cerraba con una sección de «caso relacionado» —cliente, año, duración y
+ * dificultad del proyecto que respaldaba el servicio— y con la ficha de ese
+ * proyecto. Se retiró con la sección de proyectos, por decisión del
+ * cliente. Lo que queda del trabajo real es la atribución del método, que
+ * no es una ficha de proyecto sino la fuente de lo que se afirma: un método
+ * sin decir dónde se aplicó es un método sin respaldo.
  *
  * La cabecera entra por CSS en una secuencia: rótulo → líneas del título →
  * entradilla → foto → ficha. Es el mismo patrón de todas las páginas
@@ -34,8 +39,6 @@ export function DetalleServicio({ servicio, idioma, medio }: Props) {
   const d = t.servicios.detalle;
   const ficha = t.servicios.detallados[servicio.slug];
 
-  const caso = proyectos.find((p) => p.slug === servicio.casoRelacionado);
-  const casoTexto = caso ? t.proyectos.casos[caso.slug] : undefined;
   const otro = serviciosDetallados.find((s) => s.slug !== servicio.slug)!;
 
   const bloques = [
@@ -67,6 +70,10 @@ export function DetalleServicio({ servicio, idioma, medio }: Props) {
 
         <div className="mt-16">{medio}</div>
 
+        {/* Tres datos y no cuatro: el cuarto era «Ejecutado en», que salía
+            de la ubicación del proyecto relacionado. La rejilla de FichaDatos
+            reparte las columnas que reciba, así que tres quedan repartidos
+            sin hueco vacío al final. */}
         <FichaDatos
           className="mt-16"
           inmediata
@@ -75,10 +82,6 @@ export function DetalleServicio({ servicio, idioma, medio }: Props) {
             { rotulo: d.autoridad, valor: ficha.autoridad },
             { rotulo: d.ultimaEjecucion, valor: duracionReferencia, mono: true },
             { rotulo: d.entregable, valor: d.informeTecnico },
-            {
-              rotulo: d.ejecutadoEn,
-              valor: casoTexto ? casoTexto.ubicacion.split(" · ")[0] : "Huila",
-            },
           ]}
         />
       </section>
@@ -93,59 +96,23 @@ export function DetalleServicio({ servicio, idioma, medio }: Props) {
 
       {/* ---------------- Metodología ----------------
           El brief no documenta diseño de muestreo, esfuerzo ni equipos.
-          Lo único respaldado es cómo se ejecutó en el proyecto real, y así
-          va: atribuido, no como método genérico. */}
-      <Seccion rotulo={d.metodoRotulo} titulo={d.metodoTitulo}>
-        <div className="grid gap-16 md:grid-cols-[1fr_auto] md:gap-24">
-          <Reveal>
-            <p className="medida text-lg text-ink">{ficha.metodologia}</p>
-            <p className="dato mt-8 text-sm text-ink-muted">{ficha.metodologiaFuente}</p>
-          </Reveal>
+          Lo único respaldado es cómo se ejecutó en campo, y así va:
+          atribuido, no como método genérico.
 
-          {casoTexto && (
-            <RevealGroup tipos={["lateral", "texto"]} className="md:max-w-estrecho">
-              <p className="etiqueta text-ink-muted">{d.dificultadTitulo}</p>
-              <p className="mt-4 text-sm text-ink">{casoTexto.dificultad}</p>
-            </RevealGroup>
-          )}
-        </div>
+          Ocupaba media rejilla, con «Qué lo hacía difícil» al lado. Ese
+          bloque salía del proyecto relacionado y se fue con él; sin
+          compañero, el método ocupa la medida de lectura y no una columna
+          estrecha con la mitad derecha vacía. */}
+      <Seccion rotulo={d.metodoRotulo} titulo={d.metodoTitulo}>
+        <Reveal>
+          <p className="medida text-lg text-ink">{ficha.metodologia}</p>
+          <p className="dato mt-8 text-sm text-ink-muted">{ficha.metodologiaFuente}</p>
+        </Reveal>
       </Seccion>
 
-      {/* ---------------- Caso relacionado ---------------- */}
-      {caso && casoTexto && (
-        <Seccion alterna rotulo={d.casoRotulo} titulo={d.casoTitulo}>
-          <div className="grid gap-16 md:grid-cols-[1fr_1fr] md:gap-24">
-            <RevealGroup tipos={["titulo", "texto", "texto"]}>
-              <h3 className="text-xl md:text-2xl">{casoTexto.clienteCorto}</h3>
-              <p className="medida mt-4 text-ink">{casoTexto.encargo}</p>
-              <div className="mt-8">
-                <Boton href={`/${idioma}/proyectos/${caso.slug}`} variante="secundario">
-                  {t.proyectos.verCompleto}
-                </Boton>
-              </div>
-            </RevealGroup>
-
-            {/* Sin "cómo se resolvió": es la misma frase que ya va arriba
-                como método, y el brief no tiene otra. */}
-            <FichaDatos
-              datos={[
-                { rotulo: t.proyectos.ficha.anio, valor: String(caso.anio), mono: true },
-                {
-                  rotulo: t.proyectos.ficha.duracion,
-                  valor: `${caso.duracionMeses} ${t.unidades.meses}`,
-                  mono: true,
-                },
-                { rotulo: t.proyectos.ficha.ubicacion, valor: casoTexto.ubicacion },
-                { rotulo: t.proyectos.ficha.servicio, valor: casoTexto.servicioRotulo },
-              ]}
-            />
-          </div>
-        </Seccion>
-      )}
-
       {/* ---------------- Siguiente paso ---------------- */}
-      <SiguientePaso idioma={idioma} titulo={t.siguientePaso.tituloServicio}>
-        {t.siguientePaso.textoServicio}{" "}
+      <SiguientePaso idioma={idioma} alterna titulo={t.siguientePaso.tituloServicio}>
+        {t.siguientePaso.textoServicio} {d.otraFicha}{" "}
         <Enlace href={`/${idioma}/servicios/${otro.slug}`}>
           {t.servicios.detallados[otro.slug].titulo.toLowerCase()}
         </Enlace>

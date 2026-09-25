@@ -22,8 +22,13 @@ import cuadrillaAspersion from "@/fotos/cuadrilla-aspersion.jpg";
  * ni de flora epífita.
  *
  * Son las doce que quedaban sin usar de las veintinueve entregadas, menos
- * las que repetían encuadre con alguna ya publicada. Las de cabecera y
- * proyectos no se repiten aquí a propósito.
+ * las que repetían encuadre con alguna ya publicada. Las del slider de
+ * «Quiénes somos» no se repiten aquí a propósito.
+ *
+ * Con la sección de proyectos retirada quedaron sin usar `siembra-ladera` y
+ * `traslado-material`, que eran sus dos fotos. No se han añadido aquí: el
+ * cliente pidió quitar una foto, no cambiar la galería. Los archivos y sus
+ * textos alternativos siguen en el repositorio y añadirlas es una línea.
  */
 export const galeria: readonly { clave: ClaveFoto; imagen: typeof aspersionLadera }[] = [
   { clave: "ahoyadora-via", imagen: ahoyadoraVia },

@@ -14,7 +14,7 @@ Este archivo es la fuente de verdad del contenido. El copy final del sitio sale 
 - **Constitución:** 2017
 - **Sede:** Ibagué, Tolima
 - **Correo:** gerencia@biomads.com
-- **Teléfono / WhatsApp:** 311 527 6301
+- **Teléfono / WhatsApp:** 318 062 9448
 - `[FALTA]` Dirección física, NIT, redes sociales, horario de atención.
 
 ---

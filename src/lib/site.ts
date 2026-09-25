@@ -14,8 +14,8 @@ export const empresa = {
   constitucion: 2017,
   sede: "Ibagué, Tolima",
   correo: "gerencia@biomads.com",
-  telefono: "311 527 6301",
-  telefonoE164: "+573115276301",
+  telefono: "318 062 9448",
+  telefonoE164: "+573180629448",
 } as const;
 
 /**
@@ -63,18 +63,21 @@ export type ItemNav = {
 };
 
 /**
- * Navegación: cuatro anclas de la misma página y nada más.
+ * Navegación: tres anclas de la misma página y nada más.
  *
- * Los desplegables que llevaban a las fichas de servicio y de proyecto se
- * quitaron: en un sitio de una sola página abrían un submenú para sacar al
- * visitante de ella. Las fichas siguen existiendo y se alcanzan desde su
- * sección —el popover del servicio y la tarjeta del proyecto—, que es donde
- * la ficha viene a cuento.
+ * Los desplegables que llevaban a las fichas de servicio se quitaron: en un
+ * sitio de una sola página abrían un submenú para sacar al visitante de
+ * ella. Las fichas siguen existiendo y se alcanzan desde la sección de
+ * servicios, que es donde vienen a cuento.
+ *
+ * «Proyectos» era la cuarta ancla y se retiró junto con su sección, por
+ * decisión del cliente. Quitarla de esta lista la quita a la vez de la
+ * barra, del menú móvil, del pie y del indicador de sección activa: los
+ * cuatro leen de aquí.
  */
 export const navegacion: readonly ItemNav[] = [
   { href: "#nosotros", clave: "nosotros" },
   { href: "#servicios", clave: "servicios" },
-  { href: "#proyectos", clave: "proyectos" },
   { href: "#contacto", clave: "contacto" },
 ] as const;
 

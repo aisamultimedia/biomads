@@ -47,7 +47,7 @@ Sitio corporativo. Cinco superficies: home, servicios, proyectos, nosotros, cont
 
 El visitante llega mayoritariamente desde búsqueda con intención técnica ("monitoreo de fauna EIA", "plan de compensación ambiental Colombia", "levantamiento de flora epífita") o escribiendo el nombre directo tras una referencia. Muchas visitas ocurrirán desde una oficina, en escritorio, en horario laboral — pero la verificación rápida de credenciales pasa por móvil.
 
-La conversión no es una compra: es un correo o un WhatsApp a `gerencia@biomads.com` / 311 527 6301 pidiendo propuesta. El sitio debe hacer trivial ese paso desde cualquier página, y debe permitir descargar o consultar el portafolio sin fricción.
+La conversión no es una compra: es un correo o un WhatsApp a `gerencia@biomads.com` / 318 062 9448 pidiendo propuesta. El sitio debe hacer trivial ese paso desde cualquier página, y debe permitir descargar o consultar el portafolio sin fricción.
 
 No habrá blog. Nadie en la empresa va a alimentarlo y un blog abandonado resta más de lo que suma.
 

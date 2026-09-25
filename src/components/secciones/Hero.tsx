@@ -76,7 +76,10 @@ export function Hero({ idioma }: { idioma: Idioma }) {
 
           <TituloPorLineas
             indice={PASO.titulo}
-            className="max-w-titulo text-3xl text-ink-invert md:text-4xl xl:text-5xl"
+            /* max-w-titulo-hero y no max-w-titulo: el titular nuevo tiene
+               lineas de hasta 24 caracteres y a 20ch se le partia la
+               primera por su cuenta, encima del corte ya decidido. */
+            className="max-w-titulo-hero text-3xl text-ink-invert md:text-4xl xl:text-5xl"
             lineas={t.hero.titulo}
           />
 
@@ -96,7 +99,10 @@ export function Hero({ idioma }: { idioma: Idioma }) {
             <Boton href="#contacto" variante="acento">
               {t.hero.ctaPrincipal}
             </Boton>
-            <Enlace href="#proyectos" className="text-ink-invert">
+            {/* Llevaba a #proyectos. Retirada esa sección, el segundo
+                enlace del hero apunta a servicios: es el otro destino al que
+                tiene sentido mandar a quien acaba de leer el titular. */}
+            <Enlace href="#servicios" className="text-ink-invert">
               {t.hero.ctaSecundario}
             </Enlace>
           </Entrada>

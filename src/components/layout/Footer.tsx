@@ -4,7 +4,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { RevealGroup } from "@/components/motion/RevealGroup";
 import { Logotipo } from "./Logotipo";
 import { Nav } from "./Nav";
-import { equipo, regiones } from "@/content/respaldo";
+import { regiones } from "@/content/respaldo";
 import { diccionario, interpolar, type Idioma } from "@/idioma";
 import { empresa, mailto, sitioDesarrolladoEn, whatsapp } from "@/lib/site";
 
@@ -19,12 +19,15 @@ export function Footer({ idioma }: { idioma: Idioma }) {
         {/* Quiénes somos, en tres líneas. Quien llega al pie desde una página
             de detalle no tiene por qué haber pasado por la sección Nosotros.
             El texto va con huecos y no concatenado: el orden de las palabras
-            alrededor de los datos cambia con el idioma. */}
+            alrededor de los datos cambia con el idioma.
+
+            El hueco {equipo} —la cifra de integrantes— se retiró por
+            decisión del cliente. La frase sigue diciendo que el equipo es
+            multidisciplinario, sin número. */}
         <Reveal as="p" className="medida-documento mb-16 text-lg text-ink-invert">
           {interpolar(t.pie.resumen, {
             sede: empresa.sede,
             constitucion: empresa.constitucion,
-            equipo: equipo.permanentes,
             regiones: regiones.join(` ${t.unidades.y} `),
           })}
         </Reveal>
@@ -42,7 +45,11 @@ export function Footer({ idioma }: { idioma: Idioma }) {
                   {empresa.correo}
                 </Enlace>
               </li>
-              <li className="flex items-center gap-4">
+              {/* Envuelve: el número va en monoespaciada a 27px y con la
+                  nota al lado no cabe en una columna de móvil, así que
+                  rompía por la mitad. Envolviendo, la nota baja a su
+                  línea y el número se lee entero. */}
+              <li className="flex flex-wrap items-center gap-x-4 gap-y-1">
                 <Icono nombre="telefono" className="text-accent" />
                 <Enlace href={whatsapp} externo className="dato text-xl">
                   {empresa.telefono}

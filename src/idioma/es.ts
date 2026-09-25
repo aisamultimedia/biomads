@@ -21,12 +21,9 @@ export const es: Diccionario = {
     plantillaTitulo: "%s — BIOMADS",
     descripcionPortada:
       "BIOMADS S.A.S — estudios y gestión ambiental desde Ibagué. Monitoreo de biodiversidad de fauna y seguimiento de flora epífita reubicada, con registros verificables.",
-    tituloProyectos: "Proyectos",
     tituloPrivacidad: "Política de tratamiento de datos personales",
     descripcionPrivacidad:
       "Qué datos recoge el sitio de BIOMADS, para qué los usa, cuánto tiempo los guarda y cómo ejercer sus derechos según la Ley 1581 de 2012.",
-    descripcionProyectos:
-      "Proyectos ejecutados por BIOMADS en Huila: monitoreo de fauna para EIA de vías terciarias (SOLINTER, 2017) y seguimiento de flora epífita en El Quimbo (GES, 2018).",
   },
 
   nav: {
@@ -41,7 +38,6 @@ export const es: Diccionario = {
     secciones: {
       nosotros: "Nosotros",
       servicios: "Servicios",
-      proyectos: "Proyectos",
       contacto: "Contacto",
     },
     idioma: "Idioma",
@@ -49,15 +45,20 @@ export const es: Diccionario = {
 
   hero: {
     descriptor: "Aliados estratégicos en gestión ambiental y sostenibilidad empresarial",
-    /* Titular con las palabras por las que se busca el servicio —estudios
-       ambientales, gestión ambiental, infraestructura— y la sede, que es el
-       ancla local. Antes decía «hechos para la revisión de la autoridad»;
-       el cliente pidió cambiarlo. */
-    titulo: ["Estudios y gestión", "ambiental para obras", "de infraestructura."],
+    /* Titular de posicionamiento, no de catálogo. Antes decía «Estudios y
+       gestión ambiental para obras de infraestructura»: nombraba un solo
+       tipo de cliente y dejaba fuera biodiversidad y restauración, que es
+       la mitad del alcance. El cliente lo cambió por esto en la ronda del
+       25 de septiembre de 2026. Los servicios siguen nombrados —en la
+       bajada y en su sección—, que es donde el buscador también los lee. */
+    titulo: ["Conocimiento ambiental", "que transforma proyectos", "y territorios."],
     bajada:
-      "Monitoreos de fauna, seguimiento de flora reubicada y gestión de obligaciones ambientales para proyectos de infraestructura.",
+      "Integramos experiencia en campo y conocimiento especializado para desarrollar soluciones en biodiversidad, estudios ambientales, restauración y gestión de obligaciones ambientales.",
     ctaPrincipal: "Cuéntenos su proyecto",
-    ctaSecundario: "Ver proyectos ejecutados",
+    /* Llevaba a «Ver proyectos ejecutados». Retirada la sección de
+       proyectos, el segundo enlace apunta a servicios: es el otro sitio al
+       que tiene sentido mandar a quien acaba de leer el titular. */
+    ctaSecundario: "Ver nuestros servicios",
     ficha: {
       experiencia: "Experiencia",
       constituida: "Constituida",
@@ -72,93 +73,133 @@ export const es: Diccionario = {
 
   nosotros: {
     rotulo: "¿Quiénes somos?",
-    titulo: "Capacidad técnica a la medida del alcance",
+    titulo: "Conocimiento técnico, experiencia en campo y compromiso con el territorio",
     quienesSomos:
-      "Somos BIOMADS, un equipo especializado en diseñar y ejecutar proyectos vanguardia que permitan el desarrollo sostenible de la sociedad y el medio ambiente.",
+      "Somos BIOMADS, una empresa especializada en gestión ambiental y biodiversidad. Desarrollamos soluciones técnicas que responden a las necesidades particulares de cada proyecto, integrando conocimiento, experiencia en campo y comprensión del territorio.",
+    /* Sin cifra de integrantes. La había —«un equipo permanente de ≈10
+       personas»— en el resumen del pie, y el cliente pidió retirarla: el
+       equipo se describe por composición, no por tamaño. */
     fortaleza:
-      "Nuestra principal fortaleza es la capacidad de adaptarnos a las necesidades específicas de cada proyecto, articulando un equipo multidisciplinario de profesionales y especialistas. Esto nos permite ofrecer soluciones personalizadas y mantener un acompañamiento cercano durante el desarrollo de los proyectos.",
+      "Contamos con un equipo multidisciplinario de profesionales y especialistas que nos permite abordar cada proyecto de manera integral, adaptarnos a sus retos y acompañar a nuestros clientes durante las diferentes etapas de su gestión ambiental.",
+    proposito:
+      "Nuestro propósito es aportar soluciones técnicamente sólidas que contribuyan al cumplimiento ambiental, la conservación de la biodiversidad y el desarrollo sostenible de los proyectos y territorios.",
   },
 
   institucional: {
     misionRotulo: "Misión",
     mision:
-      "Desarrollar proyectos con excelencia y compromiso, promoviendo la sostenibilidad y el respeto por los recursos naturales.",
+      "Desarrollar soluciones ambientales con rigor técnico y experiencia en campo, contribuyendo a la conservación de la biodiversidad y a la gestión sostenible de los proyectos y territorios.",
     visionRotulo: "Visión",
     vision:
-      "Ser una empresa líder a nivel nacional en soluciones ambientales integrales, reconocida por su innovación, excelencia operativa y compromiso con el desarrollo sostenible.",
+      "Ser una empresa referente en Colombia en gestión ambiental y biodiversidad, reconocida por su excelencia técnica, innovación y capacidad para generar soluciones sostenibles.",
     valoresRotulo: "Valores corporativos",
     valores: {
       excelencia: {
         nombre: "Excelencia técnica",
-        texto:
-          "Compromiso con altos estándares de calidad, precisión e innovación en cada proyecto.",
+        texto: "Rigor, conocimiento y calidad en cada proyecto.",
       },
       sostenibilidad: {
-        nombre: "Sostenibilidad activa",
+        nombre: "Sostenibilidad",
         texto:
-          "Promovemos el uso responsable de los recursos naturales y el desarrollo sostenible.",
+          "Promovemos soluciones que aportan al equilibrio entre desarrollo y conservación.",
       },
       integridad: {
         nombre: "Integridad y transparencia",
-        texto:
-          "Actuamos con ética, responsabilidad y cumplimiento normativo en todas nuestras operaciones.",
+        texto: "Actuamos con ética, responsabilidad y coherencia.",
       },
       innovacion: {
-        nombre: "Innovación ambiental",
+        nombre: "Innovación",
         texto:
-          "Aplicamos soluciones técnicas avanzadas y eficientes para enfrentar los desafíos ambientales.",
+          "Buscamos nuevas y mejores formas de responder a los desafíos ambientales.",
       },
+      /* PENDIENTE DE CONTENIDO. El cliente pidió mantener cinco valores y
+         solo envió cuatro textos nuevos. Este se conserva tal como estaba,
+         sin tocar, hasta que llegue el definitivo. No se inventa. */
       social: {
         nombre: "Compromiso social",
         texto:
           "Generamos impacto positivo en las comunidades y fomentamos el respeto por el entorno.",
       },
     },
-    politicaRotulo: "Política de calidad",
+    /* Era «Política de calidad» y pasó a ser integral: cubre calidad,
+       ambiente y seguridad y salud en el trabajo, bajo ISO 9001, 14001 y
+       45001. El rótulo se pinta con .etiqueta, que va en versalitas, así
+       que en pantalla se lee POLÍTICA INTEGRAL. */
+    politicaRotulo: "Política integral",
     politica: [
-      "En BIOMADS nos comprometemos a planificar, ejecutar y supervisar proyectos ambientales con altos estándares de calidad, sostenibilidad y responsabilidad.",
-      "Implementamos procesos eficientes y mejora continua, garantizando el cumplimiento de la normatividad ambiental vigente y la satisfacción de nuestros clientes, contribuyendo al desarrollo sostenible y la protección del medio ambiente.",
+      "En BIOMADS desarrollamos soluciones ambientales con altos estándares de calidad, promoviendo la protección del medio ambiente, el uso sostenible de los recursos naturales y condiciones de trabajo seguras y saludables.",
+      "Nuestro compromiso se fundamenta en la satisfacción de nuestros clientes, el cumplimiento de los requisitos legales y aplicables, la prevención de la contaminación, la gestión de los riesgos y oportunidades, la prevención de lesiones y deterioro de la salud, y la mejora continua de nuestro Sistema Integrado de Gestión, bajo los lineamientos de las normas ISO 9001, ISO 14001 e ISO 45001.",
     ],
-    objetivosRotulo: "Objetivos",
-    objetivos: [
-      "Cumplir con la normativa técnica y ambiental aplicable.",
-      "Desarrollar soluciones ambientales integrales y sostenibles.",
-      "Optimizar procesos.",
-      "Promover la mejora continua.",
-      "Garantizar la satisfacción de nuestros clientes.",
+    compromisosRotulo: "Compromisos",
+    compromisos: [
+      "Calidad y satisfacción de nuestros clientes.",
+      "Protección del medio ambiente y prevención de la contaminación.",
+      "Seguridad, salud y bienestar de nuestros trabajadores.",
+      "Cumplimiento de requisitos legales y otros aplicables.",
+      "Gestión de riesgos y oportunidades y mejora continua.",
     ],
   },
 
   promesa: {
     rotulo: "Nuestra promesa",
     enunciado:
-      "Un estudio ambiental se mide por lo que resiste cuando alguien lo revisa.",
+      "Soluciones ambientales con rigor técnico, conocimiento del territorio y resultados que generan valor.",
   },
 
+  /* La banda que sigue a la promesa. El rótulo era «Estudios ambientales» y
+     ahora nombra el método: las mismas cinco etapas, dichas en primera
+     persona del plural para que se lean como algo que se hace y no como un
+     índice. La quinta era «Permisos» y ahora cierra en seguimiento. */
   etapas: {
-    rotulo: "Estudios ambientales",
+    rotulo: "Nuestra forma de abordar cada proyecto",
     nombres: {
-      identificacion: "Identificación",
-      evaluacion: "Evaluación",
-      prevencion: "Prevención y mitigación",
-      compensacion: "Corrección y compensación",
-      permisos: "Permisos",
+      identificacion: "Identificamos",
+      evaluacion: "Evaluamos",
+      prevencion: "Prevenimos y mitigamos",
+      compensacion: "Corregimos y compensamos",
+      seguimiento: "Gestionamos y hacemos seguimiento",
     },
   },
 
   servicios: {
     rotulo: "Servicios",
-    titulo: "Dos frentes documentados a fondo",
-    pieTarjeta: "Marco normativo, entregable y duración",
+    titulo: "Soluciones ambientales para cada proyecto",
     consultarAlcance: "Consultar un alcance",
-    listados: {
-      "actividad-forestal": "Actividad forestal",
-      compensacion: "Planes de compensación ambiental",
-      inventarios: "Inventarios forestales",
-      "flora-fauna": "Flora y fauna",
-      educacion: "Educación ambiental",
-      "desarrollo-sostenible": "Desarrollo sostenible",
-      asesoria: "Asesoría y gestión ambiental",
+    conFicha: "Ver la ficha técnica",
+    categorias: {
+      biodiversidad: {
+        nombre: "Biodiversidad y ecosistemas",
+        items: [
+          "Monitoreo y caracterización de fauna y flora",
+          "Flora epífita",
+          "Seguimiento y manejo de biodiversidad",
+        ],
+      },
+      forestal: {
+        nombre: "Gestión forestal y compensaciones",
+        items: [
+          "Inventarios forestales",
+          "Actividad forestal",
+          "Planes de compensación ambiental",
+          "Restauración y seguimiento",
+        ],
+      },
+      estudios: {
+        nombre: "Estudios y gestión ambiental",
+        items: [
+          "Estudios ambientales",
+          "Asesoría y gestión ambiental",
+          "Seguimiento de obligaciones y requerimientos ambientales",
+        ],
+      },
+      sostenibilidad: {
+        nombre: "Sostenibilidad y educación ambiental",
+        items: [
+          "Educación ambiental",
+          "Desarrollo sostenible",
+          "Acompañamiento a iniciativas ambientales y territoriales",
+        ],
+      },
     },
     detallados: {
       "monitoreo-fauna": {
@@ -214,10 +255,6 @@ export const es: Diccionario = {
       entregable: "Entregable",
       duracion: "Duración típica",
       metodo: "Método aplicado en campo",
-      ultimaEjecucion: "Última ejecución",
-      cta: "Cuéntenos su proyecto",
-      cerrar: "Cerrar",
-      paginaCompleta: "Ver la página completa",
     },
     detalle: {
       volver: "Servicios",
@@ -225,83 +262,15 @@ export const es: Diccionario = {
       fichaTitulo: "Qué cubre y bajo qué marco",
       metodoRotulo: "Cómo se ejecuta",
       metodoTitulo: "Método aplicado en campo",
-      dificultadTitulo: "Qué lo hacía difícil",
-      casoRotulo: "Caso relacionado",
-      casoTitulo: "Dónde se ejecutó",
       autoridad: "Autoridad",
       ultimaEjecucion: "Última ejecución",
       entregable: "Entregable",
       informeTecnico: "Informe técnico",
-      ejecutadoEn: "Ejecutado en",
-      ejecucionContractual: "Última ejecución contractual",
-      marcoYMetodologia: "Marco normativo y metodología",
       siguienteTitulo: "Cuéntenos el alcance y la autoridad",
-    },
-  },
-
-  proyectos: {
-    rotulo: "Proyectos",
-    titulo: "Ejecutados y verificables",
-    verCompleto: "Ver el proyecto completo",
-    dificultadRotulo: "La dificultad",
-    resolucionRotulo: "Cómo se resolvió",
-    ficha: {
-      anio: "Año",
-      duracion: "Duración",
-      ubicacion: "Ubicación",
-      servicio: "Servicio",
-    },
-    abrirFicha: "Ver la ficha de {cliente}",
-    cerrar: "Cerrar",
-    verPaginaCompleta: "Ver la página completa",
-    detalle: {
-      cliente: "Cliente",
-      encargoRotulo: "El encargo",
-      encargoTitulo: "Qué lo hacía difícil y cómo se resolvió",
-      razonSocial: "Razón social del cliente",
-      servicioRotulo: "El servicio",
-      verFichaServicio: "Ver la ficha del servicio",
-      otroProyecto: "También puede ver el otro proyecto documentado:",
-    },
-    indice: {
-      lineasTitulo: ["Lo que hemos ejecutado,", "con nombre y duración"],
-      entradilla:
-        "Dos proyectos con ficha completa: encargo, dificultad, cómo se resolvió y duración contractual. Publicamos lo que podemos sustentar, así que aquí no hay contador de proyectos ni de años acumulados.",
-      conFichaCompleta: "Con ficha completa",
-      regiones: "Regiones",
-      anios: "Años",
-      duraciones: "Duraciones",
-      casosRotulo: "Casos",
-      dondeRotulo: "Dónde",
-      dondeTitulo: "Regiones con proyectos ejecutados",
-      dondeTexto:
-        "Ahí están los proyectos que podemos documentar. Trabajamos desde Ibagué y nos desplazamos según lo pida el frente, pero no vamos a decirle que tenemos cobertura nacional para ganarnos una invitación.",
-    },
-    casos: {
-      "solinter-2017": {
-        cliente: "Soluciones Integrales Internacionales S.A.S. — SOLINTER",
-        clienteCorto: "SOLINTER",
-        ubicacion: "Garzón y Gigante, Huila",
-        encargo:
-          "Monitoreo y estudio de la biodiversidad de fauna asociado al Estudio de Impacto Ambiental para proyectos de vías terciarias.",
-        dificultad:
-          "Obtener información representativa de la biodiversidad de fauna en campo, dadas las características del área y las condiciones propias de los muestreos.",
-        resolucion:
-          "Jornadas de monitoreo y aplicación de una metodología de campo que permitiera recopilar y organizar registros confiables para sustentar técnicamente el estudio ambiental.",
-        servicioRotulo: "Monitoreo de fauna",
-      },
-      "ges-2018": {
-        cliente: "Grupo Empresarial Surcolombiano S.A.S. — GES",
-        clienteCorto: "GES",
-        ubicacion: "Gigante, Huila · proyecto hidroeléctrico El Quimbo",
-        encargo:
-          "Mantenimiento y seguimiento de la flora epífita reubicada, perteneciente al proyecto hidroeléctrico El Quimbo.",
-        dificultad:
-          "Garantizar la continuidad del mantenimiento y seguimiento de la flora epífita después de su reubicación, verificando su estado durante el periodo contractual.",
-        resolucion:
-          "Actividades periódicas de mantenimiento y seguimiento, dejando registro del comportamiento y evolución de la flora reubicada.",
-        servicioRotulo: "Flora epífita",
-      },
+      /* El cierre de la ficha enlazaba la otra sin decir a qué venía: el
+         párrafo terminaba en punto y detrás quedaba el título del otro
+         servicio suelto, como una frase a medias. */
+      otraFicha: "También puede ver la ficha de",
     },
   },
 
@@ -404,17 +373,17 @@ export const es: Diccionario = {
     rotulo: "Siguiente paso",
     solicitarPropuesta: "Solicitar propuesta",
     escribirWhatsapp: "Escribir por WhatsApp",
-    tituloProyectos: "¿Necesita referencias de un frente parecido?",
-    textoProyectos:
-      "Pídanos el detalle del proyecto que más se acerque al suyo y le contamos cómo se ejecutó.",
     tituloServicio: "Cuéntenos el alcance y la autoridad",
     textoServicio:
       "Con eso alcanza para decirle si el frente es nuestro y armar una propuesta.",
   },
 
   pie: {
+    /* Sin cifra de equipo: decía «un equipo permanente de ≈10 personas» y
+       el cliente pidió retirar el número de integrantes. El hueco {equipo}
+       desapareció también del componente que interpola. */
     resumen:
-      "BIOMADS es una empresa de estudios y gestión ambiental con sede en {sede}, constituida en {constitucion}. Un equipo permanente de {equipo} personas más los especialistas que pida cada proyecto, con trabajo ejecutado en {regiones}.",
+      "BIOMADS es una empresa de gestión ambiental y biodiversidad con sede en {sede}, constituida en {constitucion}. Un equipo multidisciplinario de profesionales y especialistas, con trabajo ejecutado en {regiones}.",
     escribanos: "Escríbanos",
     seccionesRotulo: "Secciones",
     llamadaOWhatsapp: "llamada o WhatsApp",
@@ -474,7 +443,6 @@ export const es: Diccionario = {
 
   unidades: {
     meses: "meses",
-    personas: "personas",
     y: "y",
   },
 };

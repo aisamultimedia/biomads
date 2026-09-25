@@ -3,8 +3,8 @@ import { CLAVES_SERVICIO, type ClaveServicioFormulario } from "@/lib/validacion"
 
 /**
  * Opciones del desplegable "tipo de servicio", con su rótulo en el idioma
- * del visitante. Los nombres no se escriben dos veces: son los mismos que
- * ya usa la sección de servicios, tomados del diccionario.
+ * del visitante. Los nombres no se escriben dos veces: son las mismas cuatro
+ * categorías que pinta la sección de servicios, tomadas del diccionario.
  *
  * Solo para el servidor. El formulario es componente de cliente y recibe
  * el resultado por props: así no arrastra el diccionario entero al
@@ -25,8 +25,5 @@ export function rotuloServicio(
   t: Diccionario = diccionario("es"),
 ): string {
   if (clave === "otro") return t.contacto.formulario.servicioOtro;
-  if (clave in t.servicios.detallados) {
-    return t.servicios.detallados[clave as keyof typeof t.servicios.detallados].titulo;
-  }
-  return t.servicios.listados[clave as keyof typeof t.servicios.listados];
+  return t.servicios.categorias[clave].nombre;
 }

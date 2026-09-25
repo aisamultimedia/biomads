@@ -26,7 +26,7 @@ import {
  *
  * El idioma del navegador solo decide en la raíz `/`, y lo hace el
  * servidor (src/proxy.ts). Aquí antes se redirigía también en las páginas
- * interiores, y se quitó: quien abre un enlace a `/es/proyectos` quiere
+ * interiores, y se quitó: quien abre un enlace a `/es/privacidad` quiere
  * verlo en español aunque su navegador esté en inglés, y un rastreador con
  * `Accept-Language: en` habría acabado indexando la versión inglesa de
  * cada URL española.

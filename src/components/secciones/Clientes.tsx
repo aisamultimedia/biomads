@@ -10,8 +10,7 @@ import { permisos } from "@/lib/site";
  *
  * No hay cifra de proyectos, ni año, ni descripción del encargo: el
  * portafolio nombra a los tres clientes y nada más, y aquí no se completa
- * lo que no consta. Los dos proyectos con ficha detallada son otros y
- * viven en su propia sección.
+ * lo que no consta.
  *
  * Va sobre la misma superficie que la galería, separada por una regla: una
  * banda corta de papel entre dos superficies verdes se leía como un error

@@ -33,12 +33,9 @@ export const en: Diccionario = {
     plantillaTitulo: "%s — BIOMADS",
     descripcionPortada:
       "BIOMADS S.A.S — environmental studies and management from Ibagué, Colombia. Wildlife biodiversity monitoring and follow-up of relocated epiphytic flora, with verifiable records.",
-    tituloProyectos: "Projects",
     tituloPrivacidad: "Personal data policy",
     descripcionPrivacidad:
       "What data the BIOMADS site collects, what it is used for, how long it is kept and how to exercise your rights under Colombia's Law 1581 of 2012.",
-    descripcionProyectos:
-      "Projects delivered by BIOMADS in Huila, Colombia: wildlife monitoring for the EIA of rural roads (SOLINTER, 2017) and follow-up of epiphytic flora at El Quimbo (GES, 2018).",
   },
 
   nav: {
@@ -53,7 +50,6 @@ export const en: Diccionario = {
     secciones: {
       nosotros: "About",
       servicios: "Services",
-      proyectos: "Projects",
       contacto: "Contact",
     },
     idioma: "Language",
@@ -61,11 +57,11 @@ export const en: Diccionario = {
 
   hero: {
     descriptor: "Strategic partners in environmental management and corporate sustainability",
-    titulo: ["Environmental studies", "and management for", "infrastructure works."],
+    titulo: ["Environmental knowledge", "that transforms projects", "and territories."],
     bajada:
-      "Wildlife monitoring, follow-up of relocated flora and management of environmental obligations for infrastructure projects.",
+      "We combine field experience and specialist knowledge to develop solutions in biodiversity, environmental studies, restoration and the management of environmental obligations.",
     ctaPrincipal: "Tell us about your project",
-    ctaSecundario: "See completed projects",
+    ctaSecundario: "See our services",
     ficha: {
       experiencia: "Experience",
       constituida: "Incorporated",
@@ -80,92 +76,122 @@ export const en: Diccionario = {
 
   nosotros: {
     rotulo: "Who we are",
-    titulo: "Technical capacity sized to the scope",
+    titulo: "Technical knowledge, field experience and commitment to the territory",
     quienesSomos:
-      "We are BIOMADS, a team that designs and delivers forward-looking projects for the sustainable development of society and the environment.",
+      "We are BIOMADS, a company specialising in environmental management and biodiversity. We develop technical solutions that answer the particular needs of each project, bringing together knowledge, field experience and an understanding of the territory.",
     fortaleza:
-      "Our main strength is the ability to adapt to the specific needs of each project, assembling a multidisciplinary team of professionals and specialists. That lets us offer tailored solutions and stay close to the client throughout the project.",
+      "We have a multidisciplinary team of professionals and specialists that lets us approach each project as a whole, adapt to its challenges and support our clients through the different stages of their environmental management.",
+    proposito:
+      "Our purpose is to contribute technically sound solutions that support environmental compliance, the conservation of biodiversity and the sustainable development of projects and territories.",
   },
 
   institucional: {
     misionRotulo: "Mission",
     mision:
-      "To deliver projects with excellence and commitment, promoting sustainability and respect for natural resources.",
+      "To develop environmental solutions with technical rigour and field experience, contributing to the conservation of biodiversity and the sustainable management of projects and territories.",
     visionRotulo: "Vision",
     vision:
-      "To be a leading company in Colombia in integrated environmental solutions, recognised for its innovation, operational excellence and commitment to sustainable development.",
+      "To be a benchmark company in Colombia in environmental management and biodiversity, recognised for its technical excellence, innovation and capacity to generate sustainable solutions.",
     valoresRotulo: "Corporate values",
     valores: {
       excelencia: {
         nombre: "Technical excellence",
-        texto:
-          "Commitment to high standards of quality, precision and innovation in every project.",
+        texto: "Rigour, knowledge and quality in every project.",
       },
       sostenibilidad: {
-        nombre: "Active sustainability",
+        nombre: "Sustainability",
         texto:
-          "We promote the responsible use of natural resources and sustainable development.",
+          "We promote solutions that contribute to the balance between development and conservation.",
       },
       integridad: {
         nombre: "Integrity and transparency",
-        texto:
-          "We act with ethics, responsibility and regulatory compliance in everything we do.",
+        texto: "We act with ethics, responsibility and consistency.",
       },
       innovacion: {
-        nombre: "Environmental innovation",
+        nombre: "Innovation",
         texto:
-          "We apply advanced, efficient technical solutions to environmental challenges.",
+          "We look for new and better ways to answer environmental challenges.",
       },
+      /* PENDING CONTENT. The client asked to keep five values and sent only
+         four new texts. This one is kept exactly as it was until the final
+         wording arrives. Nothing is invented. */
       social: {
         nombre: "Social commitment",
         texto:
           "We create a positive impact in communities and foster respect for the environment.",
       },
     },
-    politicaRotulo: "Quality policy",
+    politicaRotulo: "Integrated policy",
     politica: [
-      "At BIOMADS we are committed to planning, delivering and supervising environmental projects to high standards of quality, sustainability and responsibility.",
-      "We run efficient processes with continuous improvement, ensuring compliance with current environmental regulations and the satisfaction of our clients, contributing to sustainable development and the protection of the environment.",
+      "At BIOMADS we develop environmental solutions to high standards of quality, promoting the protection of the environment, the sustainable use of natural resources and safe, healthy working conditions.",
+      "Our commitment rests on the satisfaction of our clients, compliance with legal and other applicable requirements, the prevention of pollution, the management of risks and opportunities, the prevention of injury and ill health, and the continual improvement of our Integrated Management System, following the ISO 9001, ISO 14001 and ISO 45001 standards.",
     ],
-    objetivosRotulo: "Objectives",
-    objetivos: [
-      "Comply with the applicable technical and environmental regulations.",
-      "Develop integrated, sustainable environmental solutions.",
-      "Optimise processes.",
-      "Promote continuous improvement.",
-      "Ensure the satisfaction of our clients.",
+    compromisosRotulo: "Commitments",
+    compromisos: [
+      "Quality and the satisfaction of our clients.",
+      "Protection of the environment and prevention of pollution.",
+      "Safety, health and wellbeing of our workers.",
+      "Compliance with legal and other applicable requirements.",
+      "Management of risks and opportunities, and continual improvement.",
     ],
   },
 
   promesa: {
     rotulo: "Our promise",
-    enunciado: "An environmental study is measured by what holds up when someone reviews it.",
+    enunciado:
+      "Environmental solutions with technical rigour, knowledge of the territory and results that create value.",
   },
 
   etapas: {
-    rotulo: "Environmental studies",
+    rotulo: "How we approach every project",
     nombres: {
-      identificacion: "Identification",
-      evaluacion: "Assessment",
-      prevencion: "Prevention and mitigation",
-      compensacion: "Correction and compensation",
-      permisos: "Permits",
+      identificacion: "We identify",
+      evaluacion: "We assess",
+      prevencion: "We prevent and mitigate",
+      compensacion: "We correct and compensate",
+      seguimiento: "We manage and follow up",
     },
   },
 
   servicios: {
     rotulo: "Services",
-    titulo: "Two fronts, documented in depth",
-    pieTarjeta: "Regulatory framework, deliverable and duration",
+    titulo: "Environmental solutions for every project",
     consultarAlcance: "Ask about a scope",
-    listados: {
-      "actividad-forestal": "Forestry activities",
-      compensacion: "Environmental compensation plans",
-      inventarios: "Forest inventories",
-      "flora-fauna": "Flora and fauna",
-      educacion: "Environmental education",
-      "desarrollo-sostenible": "Sustainable development",
-      asesoria: "Environmental advisory and management",
+    conFicha: "See the technical fact sheet",
+    categorias: {
+      biodiversidad: {
+        nombre: "Biodiversity and ecosystems",
+        items: [
+          "Wildlife and flora monitoring and characterisation",
+          "Epiphytic flora",
+          "Biodiversity follow-up and management",
+        ],
+      },
+      forestal: {
+        nombre: "Forest management and compensation",
+        items: [
+          "Forest inventories",
+          "Forestry activities",
+          "Environmental compensation plans",
+          "Restoration and follow-up",
+        ],
+      },
+      estudios: {
+        nombre: "Environmental studies and management",
+        items: [
+          "Environmental studies",
+          "Environmental advisory and management",
+          "Follow-up of environmental obligations and requirements",
+        ],
+      },
+      sostenibilidad: {
+        nombre: "Sustainability and environmental education",
+        items: [
+          "Environmental education",
+          "Sustainable development",
+          "Support for environmental and territorial initiatives",
+        ],
+      },
     },
     detallados: {
       "monitoreo-fauna": {
@@ -221,10 +247,6 @@ export const en: Diccionario = {
       entregable: "Deliverable",
       duracion: "Typical duration",
       metodo: "Method applied in the field",
-      ultimaEjecucion: "Most recent delivery",
-      cta: "Tell us about your project",
-      cerrar: "Close",
-      paginaCompleta: "See the full page",
     },
     detalle: {
       volver: "Services",
@@ -232,83 +254,12 @@ export const en: Diccionario = {
       fichaTitulo: "What it covers and under which framework",
       metodoRotulo: "How it is carried out",
       metodoTitulo: "Method applied in the field",
-      dificultadTitulo: "What made it difficult",
-      casoRotulo: "Related case",
-      casoTitulo: "Where it was delivered",
       autoridad: "Authority",
       ultimaEjecucion: "Most recent delivery",
       entregable: "Deliverable",
       informeTecnico: "Technical report",
-      ejecutadoEn: "Delivered in",
-      ejecucionContractual: "Most recent contract",
-      marcoYMetodologia: "Regulatory framework and methodology",
       siguienteTitulo: "Tell us the scope and the authority",
-    },
-  },
-
-  proyectos: {
-    rotulo: "Projects",
-    titulo: "Delivered and verifiable",
-    verCompleto: "See the full project",
-    dificultadRotulo: "The difficulty",
-    resolucionRotulo: "How it was solved",
-    ficha: {
-      anio: "Year",
-      duracion: "Duration",
-      ubicacion: "Location",
-      servicio: "Service",
-    },
-    abrirFicha: "Open the {cliente} project",
-    cerrar: "Close",
-    verPaginaCompleta: "See the full page",
-    detalle: {
-      cliente: "Client",
-      encargoRotulo: "The assignment",
-      encargoTitulo: "What made it difficult and how it was solved",
-      razonSocial: "Client's registered name",
-      servicioRotulo: "The service",
-      verFichaServicio: "See the service fact sheet",
-      otroProyecto: "You can also see the other documented project:",
-    },
-    indice: {
-      lineasTitulo: ["What we have delivered,", "with names and durations"],
-      entradilla:
-        "Two projects with a full record: assignment, difficulty, how it was solved and contract duration. We publish what we can substantiate, so there is no project counter or accumulated-years figure here.",
-      conFichaCompleta: "With a full record",
-      regiones: "Regions",
-      anios: "Years",
-      duraciones: "Durations",
-      casosRotulo: "Cases",
-      dondeRotulo: "Where",
-      dondeTitulo: "Regions with delivered projects",
-      dondeTexto:
-        "Those are the projects we can document. We work from Ibagué and travel wherever the site requires, but we will not tell you we have nationwide coverage to win an invitation.",
-    },
-    casos: {
-      "solinter-2017": {
-        cliente: "Soluciones Integrales Internacionales S.A.S. — SOLINTER",
-        clienteCorto: "SOLINTER",
-        ubicacion: "Garzón and Gigante, Huila",
-        encargo:
-          "Wildlife biodiversity monitoring and study for the Environmental Impact Assessment (EIA) of rural road projects.",
-        dificultad:
-          "Obtaining representative information on wildlife biodiversity in the field, given the characteristics of the area and the conditions of the sampling itself.",
-        resolucion:
-          "Monitoring days and a field methodology designed to collect and organise reliable records that technically support the environmental study.",
-        servicioRotulo: "Wildlife monitoring",
-      },
-      "ges-2018": {
-        cliente: "Grupo Empresarial Surcolombiano S.A.S. — GES",
-        clienteCorto: "GES",
-        ubicacion: "Gigante, Huila · El Quimbo hydroelectric project",
-        encargo:
-          "Maintenance and follow-up of the relocated epiphytic flora belonging to the El Quimbo hydroelectric project.",
-        dificultad:
-          "Ensuring continuity of maintenance and follow-up of the epiphytic flora after relocation, verifying its condition throughout the contract period.",
-        resolucion:
-          "Periodic maintenance and follow-up activities, recording the behaviour and development of the relocated flora.",
-        servicioRotulo: "Epiphytic flora",
-      },
+      otraFicha: "You can also see the fact sheet for",
     },
   },
 
@@ -411,9 +362,6 @@ export const en: Diccionario = {
     rotulo: "Next step",
     solicitarPropuesta: "Request a proposal",
     escribirWhatsapp: "Write on WhatsApp",
-    tituloProyectos: "Need references from a similar site?",
-    textoProyectos:
-      "Ask us for the details of the project closest to yours and we will tell you how it was delivered.",
     tituloServicio: "Tell us the scope and the authority",
     textoServicio:
       "That is enough for us to tell you whether the front is ours and to put together a proposal.",
@@ -421,7 +369,7 @@ export const en: Diccionario = {
 
   pie: {
     resumen:
-      "BIOMADS is an environmental studies and management company based in {sede}, Colombia, incorporated in {constitucion}. A permanent team of {equipo} people plus the specialists each project calls for, with work delivered in {regiones}.",
+      "BIOMADS is an environmental management and biodiversity company based in {sede}, Colombia, incorporated in {constitucion}. A multidisciplinary team of professionals and specialists, with work delivered in {regiones}.",
     escribanos: "Write to us",
     seccionesRotulo: "Sections",
     llamadaOWhatsapp: "call or WhatsApp",
@@ -481,7 +429,6 @@ export const en: Diccionario = {
 
   unidades: {
     meses: "months",
-    personas: "people",
     y: "and",
   },
 };

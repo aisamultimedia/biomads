@@ -44,20 +44,16 @@ export type ClaveEtapa =
   | "evaluacion"
   | "prevencion"
   | "compensacion"
-  | "permisos";
+  | "seguimiento";
 
 export type ClaveServicio = "monitoreo-fauna" | "flora-epifita";
 
-export type ClaveServicioListado =
-  | "actividad-forestal"
-  | "compensacion"
-  | "inventarios"
-  | "flora-fauna"
-  | "educacion"
-  | "desarrollo-sostenible"
-  | "asesoria";
-
-export type ClaveProyecto = "solinter-2017" | "ges-2018";
+/** Las cuatro categorías en que se organizan los servicios. */
+export type ClaveCategoriaServicio =
+  | "biodiversidad"
+  | "forestal"
+  | "estudios"
+  | "sostenibilidad";
 
 export type ClaveCliente =
   | "autopista-rio-magdalena"
@@ -101,8 +97,6 @@ export type Diccionario = {
     /** Plantilla para las páginas de detalle: "%s — BIOMADS". */
     plantillaTitulo: string;
     descripcionPortada: string;
-    descripcionProyectos: string;
-    tituloProyectos: string;
     tituloPrivacidad: string;
     descripcionPrivacidad: string;
   };
@@ -116,7 +110,7 @@ export type Diccionario = {
     irAlInicio: string;
     pieDePagina: string;
     volverArriba: string;
-    secciones: PorClave<"nosotros" | "servicios" | "proyectos" | "contacto">;
+    secciones: PorClave<"nosotros" | "servicios" | "contacto">;
     /** Rótulo del selector de idioma. */
     idioma: string;
   };
@@ -140,6 +134,8 @@ export type Diccionario = {
     titulo: string;
     quienesSomos: string;
     fortaleza: string;
+    /** Tercer párrafo: para qué se hace todo lo anterior. */
+    proposito: string;
   };
 
   institucional: {
@@ -151,8 +147,9 @@ export type Diccionario = {
     valores: PorClave<ClaveValor, { readonly nombre: string; readonly texto: string }>;
     politicaRotulo: string;
     politica: readonly string[];
-    objetivosRotulo: string;
-    objetivos: readonly string[];
+    /** Subtítulo de la lista que cierra la política integral. */
+    compromisosRotulo: string;
+    compromisos: readonly string[];
   };
 
   /** La pausa del recorrido. Una sola frase. */
@@ -177,10 +174,19 @@ export type Diccionario = {
   servicios: {
     rotulo: string;
     titulo: string;
-    /** Pie de la tarjeta: anuncia lo que hay dentro del panel. */
-    pieTarjeta: string;
     consultarAlcance: string;
-    listados: PorClave<ClaveServicioListado>;
+    /** Pie de la tarjeta que tiene ficha: anuncia que el ítem abre página. */
+    conFicha: string;
+    /**
+     * Las cuatro categorías. `items` es la lista de frentes que cubre cada
+     * una, en el orden en que se pintan; `categoriasServicio` en
+     * src/content decide cuáles de esos ítems llevan a una ficha, por
+     * posición.
+     */
+    categorias: PorClave<
+      ClaveCategoriaServicio,
+      { readonly nombre: string; readonly items: readonly string[] }
+    >;
     detallados: PorClave<
       ClaveServicio,
       {
@@ -201,17 +207,8 @@ export type Diccionario = {
         readonly metaDescripcion: string;
       }
     >;
-    panel: PorClave<
-      | "cuandoSeNecesita"
-      | "marco"
-      | "entregable"
-      | "duracion"
-      | "metodo"
-      | "ultimaEjecucion"
-      | "cta"
-      | "cerrar"
-      | "paginaCompleta"
-    >;
+    /** Rótulos de los bloques de la ficha de un servicio. */
+    panel: PorClave<"cuandoSeNecesita" | "marco" | "entregable" | "duracion" | "metodo">;
     /** Rótulos de la página de detalle de un servicio. */
     detalle: PorClave<
       | "volver"
@@ -219,65 +216,13 @@ export type Diccionario = {
       | "fichaTitulo"
       | "metodoRotulo"
       | "metodoTitulo"
-      | "dificultadTitulo"
-      | "casoRotulo"
-      | "casoTitulo"
       | "autoridad"
       | "ultimaEjecucion"
       | "entregable"
       | "informeTecnico"
-      | "ejecutadoEn"
-      | "ejecucionContractual"
-      | "marcoYMetodologia"
       | "siguienteTitulo"
-    >;
-  };
-
-  proyectos: {
-    rotulo: string;
-    titulo: string;
-    verCompleto: string;
-    dificultadRotulo: string;
-    resolucionRotulo: string;
-    ficha: PorClave<"anio" | "duracion" | "ubicacion" | "servicio">;
-    /** Nombre accesible del disparador de cada tarjeta. Lleva {cliente}. */
-    abrirFicha: string;
-    cerrar: string;
-    verPaginaCompleta: string;
-    /** Rótulos de la página de detalle de un proyecto. */
-    detalle: PorClave<
-      | "cliente"
-      | "encargoRotulo"
-      | "encargoTitulo"
-      | "razonSocial"
-      | "servicioRotulo"
-      | "verFichaServicio"
-      | "otroProyecto"
-    >;
-    /** Rótulos del índice /proyectos, que no repite la portada. */
-    indice: {
-      lineasTitulo: readonly string[];
-      entradilla: string;
-      conFichaCompleta: string;
-      regiones: string;
-      anios: string;
-      duraciones: string;
-      casosRotulo: string;
-      dondeRotulo: string;
-      dondeTitulo: string;
-      dondeTexto: string;
-    };
-    casos: PorClave<
-      ClaveProyecto,
-      {
-        readonly cliente: string;
-        readonly clienteCorto: string;
-        readonly ubicacion: string;
-        readonly encargo: string;
-        readonly dificultad: string;
-        readonly resolucion: string;
-        readonly servicioRotulo: string;
-      }
+      /** Entra justo antes del enlace a la otra ficha de servicio. */
+      | "otraFicha"
     >;
   };
 
@@ -370,8 +315,6 @@ export type Diccionario = {
     | "rotulo"
     | "solicitarPropuesta"
     | "escribirWhatsapp"
-    | "tituloProyectos"
-    | "textoProyectos"
     | "tituloServicio"
     | "textoServicio"
   >;
@@ -423,7 +366,6 @@ export type Diccionario = {
   /** Unidades y conectores que se interpolan con datos estructurales. */
   unidades: {
     meses: string;
-    personas: string;
     /** Conector de listas: "Antioquia y Huila". */
     y: string;
   };
