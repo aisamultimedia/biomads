@@ -2172,22 +2172,27 @@
   .tarjeta-categoria {
     display: flex;
     flex-direction: column;
-    /* Estira a la altura de su fila: la categoría de cuatro ítems marca el
-       alto y su pareja lo iguala, así que los bordes quedan alineados. */
-    height: 100%;
     padding: var(--spacing-8);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-lg);
     background-color: var(--color-paper);
   }
 
-  /* El título reserva su hueco inferior y la lista se pega al fondo con
-     `margin-block-start: auto`. Es lo que evita el espacio vacío al pie de
-     la tarjeta más corta de cada fila: el sobrante se reparte entre título y
-     regla, donde se lee como aire, y no debajo del último ítem, donde se lee
-     como un hueco. */
+  /* Dos líneas de alto mínimo desde que hay dos columnas. Los títulos de
+     las cuatro categorías miden una o dos líneas según el ancho, y sin esto
+     la regla de la tarjeta de título corto subía y quedaba desalineada de la
+     de su pareja de fila. Con el mínimo, las dos reglas caen a la misma
+     altura y la diferencia de contenido se nota abajo, que es donde dice
+     algo: esa categoría cubre más frentes. */
   .categoria-titulo {
     margin-block-end: var(--spacing-8);
+  }
+
+  @media (min-width: 768px) {
+    .categoria-titulo {
+      /* 2 líneas: el interlineado de --text-xl y --text-2xl es 1.2. */
+      min-height: 2.4em;
+    }
   }
 
   .categoria-items {
@@ -2196,7 +2201,6 @@
     /* 16px y no 12: con el relleno del enlace, es lo que deja las áreas
        táctiles de dos ítems seguidos sin solaparse. */
     gap: var(--spacing-4);
-    margin-block-start: auto;
     padding-block-start: var(--spacing-6);
     border-block-start: 1px solid var(--color-line);
   }
@@ -2221,6 +2225,16 @@
     translate: 0 -0.15em;
     border-radius: var(--radius-sm);
     background-color: var(--color-accent);
+  }
+
+  /* La norma que respalda un frente: debajo del nombre, en pequeño y sin
+     competir con él. Es la misma forma en que la ficha de servicio cita su
+     fuente de método. */
+  .categoria-nota {
+    display: block;
+    margin-block-start: var(--spacing-1);
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
   }
 
   /* Los ítems con ficha son enlaces y traen el subrayado y la flecha de

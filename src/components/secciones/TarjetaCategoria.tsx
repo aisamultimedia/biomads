@@ -48,18 +48,27 @@ export function TarjetaCategoria({ categoria, numero, textos, idioma }: Props) {
           const ficha = categoria.fichas?.[i];
 
           return (
-            <li key={item} className="categoria-item">
+            <li key={item.nombre} className="categoria-item">
               <span aria-hidden="true" className="categoria-marca" />
-              {ficha ? (
-                <Enlace flecha href={`/${idioma}/servicios/${ficha}`}>
-                  {item}
-                  {/* El nombre del ítem no dice que abre una página; la
-                      flecha lo dice en pantalla y esto para quien no la ve. */}
-                  <span className="sr-only"> — {textos.conFicha}</span>
-                </Enlace>
-              ) : (
-                <span>{item}</span>
-              )}
+              <span>
+                {ficha ? (
+                  <Enlace flecha href={`/${idioma}/servicios/${ficha}`}>
+                    {item.nombre}
+                    {/* El nombre del ítem no dice que abre una página; la
+                        flecha lo dice en pantalla y esto para quien no la ve. */}
+                    <span className="sr-only"> — {textos.conFicha}</span>
+                  </Enlace>
+                ) : (
+                  item.nombre
+                )}
+
+                {/* La norma que respalda el frente, cuando la hay. Va debajo
+                    y en la monoespaciada de las cifras, que es como el sitio
+                    cita ya sus otras fuentes. */}
+                {item.nota ? (
+                  <span className="dato categoria-nota">{item.nota}</span>
+                ) : null}
+              </span>
             </li>
           );
         })}

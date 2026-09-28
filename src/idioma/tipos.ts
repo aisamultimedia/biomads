@@ -182,10 +182,23 @@ export type Diccionario = {
      * una, en el orden en que se pintan; `categoriasServicio` en
      * src/content decide cuáles de esos ítems llevan a una ficha, por
      * posición.
+     *
+     * Cada ítem es un objeto y no una cadena porque alguno se apoya en una
+     * norma concreta —el programa de siembra, en la Ley 2173 de 2021— y esa
+     * referencia tiene que ir debajo del nombre y en pequeño, no dentro del
+     * nombre entre paréntesis: en una lista que se escanea, el paréntesis
+     * compite con lo que se está buscando.
      */
     categorias: PorClave<
       ClaveCategoriaServicio,
-      { readonly nombre: string; readonly items: readonly string[] }
+      {
+        readonly nombre: string;
+        readonly items: readonly {
+          readonly nombre: string;
+          /** Norma o marco que lo respalda. Opcional. */
+          readonly nota?: string;
+        }[];
+      }
     >;
     detallados: PorClave<
       ClaveServicio,

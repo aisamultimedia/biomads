@@ -103,7 +103,11 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
           Servicios — las cuatro categorías que cubren todo el alcance.
           ================================================================ */}
       <Seccion id="servicios" rotulo={t.servicios.rotulo} titulo={t.servicios.titulo}>
-        <RevealGroup as="ul" tipo="panel" className="grid items-stretch gap-6 md:grid-cols-2">
+        {/* items-start y no items-stretch: con 3, 4, 3 y 5 frentes, estirar
+            las tarjetas a la altura de su fila abría un hueco de 183 px
+            dentro de la más corta. Cada una mide lo que mide; lo que sí se
+            alinea es la regla, por el alto mínimo del título. */}
+        <RevealGroup as="ul" tipo="panel" className="grid items-start gap-6 md:grid-cols-2">
           {categoriasServicio.map((categoria, i) => (
             <TarjetaCategoria
               key={categoria.clave}

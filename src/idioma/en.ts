@@ -88,10 +88,10 @@ export const en: Diccionario = {
   institucional: {
     misionRotulo: "Mission",
     mision:
-      "To develop environmental solutions with technical rigour and field experience, contributing to the conservation of biodiversity and the sustainable management of projects and territories.",
+      "BIOMADS helps organisations meet and demonstrate their environmental commitments, from the obligations of their projects to their corporate sustainability targets, turning field work into verifiable results for biodiversity, communities and the business.",
     visionRotulo: "Vision",
     vision:
-      "To be a benchmark company in Colombia in environmental management and biodiversity, recognised for its technical excellence, innovation and capacity to generate sustainable solutions.",
+      "By 2030, BIOMADS will be recognised across Colombia's Andean region as the reference technical partner in biodiversity and corporate sustainability, for the verifiable quality of its results and for supporting companies in many sectors through their transition towards business models that are positive for sustainability.",
     valoresRotulo: "Corporate values",
     valores: {
       excelencia: {
@@ -162,34 +162,42 @@ export const en: Diccionario = {
       biodiversidad: {
         nombre: "Biodiversity and ecosystems",
         items: [
-          "Wildlife and flora monitoring and characterisation",
-          "Epiphytic flora",
-          "Biodiversity follow-up and management",
+          { nombre: "Wildlife and flora monitoring and characterisation" },
+          { nombre: "Epiphytic flora" },
+          { nombre: "Biodiversity follow-up and management" },
         ],
       },
       forestal: {
         nombre: "Forest management and compensation",
         items: [
-          "Forest inventories",
-          "Forestry activities",
-          "Environmental compensation plans",
-          "Restoration and follow-up",
+          { nombre: "Forest inventories" },
+          { nombre: "Forestry activities" },
+          { nombre: "Environmental compensation plans" },
+          { nombre: "Restoration and follow-up" },
         ],
       },
       estudios: {
         nombre: "Environmental studies and management",
         items: [
-          "Environmental studies",
-          "Environmental advisory and management",
-          "Follow-up of environmental obligations and requirements",
+          { nombre: "Environmental studies" },
+          { nombre: "Environmental advisory and management" },
+          { nombre: "Follow-up of environmental obligations and requirements" },
         ],
       },
       sostenibilidad: {
         nombre: "Sustainability and environmental education",
         items: [
-          "Environmental education",
-          "Sustainable development",
-          "Support for environmental and territorial initiatives",
+          {
+            /* El nombre del programa es un activo de marca y no se traduce,
+               igual que «Dejando huella»: va tal cual con una glosa que dice
+               de qué es. */
+            nombre: "«Siembra Verificable» corporate planting programme",
+            nota: "Colombia's Law 2173 of 2021",
+          },
+          { nombre: "Corporate environmental volunteering" },
+          { nombre: "Environmental education" },
+          { nombre: "Sustainable development" },
+          { nombre: "Support for environmental and territorial initiatives" },
         ],
       },
     },

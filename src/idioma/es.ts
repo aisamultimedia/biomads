@@ -88,10 +88,10 @@ export const es: Diccionario = {
   institucional: {
     misionRotulo: "Misión",
     mision:
-      "Desarrollar soluciones ambientales con rigor técnico y experiencia en campo, contribuyendo a la conservación de la biodiversidad y a la gestión sostenible de los proyectos y territorios.",
+      "BIOMADS ayuda a las organizaciones a cumplir y demostrar sus compromisos ambientales, desde las obligaciones de sus proyectos hasta sus metas de sostenibilidad empresarial, convirtiendo el trabajo de campo en resultados verificables para la biodiversidad, las comunidades y el negocio.",
     visionRotulo: "Visión",
     vision:
-      "Ser una empresa referente en Colombia en gestión ambiental y biodiversidad, reconocida por su excelencia técnica, innovación y capacidad para generar soluciones sostenibles.",
+      "En 2030, BIOMADS será reconocida en la región andina de Colombia como el aliado técnico de referencia en biodiversidad y sostenibilidad empresarial, por la calidad verificable de sus resultados y por acompañar a empresas de diversos sectores en su transición hacia modelos de negocio positivos para la sostenibilidad.",
     valoresRotulo: "Valores corporativos",
     valores: {
       excelencia: {
@@ -170,34 +170,43 @@ export const es: Diccionario = {
       biodiversidad: {
         nombre: "Biodiversidad y ecosistemas",
         items: [
-          "Monitoreo y caracterización de fauna y flora",
-          "Flora epífita",
-          "Seguimiento y manejo de biodiversidad",
+          { nombre: "Monitoreo y caracterización de fauna y flora" },
+          { nombre: "Flora epífita" },
+          { nombre: "Seguimiento y manejo de biodiversidad" },
         ],
       },
       forestal: {
         nombre: "Gestión forestal y compensaciones",
         items: [
-          "Inventarios forestales",
-          "Actividad forestal",
-          "Planes de compensación ambiental",
-          "Restauración y seguimiento",
+          { nombre: "Inventarios forestales" },
+          { nombre: "Actividad forestal" },
+          { nombre: "Planes de compensación ambiental" },
+          { nombre: "Restauración y seguimiento" },
         ],
       },
       estudios: {
         nombre: "Estudios y gestión ambiental",
         items: [
-          "Estudios ambientales",
-          "Asesoría y gestión ambiental",
-          "Seguimiento de obligaciones y requerimientos ambientales",
+          { nombre: "Estudios ambientales" },
+          { nombre: "Asesoría y gestión ambiental" },
+          { nombre: "Seguimiento de obligaciones y requerimientos ambientales" },
         ],
       },
+      /* Los dos frentes de sostenibilidad empresarial abren la categoría:
+         son los concretos —uno tiene nombre propio y una ley detrás— y los
+         otros tres la describen en general. En una lista que se escanea, lo
+         específico va arriba. */
       sostenibilidad: {
         nombre: "Sostenibilidad y educación ambiental",
         items: [
-          "Educación ambiental",
-          "Desarrollo sostenible",
-          "Acompañamiento a iniciativas ambientales y territoriales",
+          {
+            nombre: "Programa «Siembra Verificable» para empresas",
+            nota: "Ley 2173 de 2021",
+          },
+          { nombre: "Voluntariado ambiental corporativo" },
+          { nombre: "Educación ambiental" },
+          { nombre: "Desarrollo sostenible" },
+          { nombre: "Acompañamiento a iniciativas ambientales y territoriales" },
         ],
       },
     },
