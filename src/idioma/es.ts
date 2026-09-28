@@ -286,8 +286,12 @@ export const es: Diccionario = {
   galeria: {
     rotulo: "En campo",
     titulo: "Así se ve el trabajo",
+    /* Decía «jornadas de siembra, mantenimiento y control fitosanitario».
+       Con el frente de obra que entró el 28 de septiembre de 2026 —trazado,
+       encalado y líneas de piedra— esa lista se quedaba corta y dejaba fuera
+       la mitad de lo que se ve. */
     texto:
-      "Jornadas de siembra, mantenimiento y control fitosanitario, fotografiadas en los frentes donde se ejecutaron.",
+      "Jornadas de trazado, adecuación del terreno, siembra y mantenimiento, fotografiadas en los frentes donde se ejecutaron.",
     carrusel: "Fotografías de campo",
     anterior: "Fotografía anterior",
     siguiente: "Fotografía siguiente",
@@ -452,6 +456,27 @@ export const es: Diccionario = {
       "Operario con una bolsa aplica material al pie de un individuo joven sobre terreno cubierto de hojarasca seca.",
     "cuadrilla-aspersion":
       "Tres operarios con equipos de aspersión trabajan separados a lo largo de una ladera de pasto alto.",
+
+    /* Frente de obra junto a vía. Como en el resto del set, cada alt
+       describe lo que se ve y no el servicio al que lo queramos asociar. */
+    "trazado-parcela":
+      "Operario con casco y chaleco reflectivo marca con cal el trazado de una parcela jalonada con estacas de madera, junto a una vía.",
+    "encalado-berma":
+      "Operario esparce una enmienda blanca con un balde sobre la berma de una vía, al lado de una cuneta de concreto.",
+    "carga-piedra":
+      "Operario con casco carga piedra a dos carretillas junto a un acopio, al borde de una vía.",
+    "cuadrilla-piedra":
+      "Tres operarios alrededor de un acopio de piedra; uno trabaja una roca con herramienta eléctrica alimentada por una planta portátil.",
+    "lineas-piedra":
+      "Cuadrilla de cuatro operarios coloca líneas de piedra sobre un lote plano, con carretillas y montaña al fondo.",
+    "banda-piedra":
+      "Franja de piedra ya colocada en primer plano; al fondo, dos operarios preparan la siguiente entre estacas de trazado.",
+    "cuadrilla-terreno":
+      "Cuatro operarios de BIOMADS, en fila y agachados, trabajan el suelo descubierto de un lote junto a una vía.",
+    "talud-cuneta":
+      "Dos operarios trabajan con herramienta manual el talud de tierra contiguo a la boca de una alcantarilla, bajo cielo nublado.",
+    "jardin-piedra":
+      "Operario revisa una franja de piedra entre bandas de cubresuelo verde ya establecido, junto a una vía.",
   },
 
   unidades: {

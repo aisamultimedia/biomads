@@ -14,8 +14,18 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const aqui = dirname(fileURLToPath(import.meta.url));
-const origen = resolve(aqui, "../../Foto");
 const destino = resolve(aqui, "../src/fotos");
+
+/**
+ * Carpetas de originales. La segunda llegó el 28 de septiembre de 2026 con
+ * un frente distinto —trazado de parcelas, encalado, líneas de piedra y
+ * taludes junto a una vía— y los nombres de archivo son UUID, así que el
+ * nombre de destino es lo único que dice qué hay dentro.
+ */
+const carpetas = {
+  original: resolve(aqui, "../../Foto"),
+  nuevas: resolve(aqui, "../../Foto/Nuevas fotos"),
+};
 
 /** Ancho máximo servido. next/image genera desde aquí los tamaños menores. */
 const ANCHO_MAXIMO = 1600;
@@ -65,12 +75,26 @@ const seleccion = [
   { de: "IMG_7463.PNG", a: "guadana-despeje.jpg" },
   { de: "IMG_7465.PNG", a: "fertilizacion-individuo.jpg" },
   { de: "IMG_7467.PNG", a: "cuadrilla-aspersion.jpg" },
+
+  /* Frente de obra junto a vía, entregado el 28 de septiembre de 2026. Nueve
+     útiles de las diez: 21AD7FF7 repetía encuadre exacto con 19561198 y se
+     descartó. El orden es el de la jornada: trazar, encalar, acopiar la
+     piedra, colocarla, cerrar la banda, y el resultado ya con cubresuelo. */
+  { carpeta: "nuevas", de: "19561198-3A81-4DCB-8568-88E879068E80.PNG", a: "trazado-parcela.jpg" },
+  { carpeta: "nuevas", de: "06456AEF-8476-485A-AE31-18C5288ADB95.PNG", a: "encalado-berma.jpg" },
+  { carpeta: "nuevas", de: "C982DEC4-1284-41BB-BED7-90DBAD1BDB40.PNG", a: "carga-piedra.jpg" },
+  { carpeta: "nuevas", de: "01D96271-556A-4722-A9FC-BE9242A85F0B.PNG", a: "cuadrilla-piedra.jpg" },
+  { carpeta: "nuevas", de: "96B94ECC-A9C8-4167-B30A-5398AE38F9EC.PNG", a: "lineas-piedra.jpg" },
+  { carpeta: "nuevas", de: "A0E72B56-670C-4A8C-9B53-CC501D588B61.PNG", a: "banda-piedra.jpg" },
+  { carpeta: "nuevas", de: "826AFBE6-DB6C-437B-9274-4D776AE67A8E.PNG", a: "cuadrilla-terreno.jpg" },
+  { carpeta: "nuevas", de: "8AA6ABC3-563C-4863-A056-050FD4B8BC79.PNG", a: "talud-cuneta.jpg" },
+  { carpeta: "nuevas", de: "B5BDE690-22E6-4A43-AC86-55F1B026555F.PNG", a: "jardin-piedra.jpg" },
 ];
 
 mkdirSync(destino, { recursive: true });
 
-for (const { de, a } of seleccion) {
-  const entrada = resolve(origen, de);
+for (const { de, a, carpeta = "original" } of seleccion) {
+  const entrada = resolve(carpetas[carpeta], de);
   const salida = resolve(destino, a);
 
   const recorte = recortes[a];

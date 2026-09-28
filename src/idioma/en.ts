@@ -275,7 +275,7 @@ export const en: Diccionario = {
     rotulo: "In the field",
     titulo: "What the work looks like",
     texto:
-      "Planting, maintenance and phytosanitary control days, photographed at the sites where they were carried out.",
+      "Days of setting out, ground preparation, planting and maintenance, photographed at the sites where they were carried out.",
     carrusel: "Field photographs",
     anterior: "Previous photograph",
     siguiente: "Next photograph",
@@ -430,6 +430,25 @@ export const en: Diccionario = {
       "A worker with a bag applies material at the base of a young individual on ground covered in dry leaf litter.",
     "cuadrilla-aspersion":
       "Three workers with spraying equipment work spaced out along a slope of tall grass.",
+
+    "trazado-parcela":
+      "A worker in a helmet and reflective vest marks out a plot with lime, staked with wooden pegs, beside a road.",
+    "encalado-berma":
+      "A worker spreads a white soil amendment from a bucket over a road verge, next to a concrete drainage channel.",
+    "carga-piedra":
+      "A worker in a helmet loads stone into two wheelbarrows beside a pile, at the edge of a road.",
+    "cuadrilla-piedra":
+      "Three workers around a pile of stone; one works a rock with a power tool run off a portable generator.",
+    "lineas-piedra":
+      "A crew of four lays lines of stone across a flat plot, with wheelbarrows and hills behind.",
+    "banda-piedra":
+      "A finished band of stone in the foreground; behind it, two workers prepare the next one among layout stakes.",
+    "cuadrilla-terreno":
+      "Four BIOMADS workers, in a row and bent over, work the bare soil of a plot beside a road.",
+    "talud-cuneta":
+      "Two workers use hand tools on the earth slope next to a culvert mouth, under a cloudy sky.",
+    "jardin-piedra":
+      "A worker checks a band of stone between strips of established green groundcover, beside a road.",
   },
 
   unidades: {

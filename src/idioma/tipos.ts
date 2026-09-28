@@ -83,7 +83,17 @@ export type ClaveFoto =
   | "plateo-individuo"
   | "guadana-despeje"
   | "fertilizacion-individuo"
-  | "cuadrilla-aspersion";
+  | "cuadrilla-aspersion"
+  /* Frente de obra junto a vía, entregado el 28 de septiembre de 2026 */
+  | "trazado-parcela"
+  | "encalado-berma"
+  | "carga-piedra"
+  | "cuadrilla-piedra"
+  | "lineas-piedra"
+  | "banda-piedra"
+  | "cuadrilla-terreno"
+  | "talud-cuneta"
+  | "jardin-piedra";
 
 export type Diccionario = {
   /** Nombre del idioma en su propia lengua, para el selector. */
