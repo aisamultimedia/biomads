@@ -46,8 +46,6 @@ export type ClaveEtapa =
   | "compensacion"
   | "seguimiento";
 
-export type ClaveServicio = "monitoreo-fauna" | "flora-epifita";
-
 /** Las cuatro categorías en que se organizan los servicios. */
 export type ClaveCategoriaServicio =
   | "biodiversidad"
@@ -185,13 +183,13 @@ export type Diccionario = {
     rotulo: string;
     titulo: string;
     consultarAlcance: string;
-    /** Pie de la tarjeta que tiene ficha: anuncia que el ítem abre página. */
-    conFicha: string;
     /**
      * Las cuatro categorías. `items` es la lista de frentes que cubre cada
-     * una, en el orden en que se pintan; `categoriasServicio` en
-     * src/content decide cuáles de esos ítems llevan a una ficha, por
-     * posición.
+     * una, en el orden en que se pintan.
+     *
+     * Ningún ítem es enlace: no hay página de servicio detrás, y una lista
+     * donde dos llevan a algún sitio y el resto no prometía una
+     * profundidad que no existe.
      *
      * Cada ítem es un objeto y no una cadena porque alguno se apoya en una
      * norma concreta —el programa de siembra, en la Ley 2173 de 2021— y esa
@@ -209,43 +207,6 @@ export type Diccionario = {
           readonly nota?: string;
         }[];
       }
-    >;
-    detallados: PorClave<
-      ClaveServicio,
-      {
-        readonly titulo: string;
-        readonly resumen: string;
-        readonly cuandoSeNecesita: string;
-        readonly marco: string;
-        readonly entregable: string;
-        readonly duracion: string;
-        readonly elVacio: string;
-        readonly metodologia: string;
-        readonly metodologiaFuente: string;
-        /** Una entrada por línea: el salto del titular es decisión de diseño. */
-        readonly lineasTitulo: readonly string[];
-        /** Ante quién responde el proyecto. */
-        readonly autoridad: string;
-        readonly metaTitulo: string;
-        readonly metaDescripcion: string;
-      }
-    >;
-    /** Rótulos de los bloques de la ficha de un servicio. */
-    panel: PorClave<"cuandoSeNecesita" | "marco" | "entregable" | "duracion" | "metodo">;
-    /** Rótulos de la página de detalle de un servicio. */
-    detalle: PorClave<
-      | "volver"
-      | "fichaRotulo"
-      | "fichaTitulo"
-      | "metodoRotulo"
-      | "metodoTitulo"
-      | "autoridad"
-      | "ultimaEjecucion"
-      | "entregable"
-      | "informeTecnico"
-      | "siguienteTitulo"
-      /** Entra justo antes del enlace a la otra ficha de servicio. */
-      | "otraFicha"
     >;
   };
 
@@ -332,14 +293,13 @@ export type Diccionario = {
     };
   };
 
-  /** Bloque de cierre que repiten las páginas de detalle. */
-  siguientePaso: PorClave<
-    | "rotulo"
-    | "solicitarPropuesta"
-    | "escribirWhatsapp"
-    | "tituloServicio"
-    | "textoServicio"
-  >;
+  /**
+   * Rótulo del botón de acento de la cabecera. Era el cierre de las páginas
+   * de detalle, que ya no existen; de todo aquel bloque sobrevive esta
+   * cadena porque el botón dejó de decir «Contacto» —ahora eso es un ítem
+   * del menú— y dice lo que de verdad ofrece.
+   */
+  siguientePaso: PorClave<"solicitarPropuesta">;
 
   pie: {
     resumen: string;
@@ -385,9 +345,12 @@ export type Diccionario = {
   /** Textos alternativos. Describen lo que se ve, no lo que se querría ver. */
   fotos: PorClave<ClaveFoto>;
 
-  /** Unidades y conectores que se interpolan con datos estructurales. */
+  /**
+   * Conectores que se interpolan con datos estructurales. `meses` vivía
+   * aquí y se fue con las fichas de servicio, que eran lo único que
+   * publicaba una duración.
+   */
   unidades: {
-    meses: string;
     /** Conector de listas: "Antioquia y Huila". */
     y: string;
   };

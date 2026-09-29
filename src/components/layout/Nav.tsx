@@ -51,7 +51,7 @@ export function Nav({
         const contenido = (
           <>
             <a
-              href={item.href}
+              href={item.destino ?? item.href}
               onClick={onNavegar}
               aria-current={activo ? "true" : undefined}
               className={[

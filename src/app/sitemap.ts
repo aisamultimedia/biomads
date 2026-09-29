@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { serviciosDetallados } from "@/content/servicios";
 import { diccionario, IDIOMAS } from "@/idioma";
 import { sitioUrl } from "@/lib/site";
 
@@ -11,15 +10,13 @@ import { sitioUrl } from "@/lib/site";
  * página en distintas lenguas y no contenido duplicado.
  *
  * La portada es una sola página con todo el recorrido, así que va primero y
- * con la prioridad más alta. Lo único aparte son las dos fichas de servicio,
- * para quien llegue por buscador o comparta un enlace: los índices
- * `/servicios`, `/nosotros` y `/contacto` se borraron porque repetían lo que
- * la portada ya dice.
+ * con la prioridad más alta. Lo único aparte es la política de tratamiento
+ * de datos.
  *
- * `/proyectos` y las fichas de cada proyecto estaban aquí y salieron con la
- * sección, por decisión del cliente. Sin entrada en el mapa, el buscador
- * deja de pedirlas; las URL ya no existen y responden 404, que es lo que
- * corresponde cuando una página se retira.
+ * Aquí estuvieron `/proyectos`, la ficha de cada proyecto y las dos de
+ * servicio. Salieron con sus secciones, por decisión del cliente. Sin
+ * entrada en el mapa el buscador deja de pedirlas; las URL ya no existen y
+ * responden 404, que es lo que corresponde cuando una página se retira.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = sitioUrl();
@@ -29,7 +26,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const rutas: readonly { ruta: string; prioridad: number }[] = [
     { ruta: "", prioridad: 1 },
     { ruta: "/privacidad", prioridad: 0.3 },
-    ...serviciosDetallados.map((s) => ({ ruta: `/servicios/${s.slug}`, prioridad: 0.8 })),
   ];
 
   return rutas.flatMap(({ ruta, prioridad }) =>

@@ -157,7 +157,6 @@ export const en: Diccionario = {
     rotulo: "Services",
     titulo: "Environmental solutions for every project",
     consultarAlcance: "Ask about a scope",
-    conFicha: "See the technical fact sheet",
     categorias: {
       biodiversidad: {
         nombre: "Biodiversity and ecosystems",
@@ -201,74 +200,6 @@ export const en: Diccionario = {
         ],
       },
     },
-    detallados: {
-      "monitoreo-fauna": {
-        titulo: "Wildlife biodiversity monitoring and study",
-        resumen:
-          "Wildlife characterisation and monitoring in support of the project's environmental studies.",
-        cuandoSeNecesita:
-          "When a road or infrastructure project needs to assess its possible impacts on wildlife, especially as part of the environmental studies required before it can go ahead.",
-        marco:
-          "Carried out within the framework of environmental impact studies (EIA) and the project's environmental obligations. If the project is licensed at national level it may involve ANLA, Colombia's national environmental licensing authority; otherwise, the relevant regional environmental authority.",
-        entregable:
-          "Technical report of wildlife characterisation and monitoring, with records of the species found, the methodology applied, results and an analysis of the biodiversity associated with the project area.",
-        duracion:
-          "Depends on the size and characteristics of the study area, the type of project, the wildlife groups to assess, the number of field days and weather conditions. It may take several campaigns to obtain representative information.",
-        elVacio:
-          "That the study is not merely a list of species, but delivers reliable field information, a clear methodology, verifiable records and technically supported results, so that it can serve as the basis for the project's environmental studies.",
-        metodologia:
-          "Monitoring days and a field methodology designed to collect and organise reliable records that technically support the environmental study.",
-        metodologiaFuente: "SOLINTER · rural roads in Garzón and Gigante, Huila · 2017",
-        lineasTitulo: ["Wildlife biodiversity", "monitoring and study"],
-        autoridad: "ANLA or regional authority",
-        metaTitulo: "Wildlife biodiversity monitoring",
-        metaDescripcion:
-          "Wildlife characterisation and monitoring in support of the environmental study: verifiable records, applied methodology and technically supported results.",
-      },
-      "flora-epifita": {
-        titulo: "Maintenance and follow-up of relocated epiphytic flora",
-        resumen:
-          "Follow-up with verifiable records after the transfer, not just the initial relocation.",
-        cuandoSeNecesita:
-          "When an infrastructure project has required the rescue, transfer or relocation of epiphytic flora and must then ensure its maintenance and follow-up to show that the environmental measures are working.",
-        marco:
-          "Under the environmental obligations set for the project and the management measures for epiphytic flora, before the competent environmental authority. They may be contained in the environmental management or licensing instrument and in the corresponding administrative acts.",
-        entregable:
-          "Technical maintenance and follow-up reports documenting the condition of the species, their survival, their development and the activities carried out.",
-        duracion:
-          "Depends on the number of relocated individuals or species, the area, the condition of the plants, the maintenance frequency and the authority's requirements. It may be extended if there are losses, deterioration or adverse weather.",
-        elVacio:
-          "That there is real follow-up after relocation, not only the initial transfer. The client needs to show that the plants were maintained, that their development was verified and that there is traceability through records and technical reports.",
-        metodologia:
-          "Periodic maintenance and follow-up activities, recording the behaviour and development of the relocated flora.",
-        metodologiaFuente: "GES · epiphytic flora at El Quimbo, Gigante, Huila · 2018",
-        lineasTitulo: ["Maintenance and follow-up", "of relocated epiphytic flora"],
-        autoridad: "Competent environmental authority",
-        metaTitulo: "Maintenance and follow-up of relocated epiphytic flora",
-        metaDescripcion:
-          "Follow-up with verifiable records after the transfer: condition of the species, survival and development documented in technical reports.",
-      },
-    },
-    panel: {
-      cuandoSeNecesita: "When it is needed",
-      marco: "Regulatory framework",
-      entregable: "Deliverable",
-      duracion: "Typical duration",
-      metodo: "Method applied in the field",
-    },
-    detalle: {
-      volver: "Services",
-      fichaRotulo: "The fact sheet",
-      fichaTitulo: "What it covers and under which framework",
-      metodoRotulo: "How it is carried out",
-      metodoTitulo: "Method applied in the field",
-      autoridad: "Authority",
-      ultimaEjecucion: "Most recent delivery",
-      entregable: "Deliverable",
-      informeTecnico: "Technical report",
-      siguienteTitulo: "Tell us the scope and the authority",
-      otraFicha: "You can also see the fact sheet for",
-    },
   },
 
   galeria: {
@@ -298,7 +229,7 @@ export const en: Diccionario = {
   contacto: {
     rotulo: "Contact",
     titulo: "Tell us about your project",
-    directoRotulo: "Direct, no form",
+    directoRotulo: "Write to us directly",
     telefonoNota: "Call or WhatsApp",
     correoNota: "Management email",
     dondeRotulo: "Where we are",
@@ -364,12 +295,7 @@ export const en: Diccionario = {
   },
 
   siguientePaso: {
-    rotulo: "Next step",
     solicitarPropuesta: "Request a proposal",
-    escribirWhatsapp: "Write on WhatsApp",
-    tituloServicio: "Tell us the scope and the authority",
-    textoServicio:
-      "That is enough for us to tell you whether the front is ours and to put together a proposal.",
   },
 
   pie: {
@@ -452,7 +378,6 @@ export const en: Diccionario = {
   },
 
   unidades: {
-    meses: "months",
     y: "and",
   },
 };

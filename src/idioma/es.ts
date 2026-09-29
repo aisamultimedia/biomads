@@ -165,7 +165,6 @@ export const es: Diccionario = {
     rotulo: "Servicios",
     titulo: "Soluciones ambientales para cada proyecto",
     consultarAlcance: "Consultar un alcance",
-    conFicha: "Ver la ficha técnica",
     categorias: {
       biodiversidad: {
         nombre: "Biodiversidad y ecosistemas",
@@ -210,77 +209,6 @@ export const es: Diccionario = {
         ],
       },
     },
-    detallados: {
-      "monitoreo-fauna": {
-        titulo: "Monitoreo y estudio de biodiversidad de fauna",
-        resumen:
-          "Caracterización y monitoreo de fauna como soporte de los estudios ambientales del proyecto.",
-        cuandoSeNecesita:
-          "Cuando se va a desarrollar un proyecto vial o de infraestructura que requiere evaluar sus posibles impactos sobre la fauna, especialmente como parte de los estudios ambientales necesarios para su ejecución.",
-        marco:
-          "Se ejecuta dentro del marco de los estudios de impacto ambiental y de las obligaciones ambientales del proyecto. Si el proyecto está sujeto a licenciamiento de competencia nacional puede involucrar a la ANLA; en otros casos, a la autoridad ambiental regional correspondiente.",
-        entregable:
-          "Informe técnico de caracterización y monitoreo de fauna, con registros de las especies encontradas, metodología aplicada, resultados y análisis de la biodiversidad asociada al área del proyecto.",
-        duracion:
-          "Depende del tamaño y características del área de estudio, tipo de proyecto, grupos de fauna a evaluar, número de jornadas de campo y condiciones climáticas. Puede requerir varias campañas para obtener información representativa.",
-        elVacio:
-          "Que el estudio no sea simplemente una lista de especies, sino que entregue información de campo confiable, metodología clara, registros verificables y resultados técnicamente sustentados, de manera que pueda usarse como soporte de los estudios ambientales del proyecto.",
-        metodologia:
-          "Jornadas de monitoreo y aplicación de una metodología de campo que permitiera recopilar y organizar registros confiables para sustentar técnicamente el estudio ambiental.",
-        metodologiaFuente: "SOLINTER · vías terciarias en Garzón y Gigante, Huila · 2017",
-        lineasTitulo: ["Monitoreo y estudio", "de biodiversidad de fauna"],
-        autoridad: "ANLA o autoridad regional",
-        metaTitulo: "Monitoreo de biodiversidad de fauna",
-        metaDescripcion:
-          "Caracterización y monitoreo de fauna como soporte del estudio ambiental: registros verificables, metodología aplicada y resultados técnicamente sustentados.",
-      },
-      "flora-epifita": {
-        titulo: "Mantenimiento y seguimiento de flora epífita reubicada",
-        resumen:
-          "Seguimiento con registros verificables después del traslado, no solo la reubicación inicial.",
-        cuandoSeNecesita:
-          "Cuando un proyecto de infraestructura ha requerido el rescate, traslado o reubicación de flora epífita y posteriormente debe garantizar su mantenimiento y seguimiento para demostrar que las medidas ambientales implementadas están funcionando.",
-        marco:
-          "Bajo las obligaciones ambientales establecidas para el proyecto y las medidas de manejo relacionadas con la flora epífita, ante la autoridad ambiental competente. Pueden estar contenidas en el instrumento de manejo o licenciamiento ambiental y en los actos administrativos correspondientes.",
-        entregable:
-          "Informes técnicos de mantenimiento y seguimiento donde se documenta el estado de las especies, su supervivencia, evolución y las actividades realizadas.",
-        duracion:
-          "Depende del número de individuos o especies reubicadas, área, estado de las plantas, frecuencia de mantenimiento y requerimientos de la autoridad. Puede extenderse si hay pérdidas, deterioro o condiciones climáticas adversas.",
-        elVacio:
-          "Que exista un seguimiento real después de la reubicación, no solamente el traslado inicial. El cliente necesita demostrar que las plantas fueron mantenidas, que se verificó su evolución y que existe trazabilidad mediante registros e informes técnicos.",
-        metodologia:
-          "Actividades periódicas de mantenimiento y seguimiento, dejando registro del comportamiento y evolución de la flora reubicada.",
-        metodologiaFuente: "GES · flora epífita de El Quimbo, Gigante, Huila · 2018",
-        lineasTitulo: ["Mantenimiento y seguimiento", "de flora epífita reubicada"],
-        autoridad: "Autoridad ambiental competente",
-        metaTitulo: "Mantenimiento y seguimiento de flora epífita reubicada",
-        metaDescripcion:
-          "Seguimiento con registros verificables después del traslado: estado de las especies, supervivencia y evolución documentadas en informes técnicos.",
-      },
-    },
-    panel: {
-      cuandoSeNecesita: "Cuándo se necesita",
-      marco: "Marco normativo",
-      entregable: "Entregable",
-      duracion: "Duración típica",
-      metodo: "Método aplicado en campo",
-    },
-    detalle: {
-      volver: "Servicios",
-      fichaRotulo: "La ficha",
-      fichaTitulo: "Qué cubre y bajo qué marco",
-      metodoRotulo: "Cómo se ejecuta",
-      metodoTitulo: "Método aplicado en campo",
-      autoridad: "Autoridad",
-      ultimaEjecucion: "Última ejecución",
-      entregable: "Entregable",
-      informeTecnico: "Informe técnico",
-      siguienteTitulo: "Cuéntenos el alcance y la autoridad",
-      /* El cierre de la ficha enlazaba la otra sin decir a qué venía: el
-         párrafo terminaba en punto y detrás quedaba el título del otro
-         servicio suelto, como una frase a medias. */
-      otraFicha: "También puede ver la ficha de",
-    },
   },
 
   galeria: {
@@ -321,7 +249,9 @@ export const es: Diccionario = {
        hero, que es el que trae aquí a casi todo el mundo, y la sección
        entra directa a las vías de contacto. */
     titulo: "Cuéntenos su proyecto",
-    directoRotulo: "Directo, sin formulario",
+    /* Era «Directo, sin formulario». Explicaba el formulario en vez de
+       nombrar lo que hay debajo, que son el teléfono y el correo. */
+    directoRotulo: "Escríbanos directo",
     telefonoNota: "Llamada o WhatsApp",
     correoNota: "Correo de gerencia",
     dondeRotulo: "Dónde estamos",
@@ -387,12 +317,7 @@ export const es: Diccionario = {
   },
 
   siguientePaso: {
-    rotulo: "Siguiente paso",
     solicitarPropuesta: "Solicitar propuesta",
-    escribirWhatsapp: "Escribir por WhatsApp",
-    tituloServicio: "Cuéntenos el alcance y la autoridad",
-    textoServicio:
-      "Con eso alcanza para decirle si el frente es nuestro y armar una propuesta.",
   },
 
   pie: {
@@ -480,7 +405,6 @@ export const es: Diccionario = {
   },
 
   unidades: {
-    meses: "meses",
     y: "y",
   },
 };

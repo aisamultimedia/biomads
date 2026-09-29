@@ -120,9 +120,13 @@ export function Header({ idioma }: { idioma: Idioma }) {
                   no la que va después en el atributo. Con `hidden
                   sm:inline-flex` encima, el botón nunca llegó a ocultarse y
                   aplastaba el logo en móvil. */}
+              {/* Decía «Contacto» y ahora eso es un ítem del menú, a la
+                  izquierda: dos controles con el mismo rótulo en la misma
+                  barra se leían como un error. El botón dice lo que de
+                  verdad ofrece y lleva al formulario, igual que el ítem. */}
               <div className="hidden sm:block">
-                <Boton href="#contacto" variante="acento">
-                  {t.nav.secciones.contacto}
+                <Boton href="#formulario" variante="acento">
+                  {t.siguientePaso.solicitarPropuesta}
                 </Boton>
               </div>
 

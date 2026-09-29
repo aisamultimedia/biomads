@@ -1,77 +1,66 @@
-import { Enlace } from "@/components/ui/Enlace";
 import { Icono } from "@/components/ui/Icono";
 import type { CategoriaServicio } from "@/content/servicios";
-import type { Diccionario, Idioma } from "@/idioma";
+import type { Diccionario } from "@/idioma";
 
 type Props = {
   categoria: CategoriaServicio;
   /** Numeral de la tarjeta: 01 a 04. */
   numero: string;
   textos: Diccionario["servicios"];
-  idioma: Idioma;
 };
 
 /**
  * Una de las cuatro categorías de servicio.
  *
- * Sustituye al par «dos tarjetas con ficha desplegable + lista de siete
- * nombres sueltos» que había antes: el cliente reorganizó todo el alcance
- * en cuatro categorías, así que los cuatro bloques pesan lo mismo y ninguno
- * se lee como el principal.
+ * **No es enlace ni abre nada.** Los dos ítems que llevaban a una página de
+ * ficha se retiraron por decisión del cliente: no hay profundización de
+ * servicio que ofrecer y la tarjeta no puede prometer una. Por eso tampoco
+ * hay levantamiento al pasar el cursor ni signo de «más»: ningún gesto
+ * sugiere un clic que no existe.
  *
- * La tarjeta ya no es un botón. Antes lo era entera porque abría un panel
- * con la ficha; aquí no hay nada que abrir, así que tampoco hay gesto de
- * clic ni levantamiento al pasar el cursor: prometería algo que no ocurre.
- * Lo que sí es enlace son los dos ítems que tienen página propia, y se ven
- * como enlaces —subrayado y flecha— en medio de una lista de texto.
+ * **Qué la saca de la tarjeta genérica.** Era una caja blanca con un número
+ * pequeño, un icono de trazo y una lista de viñetas —lo mismo que cualquier
+ * cuadrícula de servicios—. Ahora el numeral es el elemento gráfico: va en
+ * la monoespaciada a tamaño de titular, que es el motivo que el sitio ya usa
+ * en la ficha del hero, en las etapas y en los pasos del formulario. El
+ * icono va en una pastilla de acento, de modo que los cuatro se leen como un
+ * juego. Y los frentes van en filas separadas por regla de 1px, no en
+ * viñetas: es la misma retícula de reglas finas que ordena el resto de la
+ * página.
  *
- * Las cuatro igualan altura por la rejilla (`items-stretch`), no por una
- * altura fija: la categoría con cuatro ítems estira a su pareja de fila y
- * los bordes quedan alineados sin recortar nada.
+ * **Por qué todas miden lo mismo.** La rejilla las estira a la altura de su
+ * fila y las filas de frentes se reparten el alto sobrante, así que la
+ * categoría de tres frentes respira más que la de cinco en vez de dejar un
+ * hueco al pie. Sin ese reparto, con 3 y 5 frentes la diferencia era de
+ * 111 px de blanco dentro de la tarjeta corta.
  */
-export function TarjetaCategoria({ categoria, numero, textos, idioma }: Props) {
+export function TarjetaCategoria({ categoria, numero, textos }: Props) {
   const { nombre, items } = textos.categorias[categoria.clave];
 
   return (
     <div className="tarjeta-categoria">
-      {/* Numeral e icono en la misma línea: el numeral ordena las cuatro y
-          el icono dice de qué va antes de leer el título. */}
-      <div className="flex items-center justify-between gap-4">
-        <span className="dato text-sm text-accent-deep">{numero}</span>
-        <Icono nombre={categoria.icono} tamano={28} className="text-accent-deep" />
+      <div className="categoria-cabecera">
+        <span className="dato categoria-numero">{numero}</span>
+        <span className="categoria-insignia">
+          <Icono nombre={categoria.icono} tamano={24} />
+        </span>
       </div>
 
-      <h3 className="categoria-titulo mt-6 text-xl text-ink md:text-2xl">{nombre}</h3>
+      <h3 className="categoria-titulo">{nombre}</h3>
 
       <ul className="categoria-items">
-        {items.map((item, i) => {
-          const ficha = categoria.fichas?.[i];
+        {items.map((item) => (
+          <li key={item.nombre} className="categoria-item">
+            <span>
+              {item.nombre}
 
-          return (
-            <li key={item.nombre} className="categoria-item">
-              <span aria-hidden="true" className="categoria-marca" />
-              <span>
-                {ficha ? (
-                  <Enlace flecha href={`/${idioma}/servicios/${ficha}`}>
-                    {item.nombre}
-                    {/* El nombre del ítem no dice que abre una página; la
-                        flecha lo dice en pantalla y esto para quien no la ve. */}
-                    <span className="sr-only"> — {textos.conFicha}</span>
-                  </Enlace>
-                ) : (
-                  item.nombre
-                )}
-
-                {/* La norma que respalda el frente, cuando la hay. Va debajo
-                    y en la monoespaciada de las cifras, que es como el sitio
-                    cita ya sus otras fuentes. */}
-                {item.nota ? (
-                  <span className="dato categoria-nota">{item.nota}</span>
-                ) : null}
-              </span>
-            </li>
-          );
-        })}
+              {/* La norma que respalda el frente, cuando la hay. Va debajo y
+                  en la monoespaciada de las cifras, que es como el sitio
+                  cita ya sus otras fuentes. */}
+              {item.nota ? <span className="dato categoria-nota">{item.nota}</span> : null}
+            </span>
+          </li>
+        ))}
       </ul>
     </div>
   );

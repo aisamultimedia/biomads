@@ -56,8 +56,18 @@ export const permisos = {
 } as const;
 
 export type ItemNav = {
-  /** Ancla de la página única. */
+  /**
+   * Sección de la página única. Es lo que observa el indicador de sección
+   * activa, y también a dónde lleva el enlace mientras no haya `destino`.
+   */
   href: `#${string}`;
+  /**
+   * A dónde lleva el enlace, cuando no es el principio de la sección.
+   * Contacto lo usa: la sección abre con el rótulo y el título, y en móvil
+   * el formulario queda una pantalla más abajo. El ítem sigue marcándose
+   * activo con la sección entera, que es lo que se está mirando.
+   */
+  destino?: `#${string}`;
   /** Clave en `nav.secciones` del diccionario. El rótulo es texto. */
   clave: ClaveSeccion;
 };
@@ -78,7 +88,7 @@ export type ItemNav = {
 export const navegacion: readonly ItemNav[] = [
   { href: "#nosotros", clave: "nosotros" },
   { href: "#servicios", clave: "servicios" },
-  { href: "#contacto", clave: "contacto" },
+  { href: "#contacto", destino: "#formulario", clave: "contacto" },
 ] as const;
 
 /**

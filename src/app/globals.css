@@ -2156,105 +2156,118 @@
 /* =========================================================================
    Tarjeta de categoría de servicio
 
-   Sustituye a dos piezas que había antes: la tarjeta desplegable de los dos
-   servicios con ficha y la lista de siete nombres sueltos que iba debajo. El
-   cliente reorganizó todo el alcance en cuatro categorías, así que las
-   cuatro pesan lo mismo y ninguna se lee como la principal.
+   Las cuatro categorías en que se organiza todo el alcance. Sustituyen a la
+   tarjeta desplegable de los dos servicios con ficha y a la lista de siete
+   nombres sueltos que iba debajo.
 
-   Conserva el lenguaje de la tarjeta que sustituye —borde de 1px, radio
-   grande, relleno de 32px, fondo de papel— pero no su levantamiento al pasar
-   el cursor: la tarjeta ya no abre nada y el gesto prometería un clic que no
-   existe. Lo que reacciona es lo que sí es enlace, que son los ítems con
-   ficha propia.
+   **No abren nada.** Los dos ítems que llevaban a una página de ficha se
+   retiraron por decisión del cliente: no hay profundización de servicio que
+   ofrecer. Por eso aquí no hay levantamiento al pasar el cursor, ni borde
+   que se enciende, ni signo de «más»: ningún gesto puede sugerir un clic que
+   no existe.
+
+   **Lo que las saca de la tarjeta genérica** es el numeral y la retícula. El
+   numeral va en la monoespaciada a tamaño de titular —el motivo que el sitio
+   ya usa en la ficha del hero, en las etapas y en los pasos del formulario—,
+   el icono va en una pastilla de acento para que los cuatro se lean como un
+   juego, y los frentes van en filas con regla de 1px en vez de viñetas, que
+   es la misma retícula que ordena el resto de la página.
    ========================================================================= */
 
 @layer components {
   .tarjeta-categoria {
     display: flex;
     flex-direction: column;
+    /* Estira a la altura de su fila. La rejilla de la portada va en
+       items-stretch justamente para esto: el cliente las quiere del mismo
+       tamaño. */
+    height: 100%;
     padding: var(--spacing-8);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-lg);
     background-color: var(--color-paper);
   }
 
-  /* Dos líneas de alto mínimo desde que hay dos columnas. Los títulos de
-     las cuatro categorías miden una o dos líneas según el ancho, y sin esto
-     la regla de la tarjeta de título corto subía y quedaba desalineada de la
-     de su pareja de fila. Con el mínimo, las dos reglas caen a la misma
-     altura y la diferencia de contenido se nota abajo, que es donde dice
-     algo: esa categoría cubre más frentes. */
+  .categoria-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-4);
+  }
+
+  /* El numeral es el elemento gráfico de la tarjeta, no una etiqueta: a
+     --text-3xl pesa lo mismo que el título y ordena las cuatro de un
+     vistazo. En --accent-deep sobre papel da 4.9:1, de sobra para texto
+     grande. */
+  .categoria-numero {
+    font-size: var(--text-3xl);
+    line-height: 1;
+    color: var(--color-accent-deep);
+  }
+
+  /* Pastilla de acento con el icono en --dark encima: 11.2:1. Es el estado
+     que la banda de etapas reserva para el hover; aquí es el estado normal,
+     porque estas tarjetas no reaccionan al cursor y el color es lo único
+     que las separa de una caja blanca cualquiera. */
+  .categoria-insignia {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--spacing-12);
+    height: var(--spacing-12);
+    border-radius: var(--radius-pill);
+    background-color: var(--color-accent);
+    color: var(--color-dark);
+  }
+
+  /* Dos líneas de alto mínimo desde que hay dos columnas: los títulos miden
+     una o dos según el ancho, y sin esto la primera fila de frentes de una
+     tarjeta de título corto subía y quedaba desalineada de la de su pareja
+     de fila. */
   .categoria-titulo {
-    margin-block-end: var(--spacing-8);
+    margin-block-start: var(--spacing-8);
+    font-size: var(--text-xl);
+    color: var(--color-ink);
   }
 
   @media (min-width: 768px) {
     .categoria-titulo {
       /* 2 líneas: el interlineado de --text-xl y --text-2xl es 1.2. */
       min-height: 2.4em;
+      font-size: var(--text-2xl);
     }
   }
 
+  /* Los frentes, en filas con regla. `flex: 1` en la lista y en cada fila
+     reparte el alto sobrante de la tarjeta entre las filas que haya: la
+     categoría de tres frentes respira más que la de cinco, en vez de dejar
+     un hueco al pie. Con 3 y 5 frentes ese hueco era de 111 px. */
   .categoria-items {
     display: flex;
+    flex: 1;
     flex-direction: column;
-    /* 16px y no 12: con el relleno del enlace, es lo que deja las áreas
-       táctiles de dos ítems seguidos sin solaparse. */
-    gap: var(--spacing-4);
-    padding-block-start: var(--spacing-6);
-    border-block-start: 1px solid var(--color-line);
+    margin-block-start: var(--spacing-8);
   }
 
   .categoria-item {
     display: flex;
-    align-items: baseline;
-    gap: var(--spacing-3);
+    flex: 1;
+    align-items: center;
+    /* Suelo de la fila: con pocas filas el reparto las estira, pero con
+       muchas no pueden encogerse por debajo de lo que pide el texto. */
+    min-height: var(--area-tactil);
+    padding-block: var(--spacing-3);
+    border-block-start: 1px solid var(--color-line);
     color: var(--color-ink);
   }
 
-  /* Cuadradito de acento, el mismo marcador que usan los compromisos de la
-     política integral: una lista de frentes y una de compromisos son la
-     misma clase de lista y no tienen por qué señalarse distinto. */
-  .categoria-marca,
-  .compromiso-marca {
-    flex: none;
-    width: var(--spacing-2);
-    height: var(--spacing-2);
-    /* Sube un pelo para alinearse con la primera línea de texto y no con
-       su base, que es donde cae por ser `align-items: baseline`. */
-    translate: 0 -0.15em;
-    border-radius: var(--radius-sm);
-    background-color: var(--color-accent);
-  }
-
   /* La norma que respalda un frente: debajo del nombre, en pequeño y sin
-     competir con él. Es la misma forma en que la ficha de servicio cita su
-     fuente de método. */
+     competir con él. Es la misma forma en que el sitio cita sus fuentes. */
   .categoria-nota {
     display: block;
     margin-block-start: var(--spacing-1);
     font-size: var(--text-xs);
     color: var(--color-ink-muted);
-  }
-
-  /* Los ítems con ficha son enlaces y traen el subrayado y la flecha de
-     .enlace-flecha, que es `inline-flex`. Aquí vuelve a `inline`: en flex,
-     el texto es un solo hijo que ocupa el ancho disponible, así que al
-     romper en dos líneas —«Monitoreo y caracterización de fauna y flora» lo
-     hace en móvil— la flecha se quedaba suelta contra el borde derecho en
-     vez de ir detrás de la última palabra. El subrayado no se entera: es un
-     degradado de fondo y se dibuja por línea.
-
-     El relleno vertical no mueve nada —es un elemento en línea— pero sí
-     agranda el área pulsable, que en un enlace de una sola línea se quedaba
-     en 26 px. */
-  .categoria-item .enlace-flecha {
-    display: inline;
-    padding-block: var(--spacing-2);
-  }
-
-  .categoria-item .enlace-flecha > .flecha {
-    margin-inline-start: var(--spacing-2);
   }
 }
 

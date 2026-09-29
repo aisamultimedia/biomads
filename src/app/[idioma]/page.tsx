@@ -103,18 +103,23 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
           Servicios — las cuatro categorías que cubren todo el alcance.
           ================================================================ */}
       <Seccion id="servicios" rotulo={t.servicios.rotulo} titulo={t.servicios.titulo}>
-        {/* items-start y no items-stretch: con 3, 4, 3 y 5 frentes, estirar
-            las tarjetas a la altura de su fila abría un hueco de 183 px
-            dentro de la más corta. Cada una mide lo que mide; lo que sí se
-            alinea es la regla, por el alto mínimo del título. */}
-        <RevealGroup as="ul" tipo="panel" className="grid items-start gap-6 md:grid-cols-2">
+        {/* items-stretch: el cliente las quiere del mismo tamaño. El hueco
+            que eso abría en la tarjeta con menos frentes lo absorbe ahora la
+            lista, que reparte el alto sobrante entre sus filas. */}
+        <RevealGroup
+          as="ul"
+          tipo="panel"
+          /* auto-rows-fr solo desde md, que es donde hay dos columnas: en
+             una sola, igualar filas estira las cuatro tarjetas al alto de la
+             más larga y regala pantalla en móvil sin que nadie las compare. */
+          className="grid items-stretch gap-6 md:auto-rows-fr md:grid-cols-2"
+        >
           {categoriasServicio.map((categoria, i) => (
             <TarjetaCategoria
               key={categoria.clave}
               categoria={categoria}
               numero={String(i + 1).padStart(2, "0")}
               textos={t.servicios}
-              idioma={idioma}
             />
           ))}
         </RevealGroup>
@@ -194,7 +199,12 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
             </Reveal>
           </div>
 
-          <Reveal>
+          {/* Ancla propia: «Contacto» en el menú y el botón de la cabecera
+              apuntan aquí y no al principio de la sección. En escritorio la
+              diferencia es poca —el formulario empieza a la altura del
+              primer bloque—, pero en móvil el formulario va debajo de las
+              vías directas y quedaba a una pantalla del ancla anterior. */}
+          <Reveal id="formulario">
             <FormularioContacto
               idioma={idioma}
               textos={t.contacto.formulario}

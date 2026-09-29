@@ -5,8 +5,15 @@ import { useSeccionActiva } from "@/hooks/useSeccionActiva";
 import type { Diccionario } from "@/idioma";
 import { navegacion } from "@/lib/site";
 
-/** Contacto sale del menú: vive como botón siempre visible en la barra. */
-const items = navegacion.filter((item) => item.href !== "#contacto");
+/**
+ * Las tres anclas, Contacto incluida.
+ *
+ * Salía de aquí porque el botón de la derecha decía lo mismo, y el cliente
+ * echó en falta la entrada de menú: un botón de acento al otro extremo de
+ * la barra no se lee como parte de la navegación. Ahora Contacto es un ítem
+ * más y el botón dice lo que de verdad ofrece, que es pedir propuesta.
+ */
+const items = navegacion;
 
 const enlaceBase = [
   "enlace-barra relative inline-flex items-center",
@@ -73,7 +80,7 @@ export function NavBarra({ textos }: { textos: Diccionario["nav"]["secciones"] }
                 desplazamiento suave en una navegación que no cambia de
                 página. */}
             <a
-              href={item.href}
+              href={item.destino ?? item.href}
               aria-current={activo ? "true" : undefined}
               /* El color lo pone el tema de la barra, no una clase fija. */
               className={[enlaceBase, activo ? "es-activo" : subrayadoHover].join(" ")}
