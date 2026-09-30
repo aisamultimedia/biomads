@@ -37,7 +37,12 @@ export type NombreIcono =
   /* Contacto */
   | "correo"
   | "telefono"
-  | "ubicacion";
+  | "ubicacion"
+  /* Filas de la ficha de proyecto */
+  | "persona"
+  | "calendario"
+  | "sector"
+  | "engranaje";
 
 /* Cada entrada es el interior del <svg>, sobre la rejilla de 24×24.
    Sin `fill`: todo se resuelve con trazo, que es lo que permite que el
@@ -240,6 +245,58 @@ const trazos: Record<NombreIcono, React.ReactNode> = {
     <>
       <path d="M12 21.5s7-6.1 7-11.2a7 7 0 1 0-14 0c0 5.1 7 11.2 7 11.2Z" />
       <circle cx="12" cy="10.1" r="2.6" />
+    </>
+  ),
+
+  /* Los cuatro de la ficha de proyecto. Acompañan al rótulo de cada fila
+     —cliente, periodo, sector y servicio— como en el mockup que entregó el
+     cliente. Son decorativos: el rótulo de al lado ya dice lo mismo. */
+
+  /* Una figura, no dos: el cliente es una razón social, no una comunidad.
+     «social» ya usa dos y significa otra cosa. */
+  persona: (
+    <>
+      <circle cx="12" cy="8" r="3.4" />
+      <path d="M5.5 20.5c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5" />
+    </>
+  ),
+
+  calendario: (
+    <>
+      <rect x="3.5" y="5.5" width="17" height="15" rx="1.5" />
+      <path d="M3.5 10.2h17" />
+      <path d="M8 3.5v4" />
+      <path d="M16 3.5v4" />
+    </>
+  ),
+
+  /* Frontón y columnas: el sector es el marco institucional en el que cae
+     el proyecto, y esa es la forma con que se dibuja una institución. */
+  sector: (
+    <>
+      <path d="M3 20.5h18" />
+      <path d="M12 3.5 4.2 8h15.6L12 3.5Z" />
+      <path d="M6.6 11v6" />
+      <path d="M10.2 11v6" />
+      <path d="M13.8 11v6" />
+      <path d="M17.4 11v6" />
+    </>
+  ),
+
+  /* Los dientes arrancan pegados al círculo. Con el hueco que tenían antes
+     —radios largos saliendo de muy adentro— esto se leía como un sol, no
+     como un engranaje. */
+  engranaje: (
+    <>
+      <circle cx="12" cy="12" r="4.4" />
+      <path d="M12 4.4v2.2" />
+      <path d="M12 19.6v-2.2" />
+      <path d="M19.6 12h-2.2" />
+      <path d="M4.4 12h2.2" />
+      <path d="m17.4 6.6-1.6 1.6" />
+      <path d="m6.6 17.4 1.6-1.6" />
+      <path d="m17.4 17.4-1.6-1.6" />
+      <path d="M6.6 6.6 8.2 8.2" />
     </>
   ),
 };

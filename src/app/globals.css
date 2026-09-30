@@ -2932,6 +2932,38 @@
     color: var(--color-accent-deep);
   }
 
+  /* Insignia del mockup: círculo de acento pálido con el icono del
+     proyecto. En reposo es tenue y al abrir o al pasar el cursor se
+     rellena, igual que la insignia de servicios: los dos juegos de iconos
+     del sitio responden igual. */
+  .proyecto-insignia {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--spacing-12);
+    height: var(--spacing-12);
+    border-radius: var(--radius-pill);
+    background-color: color-mix(in srgb, var(--color-accent) 16%, transparent);
+    color: var(--color-accent-deep);
+    transition:
+      background-color var(--duracion-micro) var(--ease-base),
+      color var(--duracion-micro) var(--ease-base),
+      scale var(--duracion-corta) var(--ease-base);
+  }
+
+  .proyecto-caja[data-abierto] .proyecto-insignia,
+  .proyecto-fila:hover .proyecto-insignia {
+    background-color: var(--color-accent);
+    color: var(--color-dark);
+    scale: 1.06;
+  }
+
+  @media (max-width: 639px) {
+    .proyecto-insignia {
+      display: none;
+    }
+  }
+
   .proyecto-titular {
     flex: 1;
     min-width: 0;
@@ -2990,9 +3022,31 @@
   }
 
   @media (max-width: 767px) {
-    .proyecto-estado {
+    .proyecto-disparador .proyecto-estado {
       display: none;
     }
+  }
+
+  /* Cerrada va en la fila; abierta salta sobre la fotografía, que es donde
+     la puso el mockup. Nunca se ve en los dos sitios a la vez. */
+  .proyecto-caja[data-abierto] .proyecto-disparador .proyecto-estado {
+    display: none;
+  }
+
+  .proyecto-estado--foto {
+    position: absolute;
+    inset-block-start: var(--spacing-4);
+    inset-inline-start: var(--spacing-4);
+    /* Sobre fotografía el contorno no basta: va en --dark con texto claro,
+       11.2:1, que se lee encima de cualquier encuadre. */
+    border-color: transparent;
+    background-color: var(--color-dark);
+    color: var(--color-ink-invert);
+  }
+
+  .proyecto-estado--foto[data-estado="en-ejecucion"] {
+    border-color: transparent;
+    color: var(--color-accent);
   }
 
   /* El signo: de + a −, solo con transform. */
@@ -3061,6 +3115,7 @@
   }
 
   .proyecto-marco {
+    position: relative;
     overflow: hidden;
     aspect-ratio: 4 / 3;
     border-radius: var(--radius-md);
@@ -3073,16 +3128,49 @@
     object-fit: cover;
   }
 
+  /* 24px y no 20: la escala de espaciado del sitio salta de 16 a 24 a
+     propósito, y un valor fuera de ella compila a una declaración inválida
+     que se descarta sin avisar. */
   .proyecto-datos {
     display: grid;
-    gap: var(--spacing-4);
+    gap: var(--spacing-6);
   }
 
   @media (min-width: 640px) {
     .proyecto-datos {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--spacing-4) var(--spacing-8);
+      gap: var(--spacing-6) var(--spacing-8);
     }
+
+    /* Divisoria entre las dos columnas, como en el mockup. Va en el hueco,
+       no como borde de las celdas: así no se dibuja debajo de la última
+       fila cuando el número de datos es impar. */
+    .proyecto-datos > .proyecto-dato:nth-child(odd) {
+      position: relative;
+    }
+
+    .proyecto-datos > .proyecto-dato:nth-child(odd)::after {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inset-inline-end: calc(var(--spacing-8) / -2);
+      width: 1px;
+      background-color: var(--color-line);
+    }
+  }
+
+  /* Cada dato con su icono al lado del rótulo. El icono es decorativo —el
+     rótulo dice lo mismo— y va alineado con la primera línea, no centrado
+     en el bloque, porque el valor puede ocupar dos renglones. */
+  .proyecto-dato {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+
+  .proyecto-dato-icono {
+    margin-block-start: 1px;
+    color: var(--color-accent-deep);
   }
 
   .proyecto-alcance {

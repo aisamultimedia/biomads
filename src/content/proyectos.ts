@@ -1,3 +1,4 @@
+import type { NombreIcono } from "@/components/ui/Icono";
 import type { ClaveFoto, ClaveProyecto } from "@/idioma";
 import campoAbierto from "@/fotos/campo-abierto.jpg";
 import taludCuneta from "@/fotos/talud-cuneta.jpg";
@@ -32,6 +33,11 @@ export type EstadoProyecto = "en-ejecucion" | "ejecutado";
 export type Proyecto = {
   slug: ClaveProyecto;
   estado: EstadoProyecto;
+  /**
+   * Insignia de la fila. Dice de qué va el proyecto antes de leer el
+   * título, que es el papel que el icono tenía en el mockup del cliente.
+   */
+  icono: NombreIcono;
   /** Año de inicio. */
   desde: number;
   /** Año de cierre. Igual al de inicio en los contratos de un solo año. */
@@ -46,6 +52,7 @@ export const proyectos: readonly Proyecto[] = [
   {
     slug: "paga",
     estado: "en-ejecucion",
+    icono: "portapapeles",
     desde: 2025,
     hasta: 2027,
     imagen: campoAbierto,
@@ -54,6 +61,7 @@ export const proyectos: readonly Proyecto[] = [
   {
     slug: "sat",
     estado: "ejecutado",
+    icono: "evaluacion",
     desde: 2025,
     hasta: 2026,
     imagen: taludCuneta,
@@ -62,6 +70,7 @@ export const proyectos: readonly Proyecto[] = [
   {
     slug: "compensacion-biotica",
     estado: "ejecutado",
+    icono: "compensacion",
     desde: 2021,
     hasta: 2026,
     meses: 60,
@@ -71,6 +80,7 @@ export const proyectos: readonly Proyecto[] = [
   {
     slug: "embellecimiento",
     estado: "ejecutado",
+    icono: "sostenibilidad",
     desde: 2024,
     hasta: 2026,
     imagen: individuosEnHilera,
@@ -79,6 +89,7 @@ export const proyectos: readonly Proyecto[] = [
   {
     slug: "flora-epifita-quimbo",
     estado: "ejecutado",
+    icono: "epifita",
     desde: 2018,
     hasta: 2018,
     meses: 8,
@@ -88,6 +99,7 @@ export const proyectos: readonly Proyecto[] = [
   {
     slug: "fauna-solinter",
     estado: "ejecutado",
+    icono: "huella",
     desde: 2017,
     hasta: 2017,
     meses: 6,
