@@ -232,20 +232,13 @@ export type Diccionario = {
     rotulo: string;
     titulo: string;
     entradilla: string;
-    /** Botón que lleva del home a la página. */
-    verTodos: string;
-    /** Enlace de cada tarjeta del home a su ficha en la página. */
-    verFicha: string;
-    /** Rótulo y título de la página, que no repiten los del home. */
-    indice: {
-      rotulo: string;
-      lineasTitulo: readonly string[];
-      entradilla: string;
-      volver: string;
-      /** Cierre de la página. */
-      siguienteTitulo: string;
-      siguienteTexto: string;
-    };
+    /**
+     * Las tres cifras del encabezado. Las tres se comprueban en las fichas
+     * que van justo debajo: no hay contador de años acumulados ni de
+     * proyectos totales, que es lo que el sitio lleva diciendo desde el
+     * principio que no publica.
+     */
+    cifras: PorClave<"fichas" | "hectareas" | "desde">;
     /** Los dos estados posibles. */
     estados: PorClave<"en-ejecucion" | "ejecutado">;
     /** Rótulos de las filas de la ficha. */

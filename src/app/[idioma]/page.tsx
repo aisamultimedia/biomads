@@ -2,61 +2,75 @@ import { Boton } from "@/components/ui/Boton";
 import { Enlace } from "@/components/ui/Enlace";
 import { Icono } from "@/components/ui/Icono";
 import { Seccion } from "@/components/ui/Seccion";
+import { Contornos } from "@/components/ui/Contornos";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealGroup } from "@/components/motion/RevealGroup";
+import { Cursor } from "@/components/motion/Cursor";
 import { Clientes } from "@/components/secciones/Clientes";
 import { EtapasEstudio } from "@/components/secciones/EtapasEstudio";
-import { TarjetaCategoria } from "@/components/secciones/TarjetaCategoria";
+import { Servicios } from "@/components/secciones/Servicios";
+import { Proyectos } from "@/components/secciones/Proyectos";
 import { Diapositivas } from "@/components/secciones/Diapositivas";
 import { FormularioContacto } from "@/components/secciones/FormularioContacto";
 import { Galeria } from "@/components/secciones/Galeria";
 import { Hero } from "@/components/secciones/Hero";
 import { MarcoInstitucional } from "@/components/secciones/MarcoInstitucional";
 import { PromesaMarca } from "@/components/secciones/PromesaMarca";
-import { FichaProyecto } from "@/components/secciones/FichaProyecto";
-import { proyectosDestacados } from "@/content/proyectos";
+import { proyectos } from "@/content/proyectos";
 import { regiones } from "@/content/respaldo";
-import { categoriasServicio } from "@/content/servicios";
+import { categoriasServicio, fotosServicio } from "@/content/servicios";
 import { diccionario, comoIdioma } from "@/idioma";
 import { opcionesDeServicio } from "@/lib/formulario";
 import { empresa, mailto, whatsapp } from "@/lib/site";
 import { fotosNosotros } from "@/content/nosotros";
 
 /**
- * Página única.
+ * Página única, y ahora única de verdad.
  *
- * Todo el recorrido vive aquí, en secciones ancladas: nosotros, la forma de
- * abordar un proyecto, servicios y contacto. Las páginas de detalle de los
- * dos servicios con ficha siguen existiendo para quien llegue por buscador o
- * comparta un enlace, pero la visita normal no sale de esta pantalla.
+ * El cliente pidió que nada esencial dependa de abrir una ficha, un modal o
+ * una página aparte. Así que aquí está todo: quiénes somos, el marco
+ * institucional, la promesa, el método, los cuatro frentes de servicio con
+ * lo que cubre cada uno y las seis fichas de proyecto completas. Fuera queda
+ * solo la política de tratamiento de datos, que es un documento legal y se
+ * comparte por su URL.
  *
- * Proyectos se retiró el 25 de septiembre de 2026 y volvió el 30, cuando
- * BIOMADS entregó seis fichas técnicas donde antes había dos casos con
- * datos delgados. Vuelve a su sitio de siempre, entre servicios y la
- * galería: primero qué hacemos, luego dónde lo hemos hecho, luego cómo se
- * ve. Enseña tres y lleva a /proyectos, que es donde están los seis y donde
- * el portafolio puede crecer sin alargar la portada.
+ * **Lo que evita que sea un rollo interminable** no es esconder contenido,
+ * es darle forma. Los servicios son una lista que se recorre y cambia un
+ * panel; los proyectos, un índice de seis renglones que despliega la ficha
+ * en su sitio. Cerrados ocupan poco, abiertos lo que pida lo que se está
+ * leyendo, y en ningún caso se sale de la página.
  *
- * Con la sección de vuelta, servicios recupera la superficie alterna que
- * tuvo que ceder cuando no estaba: proyectos es otra vez el bloque de papel
- * que separa servicios de la galería, y la galería y la banda de clientes
- * vuelven a compartir superficie sin que se fundan tres seguidas.
+ * **El recorrido.** Qué prometemos (hero) → quiénes somos y qué nos mueve →
+ * la promesa, como pausa → cómo trabajamos (método) → qué hacemos
+ * (servicios) → dónde lo hemos hecho (proyectos) → cómo se ve (campo) →
+ * quién ha confiado → hablemos.
  */
 export default async function Portada({ params }: PageProps<"/[idioma]">) {
   const { idioma: segmento } = await params;
   const idioma = comoIdioma(segmento);
   const t = diccionario(idioma);
 
+  const cifras = [
+    {
+      valor: String(proyectos.length).padStart(2, "0"),
+      rotulo: t.proyectos.cifras.fichas,
+    },
+    { valor: "88,54", rotulo: t.proyectos.cifras.hectareas },
+    { valor: String(empresa.constitucion), rotulo: t.proyectos.cifras.desde },
+  ];
+
   return (
     <>
       <Hero idioma={idioma} />
 
       {/* ================================================================
-          Nosotros — inmediatamente después del hero.
+          Nosotros. La columna de texto se queda fija mientras las fotos
+          pasan al lado: es lo que convierte dos bloques quietos en algo
+          que se recorre.
           ================================================================ */}
       <Seccion id="nosotros" rotulo={t.nosotros.rotulo} titulo={t.nosotros.titulo}>
-        <div className="grid gap-16 md:grid-cols-2 md:gap-24">
-          <div>
+        <div className="nosotros-reja">
+          <div className="nosotros-texto">
             <Reveal as="p" className="medida text-lg text-ink">
               {t.nosotros.quienesSomos}
             </Reveal>
@@ -65,30 +79,25 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
               {t.nosotros.fortaleza}
             </Reveal>
 
+            <Reveal regla className="mt-10 pt-6">
+              <p className="etiqueta text-ink-muted">{t.contacto.dondeRotulo}</p>
+              <p className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                <span className="text-ink">{empresa.sede}</span>
+                <span className="dato coordenada">{empresa.coordenadas}</span>
+              </p>
+            </Reveal>
           </div>
 
-          {/* Fotos de equipo en un slider a una por vista. La lista de
-              cargos, la de especialistas y la nota de la tarjeta
-              profesional se retiraron por decisión del cliente: el texto
-              dice quiénes somos y las fotos lo enseñan. */}
-          <Reveal indice={2}>
+          <Reveal indice={2} className="nosotros-fotos">
             <Diapositivas fotos={fotosNosotros} textos={t.galeria} alts={t.fotos} />
           </Reveal>
         </div>
 
-        {/* El propósito cierra la sección a ancho completo, fuera de la
-            rejilla. El cliente entregó tres párrafos donde antes había dos,
-            y el tercero dentro de la columna la estiraba bastante por
-            debajo de la foto: en tablet dejaba un palmo de blanco a la
-            derecha. Fuera, la columna vuelve a la altura del slider y el
-            párrafo gana el peso que le toca, que es el de la conclusión. */}
+        {/* El propósito cierra la sección a ancho completo. */}
         <Reveal as="p" regla className="medida mt-16 pt-8 text-lg text-ink">
           {t.nosotros.proposito}
         </Reveal>
 
-        {/* Misión, visión, valores y política integral. Al final de la
-            sección, nunca abriéndola: es lo mismo que declara toda
-            consultora del sector. */}
         <MarcoInstitucional idioma={idioma} />
       </Seccion>
 
@@ -98,77 +107,69 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
       <PromesaMarca idioma={idioma} />
 
       {/* ================================================================
-          Las cinco etapas del método, en banda oscura. Es la continuación
-          de la promesa: primero qué se promete, luego cómo se aborda.
+          Las cinco etapas del método, en banda oscura.
           ================================================================ */}
       <EtapasEstudio idioma={idioma} />
 
       {/* ================================================================
-          Servicios — las cuatro categorías que cubren todo el alcance.
+          Servicios: cuatro frentes que se recorren, con todo lo que cubre
+          cada uno a la vista. Las curvas de nivel del fondo son el motivo
+          de la casa —territorio medido— y no una textura cualquiera.
           ================================================================ */}
-      <Seccion id="servicios" alterna rotulo={t.servicios.rotulo} titulo={t.servicios.titulo}>
-        {/* items-stretch: el cliente las quiere del mismo tamaño. El hueco
-            que eso abría en la tarjeta con menos frentes lo absorbe ahora la
-            lista, que reparte el alto sobrante entre sus filas. */}
-        <RevealGroup
-          as="ul"
-          tipo="panel"
-          /* auto-rows-fr solo desde md, que es donde hay dos columnas: en
-             una sola, igualar filas estira las cuatro tarjetas al alto de la
-             más larga y regala pantalla en móvil sin que nadie las compare. */
-          className="grid items-stretch gap-6 md:auto-rows-fr md:grid-cols-2"
-        >
-          {categoriasServicio.map((categoria, i) => (
-            <TarjetaCategoria
-              key={categoria.clave}
-              categoria={categoria}
-              numero={String(i + 1).padStart(2, "0")}
-              textos={t.servicios}
-            />
-          ))}
-        </RevealGroup>
+      <Seccion
+        id="servicios"
+        alterna
+        className="seccion-contornos"
+        rotulo={t.servicios.rotulo}
+        titulo={t.servicios.titulo}
+      >
+        <Contornos variante="seccion" />
+
+        <Servicios
+          categorias={categoriasServicio}
+          imagenes={fotosServicio}
+          textos={t.servicios}
+          alts={t.fotos}
+        />
 
         <Reveal className="mt-16">
-          <Boton href="#contacto" variante="secundario">
-            {t.servicios.consultarAlcance}
-          </Boton>
+          <Cursor as="span" className="inline-block">
+            <Boton href="#formulario" variante="secundario">
+              {t.servicios.consultarAlcance}
+            </Boton>
+          </Cursor>
         </Reveal>
       </Seccion>
 
       {/* ================================================================
-          Proyectos destacados: tres fichas y la puerta a las seis.
+          Proyectos: las seis fichas técnicas, enteras y en su sitio.
           ================================================================ */}
       <Seccion id="proyectos" rotulo={t.proyectos.rotulo} titulo={t.proyectos.titulo}>
-        <Reveal as="p" className="medida -mt-8 mb-16 text-ink-muted">
-          {t.proyectos.entradilla}
-        </Reveal>
+        <div className="proyectos-cabecera">
+          <Reveal as="p" className="medida text-ink-muted">
+            {t.proyectos.entradilla}
+          </Reveal>
 
-        <RevealGroup
-          as="ul"
-          tipo="panel"
-          /* Tres columnas desde lg y no desde md: a 768 px cada una medía
-             230 px y todo rompía, con tarjetas de 1.600 px de alto. Entre md
-             y lg van a una columna, y ahí el CSS les da la caja en fila
-             —foto a la izquierda— que ya usa la página. */
-          className="grid items-stretch gap-6 lg:auto-rows-fr lg:grid-cols-3"
-        >
-          {proyectosDestacados.map((proyecto) => (
-            <FichaProyecto
-              key={proyecto.slug}
-              proyecto={proyecto}
-              textos={t.proyectos}
-              unidades={t.unidades}
-              fotos={t.fotos}
-              variante="resumen"
-              idioma={idioma}
-            />
-          ))}
-        </RevealGroup>
+          {/* Tres cifras, las tres comprobables en las fichas que hay justo
+              debajo. Ni una más: el sitio no lleva contador de años
+              acumulados ni de proyectos totales. */}
+          <RevealGroup as="dl" tipo="panel" className="proyectos-cifras">
+            {cifras.map((cifra) => (
+              <div key={cifra.rotulo}>
+                <dt className="etiqueta text-ink-muted">{cifra.rotulo}</dt>
+                <dd className="dato proyectos-cifra">{cifra.valor}</dd>
+              </div>
+            ))}
+          </RevealGroup>
+        </div>
 
         <Reveal className="mt-16">
-          <Boton href={`/${idioma}/proyectos`} variante="secundario">
-            {t.proyectos.verTodos}
-          </Boton>
+          <Proyectos
+            proyectos={proyectos}
+            textos={t.proyectos}
+            unidades={t.unidades}
+            fotos={t.fotos}
+          />
         </Reveal>
       </Seccion>
 
@@ -191,11 +192,6 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
       <Seccion id="contacto" rotulo={t.contacto.rotulo} titulo={t.contacto.titulo}>
         <div className="grid gap-16 md:grid-cols-[1fr_1.2fr] md:gap-24">
           <div className="columna-contacto">
-            {/* Sin entradilla: la que había —«con el alcance y la autoridad
-                ante la que responde alcanza para armar una propuesta»— se
-                retiró por decisión del cliente. La columna arranca en las
-                vías directas, así que este primer bloque ya no lleva el
-                margen superior que lo separaba del párrafo. */}
             <Reveal regla className="pt-6">
               <p className="etiqueta text-ink-muted">{t.contacto.directoRotulo}</p>
               {/* El icono va fuera del enlace: dentro ampliaría el área
@@ -232,7 +228,8 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
                 <Icono nombre="ubicacion" className="mt-1 text-accent-deep" />
                 <p>
                   <span className="text-ink">{empresa.sede}</span>
-                  <span className="mt-1 block text-sm text-ink-muted">
+                  <span className="dato coordenada mt-1 block">{empresa.coordenadas}</span>
+                  <span className="mt-2 block text-sm text-ink-muted">
                     {t.contacto.regionesNota} {regiones.join(` ${t.unidades.y} `)}.
                   </span>
                 </p>
@@ -240,11 +237,6 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
             </Reveal>
           </div>
 
-          {/* Ancla propia: «Contacto» en el menú y el botón de la cabecera
-              apuntan aquí y no al principio de la sección. En escritorio la
-              diferencia es poca —el formulario empieza a la altura del
-              primer bloque—, pero en móvil el formulario va debajo de las
-              vías directas y quedaba a una pantalla del ancla anterior. */}
           <Reveal id="formulario">
             <FormularioContacto
               idioma={idioma}

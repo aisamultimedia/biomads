@@ -210,17 +210,11 @@ export const en: Diccionario = {
     rotulo: "Featured projects",
     titulo: "Work that makes a difference",
     entradilla:
-      "Each project is a measure of our commitment to the environment and to the sustainable development of the territories where we work.",
-    verTodos: "See all six projects",
-    verFicha: "See the record",
-    indice: {
-      rotulo: "Projects",
-      lineasTitulo: ["Six projects,", "with the full record"],
-      entradilla:
-        "Client, period, sector, service and scope for each one, with the resolution or decree it was delivered under. We publish what we can substantiate, so there is no project counter or accumulated-years figure here.",
-      volver: "Home",
-      siguienteTitulo: "Have a similar site?",
-      siguienteTexto: "Tell us what it involves and we will tell you how we would approach it.",
+      "Client, period, sector, scope and the regulation it was delivered under. We publish what we can substantiate: open any of them and the full record is right there, without leaving the page.",
+    cifras: {
+      fichas: "Projects on record",
+      hectareas: "Hectares in compensation",
+      desde: "First contract",
     },
     estados: {
       "en-ejecucion": "In progress",

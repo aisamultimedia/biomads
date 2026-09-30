@@ -13,6 +13,13 @@ export const empresa = {
   lema: "Dejando huella",
   constitucion: 2017,
   sede: "Ibagué, Tolima",
+  /**
+   * Coordenadas de la sede, en el formato de una ficha de campo. No es
+   * adorno tipográfico: es el lenguaje con el que se anota un punto en
+   * terreno, y es el motivo que el sitio usa para decir «territorio
+   * medido» sin recurrir a una hoja o una gota.
+   */
+  coordenadas: "4°26′N 75°14′O",
   correo: "gerencia@biomads.com",
   telefono: "318 062 9448",
   telefonoE164: "+573180629448",

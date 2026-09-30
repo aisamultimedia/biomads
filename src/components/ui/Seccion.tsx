@@ -64,7 +64,7 @@ export function Seccion({
   }
 
   return (
-    <section id={id} className={`${superficie} ${className}`}>
+    <section id={id} className={`relative ${superficie} ${className}`}>
       <div className="mx-auto w-full max-w-ancho px-6 py-24 md:py-40">
         {cabecera.length > 0 && (
           <RevealGroup className="mb-16" tipos={gestos}>

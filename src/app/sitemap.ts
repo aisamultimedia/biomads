@@ -26,7 +26,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   /** Rutas del sitio sin el prefijo de idioma, con su prioridad. */
   const rutas: readonly { ruta: string; prioridad: number }[] = [
     { ruta: "", prioridad: 1 },
-    { ruta: "/proyectos", prioridad: 0.8 },
     { ruta: "/privacidad", prioridad: 0.3 },
   ];
 

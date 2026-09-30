@@ -40,11 +40,6 @@ export type Proyecto = {
   meses?: number;
   imagen: typeof campoAbierto;
   claveFoto: ClaveFoto;
-  /**
-   * Va en la sección del home. Son los tres del mockup que entregó el
-   * cliente; los otros tres viven solo en la página, que es la que crece.
-   */
-  destacado?: boolean;
 };
 
 export const proyectos: readonly Proyecto[] = [
@@ -55,7 +50,6 @@ export const proyectos: readonly Proyecto[] = [
     hasta: 2027,
     imagen: campoAbierto,
     claveFoto: "campo-abierto",
-    destacado: true,
   },
   {
     slug: "sat",
@@ -73,7 +67,6 @@ export const proyectos: readonly Proyecto[] = [
     meses: 60,
     imagen: cuadrillaLadera,
     claveFoto: "cuadrilla-ladera",
-    destacado: true,
   },
   {
     slug: "embellecimiento",
@@ -82,7 +75,6 @@ export const proyectos: readonly Proyecto[] = [
     hasta: 2026,
     imagen: individuosEnHilera,
     claveFoto: "individuos-en-hilera",
-    destacado: true,
   },
   {
     slug: "flora-epifita-quimbo",
@@ -104,5 +96,3 @@ export const proyectos: readonly Proyecto[] = [
   },
 ];
 
-/** Los que van en el home, en el orden en que se declaran arriba. */
-export const proyectosDestacados = proyectos.filter((p) => p.destacado);

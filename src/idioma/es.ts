@@ -227,18 +227,11 @@ export const es: Diccionario = {
     rotulo: "Proyectos destacados",
     titulo: "Casos que generan impacto",
     entradilla:
-      "Cada proyecto es una muestra de nuestro compromiso con el medio ambiente y con el desarrollo sostenible de los territorios.",
-    verTodos: "Ver los seis proyectos",
-    verFicha: "Ver la ficha",
-    indice: {
-      rotulo: "Proyectos",
-      lineasTitulo: ["Seis proyectos,", "con su ficha completa"],
-      entradilla:
-        "Cliente, periodo, sector, servicio y alcance de cada uno, con la resolución o el decreto bajo el que se ejecutó. Publicamos lo que podemos sustentar, así que aquí no hay contador de proyectos ni de años acumulados.",
-      volver: "Inicio",
-      siguienteTitulo: "¿Tiene un frente parecido?",
-      siguienteTexto:
-        "Cuéntenos de qué se trata y le decimos cómo lo abordaríamos.",
+      "Cliente, periodo, sector, alcance y la norma bajo la que se ejecutó. Publicamos lo que podemos sustentar: abra cualquiera y está la ficha entera, sin salir de aquí.",
+    cifras: {
+      fichas: "Proyectos con ficha",
+      hectareas: "Hectáreas en compensación",
+      desde: "Primer contrato",
     },
     estados: {
       "en-ejecucion": "En ejecución",

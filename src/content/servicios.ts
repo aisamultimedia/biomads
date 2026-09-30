@@ -1,5 +1,9 @@
 import type { NombreIcono } from "@/components/ui/Icono";
-import type { ClaveCategoriaServicio } from "@/idioma";
+import type { ClaveCategoriaServicio, ClaveFoto } from "@/idioma";
+import marcacionIndividuo from "@/fotos/marcacion-individuo.jpg";
+import parcelaEstacas from "@/fotos/parcela-estacas.jpg";
+import revisionPlanta from "@/fotos/revision-planta.jpg";
+import cuadrillaTerreno from "@/fotos/cuadrilla-terreno.jpg";
 
 /**
  * Servicios — estructura.
@@ -28,4 +32,20 @@ export const categoriasServicio: readonly CategoriaServicio[] = [
   { clave: "forestal", icono: "arbol" },
   { clave: "estudios", icono: "portapapeles" },
   { clave: "sostenibilidad", icono: "libro" },
+];
+
+/**
+ * La fotografía que acompaña a cada categoría en el panel de escritorio, en
+ * el mismo orden que la lista de arriba.
+ *
+ * Son tomas de campo del archivo elegidas por lo que enseñan, no por el
+ * contrato del que salieron: su texto alternativo sigue describiendo lo que
+ * se ve. Solo se descargan a partir de 1024 px, que es donde el panel
+ * existe; por debajo, `sizes` las deja en 1 px.
+ */
+export const fotosServicio: readonly { clave: ClaveFoto; imagen: typeof parcelaEstacas }[] = [
+  { clave: "marcacion-individuo", imagen: marcacionIndividuo },
+  { clave: "parcela-estacas", imagen: parcelaEstacas },
+  { clave: "revision-planta", imagen: revisionPlanta },
+  { clave: "cuadrilla-terreno", imagen: cuadrillaTerreno },
 ];

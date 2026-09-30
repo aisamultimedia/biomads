@@ -2154,115 +2154,355 @@
 }
 
 /* =========================================================================
-   Tarjeta de categoría de servicio
+   Lenguaje de ficha de campo
 
-   Las cuatro categorías en que se organiza todo el alcance. Sustituyen a la
-   tarjeta desplegable de los dos servicios con ficha y a la lista de siete
-   nombres sueltos que iba debajo.
-
-   **No abren nada.** Los dos ítems que llevaban a una página de ficha se
-   retiraron por decisión del cliente: no hay profundización de servicio que
-   ofrecer. Por eso aquí no hay levantamiento al pasar el cursor, ni borde
-   que se enciende, ni signo de «más»: ningún gesto puede sugerir un clic que
-   no existe.
-
-   **Lo que las saca de la tarjeta genérica** es el numeral y la retícula. El
-   numeral va en la monoespaciada a tamaño de titular —el motivo que el sitio
-   ya usa en la ficha del hero, en las etapas y en los pasos del formulario—,
-   el icono va en una pastilla de acento para que los cuatro se lean como un
-   juego, y los frentes van en filas con regla de 1px en vez de viñetas, que
-   es la misma retícula que ordena el resto de la página.
+   Coordenadas, cifras y curvas de nivel: lo que separa a esta empresa de
+   cualquier consultora con una hoja en el logo es que mide territorio, y el
+   sitio lo dice con el vocabulario de una libreta de campo en vez de con
+   más verde.
    ========================================================================= */
 
 @layer components {
-  .tarjeta-categoria {
-    display: flex;
-    flex-direction: column;
-    /* Estira a la altura de su fila. La rejilla de la portada va en
-       items-stretch justamente para esto: el cliente las quiere del mismo
-       tamaño. */
-    height: 100%;
-    padding: var(--spacing-8);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-paper);
+  /* La coordenada va entre corchetes, como una anotación al margen, y en el
+     gris del texto secundario: acompaña al nombre del sitio, no compite. */
+  .coordenada {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-mono);
+    color: var(--color-ink-muted);
   }
 
-  .categoria-cabecera {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-4);
+  .coordenada::before {
+    content: "[";
+    margin-inline-end: 0.35ch;
+    color: var(--color-accent-deep);
   }
 
-  /* El numeral es el elemento gráfico de la tarjeta, no una etiqueta: a
-     --text-3xl pesa lo mismo que el título y ordena las cuatro de un
-     vistazo. En --accent-deep sobre papel da 4.9:1, de sobra para texto
-     grande. */
-  .categoria-numero {
+  .coordenada::after {
+    content: "]";
+    margin-inline-start: 0.35ch;
+    color: var(--color-accent-deep);
+  }
+
+  /* --- Curvas de nivel de fondo --- */
+
+  .seccion-contornos {
+    overflow: hidden;
+  }
+
+  .seccion-contornos > .mx-auto {
+    position: relative;
+    z-index: 1;
+  }
+
+  .fondo-contornos--seccion {
+    /* Muy por debajo del contraste del texto: es un grabado, no una imagen.
+       Con --color-line al 55 % se intuye y no se lee. */
+    color: color-mix(in srgb, var(--color-line-strong) 55%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+  }
+
+  /* --- Las tres cifras de proyectos --- */
+
+  .proyectos-cabecera {
+    display: grid;
+    gap: var(--spacing-12);
+  }
+
+  @media (min-width: 900px) {
+    .proyectos-cabecera {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: var(--spacing-16);
+    }
+  }
+
+  .proyectos-cifras {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--spacing-8);
+  }
+
+  @media (min-width: 900px) {
+    .proyectos-cifras {
+      gap: var(--spacing-12);
+      text-align: end;
+    }
+  }
+
+  /* La cifra a tamaño de titular y en la monoespaciada: es el mismo motivo
+     que los numerales del método y del índice, no un widget de estadísticas
+     traído de otra plantilla. */
+  .proyectos-cifra {
+    margin-block-start: var(--spacing-2);
     font-size: var(--text-3xl);
     line-height: 1;
     color: var(--color-accent-deep);
   }
 
-  /* Pastilla de acento con el icono en --dark encima: 11.2:1. Es el estado
-     que la banda de etapas reserva para el hover; aquí es el estado normal,
-     porque estas tarjetas no reaccionan al cursor y el color es lo único
-     que las separa de una caja blanca cualquiera. */
-  .categoria-insignia {
+  /* --- Nosotros: el texto se queda, las fotos pasan --- */
+
+  .nosotros-reja {
+    display: grid;
+    gap: var(--spacing-16);
+  }
+
+  @media (min-width: 768px) {
+    .nosotros-reja {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      gap: var(--spacing-24);
+    }
+
+    /* Fija mientras la columna de fotos recorre su alto. Hace falta
+       align-items:start para que la rejilla no estire la columna: un hijo
+       del alto de la fila no tiene por dónde desplazarse. */
+    .nosotros-texto {
+      position: sticky;
+      inset-block-start: calc(var(--altura-cabecera) + var(--spacing-8));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nosotros-texto {
+      position: static;
+    }
+  }
+}
+
+/* =========================================================================
+   Explorador de servicios
+
+   Cuatro nombres en una columna y un panel al lado que cambia con el que se
+   esté recorriendo. Sustituye a cuatro tarjetas iguales en fila, que era la
+   retícula por defecto de cualquier plantilla y no destacaba ninguna.
+
+   En móvil no hay cursor que recorrer, así que el mismo árbol se pinta como
+   acordeón: cada nombre despliega sus frentes debajo. El panel de fotografía
+   no se carga ahí —«sizes» lo deja en 1px— porque no se ve.
+   ========================================================================= */
+
+@layer components {
+  .servicios-explorador {
+    display: grid;
+    gap: var(--spacing-12);
+  }
+
+  @media (min-width: 1024px) {
+    .servicios-explorador {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      gap: var(--spacing-16);
+    }
+  }
+
+  /* --- La columna de nombres --- */
+
+  .servicio-fila {
+    border-block-start: 1px solid var(--color-line);
+  }
+
+  .servicio-fila:last-child {
+    border-block-end: 1px solid var(--color-line);
+  }
+
+  .servicio-disparador {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-6);
+    width: 100%;
+    padding-block: var(--spacing-6);
+    text-align: start;
+  }
+
+  .servicio-numero {
+    flex: none;
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    transition: color var(--duracion-micro) var(--ease-base);
+  }
+
+  /* El nombre es el elemento con peso de la fila: a tamaño de titular, la
+     lista se lee como un índice y no como un menú. */
+  .servicio-nombre {
+    flex: 1;
+    font-family: var(--font-titulo);
+    font-size: var(--text-xl);
+    font-weight: var(--peso-titulo);
+    line-height: 1.15;
+    color: var(--color-ink);
+    transition: color var(--duracion-micro) var(--ease-base);
+  }
+
+  @media (min-width: 768px) {
+    .servicio-nombre {
+      font-size: var(--text-2xl);
+    }
+  }
+
+  .servicio-insignia {
     display: grid;
     place-items: center;
     flex: none;
     width: var(--spacing-12);
     height: var(--spacing-12);
+    border: 1px solid var(--color-line-strong);
     border-radius: var(--radius-pill);
+    color: var(--color-ink-muted);
+    transition:
+      background-color var(--duracion-micro) var(--ease-base),
+      border-color var(--duracion-micro) var(--ease-base),
+      color var(--duracion-micro) var(--ease-base),
+      scale var(--duracion-corta) var(--ease-base);
+  }
+
+  /* La fila activa: numeral y nombre toman el acento y la insignia se
+     rellena. Es el único cambio de color de la lista, así que dice sin
+     ambigüedad cuál se está mirando. */
+  .servicio-fila[data-abierta] .servicio-numero,
+  .servicio-fila[data-abierta] .servicio-nombre {
+    color: var(--color-accent-deep);
+  }
+
+  .servicio-fila[data-abierta] .servicio-insignia {
+    border-color: var(--color-accent);
     background-color: var(--color-accent);
     color: var(--color-dark);
+    scale: 1.06;
   }
 
-  /* Dos líneas de alto mínimo desde que hay dos columnas: los títulos miden
-     una o dos según el ancho, y sin esto la primera fila de frentes de una
-     tarjeta de título corto subía y quedaba desalineada de la de su pareja
-     de fila. */
-  .categoria-titulo {
-    margin-block-start: var(--spacing-8);
-    font-size: var(--text-xl);
-    color: var(--color-ink);
+  /* --- El detalle: acordeón hasta lg, y de ahí en adelante al panel --- */
+
+  .servicio-detalle {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--duracion-corta) var(--ease-base);
   }
 
-  @media (min-width: 768px) {
-    .categoria-titulo {
-      /* 2 líneas: el interlineado de --text-xl y --text-2xl es 1.2. */
-      min-height: 2.4em;
-      font-size: var(--text-2xl);
+  .servicio-fila[data-abierta] .servicio-detalle {
+    grid-template-rows: 1fr;
+  }
+
+  .servicio-frentes {
+    overflow: hidden;
+  }
+
+  .servicio-frente {
+    padding-block: var(--spacing-2);
+    padding-inline-start: calc(var(--spacing-6) + 2ch);
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+  }
+
+  .servicio-fila[data-abierta] .servicio-frentes {
+    padding-block-end: var(--spacing-6);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .servicio-detalle {
+      transition: none;
     }
   }
 
-  /* Los frentes, en filas con regla. `flex: 1` en la lista y en cada fila
-     reparte el alto sobrante de la tarjeta entre las filas que haya: la
-     categoría de tres frentes respira más que la de cinco, en vez de dejar
-     un hueco al pie. Con 3 y 5 frentes ese hueco era de 111 px. */
-  .categoria-items {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    margin-block-start: var(--spacing-8);
+  /* Desde lg los frentes viven en el panel, no bajo el nombre. */
+  @media (min-width: 1024px) {
+    .servicio-detalle {
+      display: none;
+    }
   }
 
-  .categoria-item {
+  /* --- El panel --- */
+
+  .servicios-panel {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .servicios-panel {
+      position: sticky;
+      inset-block-start: calc(var(--altura-cabecera) + var(--spacing-8));
+      display: block;
+      overflow: hidden;
+      aspect-ratio: 4 / 5;
+      border-radius: var(--radius-lg);
+      background-color: var(--color-dark);
+    }
+  }
+
+  .servicios-panel-capa {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    /* Escala de reposo: la capa que entra afloja hasta 1 y la que sale se
+       queda quieta, así el cambio se lee como un fundido con profundidad y
+       no como un corte. */
+    scale: 1.06;
+    transition:
+      opacity var(--duracion-entrada) var(--ease-base),
+      scale var(--duracion-imagen) var(--ease-base);
+  }
+
+  .servicios-panel-capa[data-activa] {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .servicios-panel-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Velo para que los frentes se lean sobre cualquier fotografía. */
+  .servicios-panel-frentes {
+    position: absolute;
+    inset: 0;
     display: flex;
-    flex: 1;
-    align-items: center;
-    /* Suelo de la fila: con pocas filas el reparto las estira, pero con
-       muchas no pueden encogerse por debajo de lo que pide el texto. */
-    min-height: var(--area-tactil);
+    align-items: flex-end;
+    padding: var(--spacing-12);
+    background-image: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-velo) 88%, transparent) 0%,
+      color-mix(in srgb, var(--color-velo) 60%, transparent) 42%,
+      transparent 78%
+    );
+  }
+
+  .servicios-panel-lista {
+    position: absolute;
+    inset-inline: var(--spacing-12);
+    inset-block-end: var(--spacing-12);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duracion-micro) var(--ease-base);
+  }
+
+  .servicios-panel-lista[data-activa] {
+    opacity: 1;
+  }
+
+  .servicios-panel-frente {
     padding-block: var(--spacing-3);
-    border-block-start: 1px solid var(--color-line);
-    color: var(--color-ink);
+    border-block-start: 1px solid var(--color-line-invert);
+    font-size: var(--text-base);
+    color: var(--color-ink-invert);
   }
 
-  /* La norma que respalda un frente: debajo del nombre, en pequeño y sin
-     competir con él. Es la misma forma en que el sitio cita sus fuentes. */
+  /* Los frentes entran escalonados cuando su categoría se activa: es lo que
+     hace que el cambio se note como una respuesta al cursor. */
+  @media (prefers-reduced-motion: no-preference) {
+    .servicios-panel-lista[data-activa] .servicios-panel-frente {
+      animation: entrada-texto var(--duracion-entrada) var(--ease-base) both;
+      animation-delay: calc(var(--indice) * var(--stagger-grupo));
+    }
+  }
+
+  .servicios-panel-frente .categoria-nota {
+    display: block;
+    margin-block-start: var(--spacing-1);
+    font-size: var(--text-xs);
+    color: var(--color-ink-invert-muted);
+  }
+
   .categoria-nota {
     display: block;
     margin-block-start: var(--spacing-1);
@@ -2272,119 +2512,248 @@
 }
 
 /* =========================================================================
-   Ficha técnica de proyecto
+   Índice de proyectos
 
-   La misma pieza en dos sitios: tres en resumen en la portada y las seis
-   completas en /proyectos. Cambia el recorte de datos y la dirección de la
-   caja —en columna dentro de una rejilla de tres, en fila a partir de md en
-   la página—, no el lenguaje.
+   Seis filas con lo justo para elegir, y la ficha entera desplegándose en su
+   sitio. Sustituye a tres tarjetas de resumen en la portada más una página
+   aparte con las seis: el cliente pidió que la información esencial no
+   dependa de irse a otro sitio.
 
-   No hay levantamiento al pasar el cursor ni borde que se enciende: la
-   tarjeta no es el disparador. Lo que sí es enlace, en la portada, es el
-   «ver la ficha» del pie, y lleva a esta misma obra dentro de la página.
+   Cerrado ocupa seis renglones. Es lo que permite meter seis fichas técnicas
+   en la portada sin que la portada se vuelva interminable.
    ========================================================================= */
 
 @layer components {
-  .ficha-proyecto {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-paper);
+  .proyecto-fila {
+    position: relative;
   }
 
-  .ficha-proyecto-marco {
+  .proyecto-caja {
     position: relative;
+    border-block-start: 1px solid var(--color-line);
+    transition: border-color var(--duracion-micro) var(--ease-base);
+  }
+
+  .indice-proyectos > .proyecto-fila:last-child .proyecto-caja {
+    border-block-end: 1px solid var(--color-line);
+  }
+
+  .proyecto-caja[data-abierto] {
+    border-block-start-color: var(--color-accent);
+  }
+
+  /* Resplandor que sigue al puntero. Las coordenadas las publica «Cursor»
+     sobre la fila; sin cursor fino nunca se definen y el degradado no se
+     pinta, que es justo lo que se quiere con el dedo. */
+  .proyecto-caja::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      36rem circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+      color-mix(in srgb, var(--color-accent) 12%, transparent),
+      transparent 60%
+    );
+    transition: opacity var(--duracion-corta) var(--ease-base);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .proyecto-fila:hover .proyecto-caja::before {
+      opacity: 1;
+    }
+  }
+
+  .proyecto-disparador {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-6);
+    width: 100%;
+    padding-block: var(--spacing-8);
+    text-align: start;
+  }
+
+  .proyecto-numero {
     flex: none;
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+    transition: color var(--duracion-micro) var(--ease-base);
+  }
+
+  .proyecto-caja[data-abierto] .proyecto-numero,
+  .proyecto-fila:hover .proyecto-numero {
+    color: var(--color-accent-deep);
+  }
+
+  .proyecto-titular {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .proyecto-titulo {
+    display: block;
+    font-family: var(--font-titulo);
+    font-size: var(--text-xl);
+    font-weight: var(--peso-titulo);
+    line-height: 1.15;
+    color: var(--color-ink);
+  }
+
+  @media (min-width: 768px) {
+    .proyecto-titulo {
+      font-size: var(--text-2xl);
+    }
+  }
+
+  .proyecto-resumen {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-3);
+    margin-block-start: var(--spacing-2);
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+  }
+
+  .proyecto-punto {
+    width: 3px;
+    height: 3px;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-line-strong);
+  }
+
+  /* Estado: píldora de contorno, y en acento cuando el contrato sigue
+     abierto. Es el único dato de la fila que cambia de color. */
+  .proyecto-estado {
+    flex: none;
+    align-self: flex-start;
+    padding: var(--spacing-1) var(--spacing-3);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-etiqueta);
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .proyecto-estado[data-estado="en-ejecucion"] {
+    border-color: var(--color-accent);
+    color: var(--color-accent-deep);
+  }
+
+  @media (max-width: 767px) {
+    .proyecto-estado {
+      display: none;
+    }
+  }
+
+  /* El signo: de + a −, solo con transform. */
+  .proyecto-signo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--spacing-12);
+    height: var(--spacing-12);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--color-ink);
+    transition:
+      border-color var(--duracion-micro) var(--ease-base),
+      background-color var(--duracion-micro) var(--ease-base),
+      color var(--duracion-micro) var(--ease-base);
+  }
+
+  .proyecto-signo::before,
+  .proyecto-signo::after {
+    content: "";
+    position: absolute;
+    inset-inline: var(--spacing-3);
+    border-block-start: 1px solid currentColor;
+  }
+
+  .proyecto-signo::after {
+    rotate: 90deg;
+    transition: rotate var(--duracion-corta) var(--ease-base);
+  }
+
+  .proyecto-caja[data-abierto] .proyecto-signo::after {
+    rotate: 0deg;
+  }
+
+  .proyecto-caja[data-abierto] .proyecto-signo,
+  .proyecto-fila:hover .proyecto-signo {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-dark);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .proyecto-signo::after {
+      transition: none;
+    }
+  }
+
+  /* --- El panel desplegado --- */
+
+  .proyecto-panel-cuerpo {
+    display: grid;
+    gap: var(--spacing-8);
+    padding-block-end: var(--spacing-12);
+  }
+
+  @media (min-width: 1024px) {
+    .proyecto-panel-cuerpo {
+      grid-template-columns: 4fr 5fr;
+      gap: var(--spacing-12);
+      /* Alineado con el titular, no con el numeral: la ficha cuelga del
+         nombre del proyecto. */
+      padding-inline-start: calc(var(--spacing-6) + 3ch);
+    }
+  }
+
+  .proyecto-marco {
     overflow: hidden;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
     background-color: var(--color-paper-alt);
   }
 
-  /* En la tarjeta del home la foto es una banda, no un bloque: a 16/9 dentro
-     de una columna de un tercio se comía 259 px antes de que empezara la
-     ficha, que es lo que se viene a leer. */
-  .ficha-proyecto:not([id]) .ficha-proyecto-marco {
-    aspect-ratio: 5 / 2;
-  }
-
-  .ficha-proyecto-imagen {
+  .proyecto-imagen {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  /* Píldora de estado sobre la foto. Va en --dark y no en acento: encima de
-     una fotografía el acento pierde contraste con el verde del campo, y el
-     estado tiene que leerse siempre. */
-  .ficha-proyecto-estado {
-    position: absolute;
-    inset-block-start: var(--spacing-4);
-    inset-inline-start: var(--spacing-4);
-    padding: var(--spacing-1) var(--spacing-3);
-    border-radius: var(--radius-pill);
-    background-color: var(--color-dark);
-    font-family: var(--font-cuerpo);
-    font-size: var(--text-xs);
-    font-weight: 500;
-    letter-spacing: var(--tracking-etiqueta);
-    text-transform: uppercase;
-    color: var(--color-ink-invert);
-  }
-
-  .ficha-proyecto-cuerpo {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    padding: var(--spacing-8);
-  }
-
-  /* Los datos: dos columnas desde sm. En una sola, cuatro pares rótulo-dato
-     seguidos se leían como una lista de la compra. */
-  .ficha-proyecto-datos {
+  .proyecto-datos {
     display: grid;
-    gap: var(--spacing-4) var(--spacing-8);
-    margin-block-start: var(--spacing-6);
-    padding-block-start: var(--spacing-6);
-    border-block-start: 1px solid var(--color-line);
+    gap: var(--spacing-4);
   }
 
   @media (min-width: 640px) {
-    .ficha-proyecto-datos {
+    .proyecto-datos {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-4) var(--spacing-8);
     }
   }
 
-  .ficha-proyecto-alcance {
+  .proyecto-alcance {
     margin-block-start: var(--spacing-6);
     padding-block-start: var(--spacing-6);
     border-block-start: 1px solid var(--color-line);
   }
 
-  /* En la tarjeta del home el alcance es un adelanto, no el texto: se corta
-     en cuatro líneas y la ficha entera queda a un clic, en el enlace que va
-     justo debajo. Sin el corte, la sección añadía 3.500 px al home en móvil
-     y las tres tarjetas se descuadraban entre sí en escritorio. */
-  .ficha-proyecto:not([id]) .ficha-proyecto-alcance p:last-child {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
-    overflow: hidden;
-  }
-
-  .ficha-proyecto-etiquetas {
+  .proyecto-etiquetas {
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-2);
     margin-block-start: var(--spacing-6);
   }
 
-  /* Píldora de contorno, no de relleno: son cuatro o cinco por ficha y en
-     relleno de acento competirían con el propio título. */
-  .ficha-proyecto-etiqueta {
+  .proyecto-etiqueta {
     padding: var(--spacing-1) var(--spacing-3);
     border: 1px solid var(--color-line-strong);
     border-radius: var(--radius-pill);
@@ -2392,52 +2761,22 @@
     color: var(--color-ink-muted);
   }
 
-  /* El enlace se pega al fondo para que las tres tarjetas del home lo
-     alineen entre sí aunque el alcance mida distinto en cada una. */
-  .ficha-proyecto-pie {
-    margin-block-start: auto;
-    padding-block-start: var(--spacing-8);
-  }
-
-  /* --- La caja en fila: foto a un lado y ficha al otro --- */
-
-  /* La variante completa, en la página, desde md. */
-  @media (min-width: 768px) {
-    .ficha-proyecto[id] {
-      flex-direction: row;
+  /* La ficha entra por partes al desplegarse: foto, datos y etiquetas en
+     ese orden. Es lo que hace que abrir se sienta como abrir y no como un
+     salto de layout. */
+  @media (prefers-reduced-motion: no-preference) {
+    .proyecto-panel-cuerpo > * {
+      animation: entrada-texto var(--duracion-entrada) var(--ease-base) both;
     }
 
-    .ficha-proyecto[id] > .ficha-proyecto-marco {
-      width: 38%;
-      aspect-ratio: auto;
+    .proyecto-panel-cuerpo > *:nth-child(2) {
+      animation-delay: var(--stagger-grupo);
     }
 
-    .ficha-proyecto[id] > .ficha-proyecto-cuerpo {
-      padding: var(--spacing-12);
+    .proyecto-etiqueta {
+      animation: entrada-escala var(--duracion-corta) var(--ease-base) both;
+      animation-delay: calc(var(--stagger-grupo) * 2 + var(--indice) * 40ms);
     }
-  }
-
-  /* Y la del home en la franja de tablet, donde va a una sola columna: a
-     ancho completo y en columna, la foto quedaba como una valla publicitaria
-     de 288 px sobre una ficha corta. */
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .ficha-proyecto:not([id]) {
-      flex-direction: row;
-    }
-
-    .ficha-proyecto:not([id]) > .ficha-proyecto-marco {
-      width: 38%;
-      aspect-ratio: auto;
-    }
-
-    .ficha-proyecto:not([id]) > .ficha-proyecto-cuerpo {
-      padding: var(--spacing-12);
-    }
-  }
-
-  /* El ancla queda debajo de la cabecera flotante al llegar desde el home. */
-  .ficha-proyecto[id] {
-    scroll-margin-block-start: calc(var(--altura-cabecera) + var(--spacing-6));
   }
 }
 

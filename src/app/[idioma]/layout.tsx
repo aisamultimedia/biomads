@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Newsreader } from "next/font/google";
 import localFont from "next/font/local";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -10,29 +9,49 @@ import { diccionario, IDIOMAS, comoIdioma } from "@/idioma";
 import { sitioUrl } from "@/lib/site";
 import "../globals.css";
 
-/* Títulos — variable. */
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  /* Sin el eje óptico: Newsreader pasa de 129 kB a 57 kB. Es la fuente del
-     título, o sea del elemento que marca el LCP, y el ajuste óptico apenas
-     se nota en el rango que usamos (21-65px, porque el cuerpo es Switzer).
-     72 kB por un matiz invisible no se pagan. */
+/**
+ * Las tres fuentes se sirven desde el propio proyecto.
+ *
+ * Newsreader y JetBrains Mono se pedían a `next/font/google`, que las
+ * descargaba en tiempo de compilación. Dejó de funcionar: el CSS que Google
+ * sirve ahora trae varias fuentes por cara y el reemplazador de Turbopack
+ * solo admite una —«next/font/google queries have exactly one entry»—, así
+ * que el build entero fallaba. Es un fallo del andamiaje, no del sitio, y
+ * habría roto también el despliegue.
+ *
+ * Alojarlas arregla eso y de paso quita una dependencia de red del build,
+ * una petición a un tercero en cada visita y el riesgo de que la tipografía
+ * del sitio cambie porque Google decida servir otra cosa. Es lo que este
+ * proyecto ya hacía con Switzer desde el principio.
+ *
+ * De cada una se guarda solo el subconjunto latino: es el que usa el sitio,
+ * en español y en inglés, y pesa la mitad que el archivo completo.
+ */
+
+/* Títulos. Variable de 200 a 800, sin el eje óptico: son 57 kB en vez de
+   129, y el ajuste apenas se nota en el rango que usamos (21-65 px). */
+const newsreader = localFont({
+  src: "../../fonts/Newsreader-Variable.woff2",
+  weight: "200 800",
+  style: "normal",
   display: "swap",
   variable: "--fuente-newsreader",
+  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
-/* Datos, duraciones y etiquetas de ficha. */
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  // Instancias estáticas en vez de la variable completa: solo se usan dos
-  // pesos —400 en cifras, 500 en las etiquetas— y el archivo variable pesa
-  // 129 kB, más que Newsreader y Switzer juntas.
-  weight: ["400", "500"],
+/* Datos, duraciones y etiquetas de ficha. El subconjunto latino del archivo
+   variable son 31 kB, menos que las dos instancias estáticas que se servían
+   antes. */
+const jetbrainsMono = localFont({
+  src: "../../fonts/JetBrainsMono-Variable.woff2",
+  weight: "400 500",
+  style: "normal",
   display: "swap",
   variable: "--fuente-jetbrains",
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
 });
 
-/* Cuerpo e interfaz — variable, descargada de fontshare.com. */
+/* Cuerpo e interfaz. */
 const switzer = localFont({
   src: "../../fonts/Switzer-Variable.woff2",
   weight: "100 900",
