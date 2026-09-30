@@ -210,7 +210,7 @@ export const en: Diccionario = {
     rotulo: "Featured projects",
     titulo: "Work that makes a difference",
     entradilla:
-      "Projects we have delivered, each with its full technical record. Open them right here, without leaving the page.",
+      "Projects we have delivered, each with its full technical record.",
     cifras: {
       fichas: "Projects on record",
       hectareas: "Hectares in compensation",
