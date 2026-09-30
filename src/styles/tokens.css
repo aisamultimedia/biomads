@@ -245,7 +245,6 @@
   --duracion-regla:    800ms; /* trazo de reglas */
   --duracion-imagen:  1000ms; /* máscara y escala de fotografías */
   --duracion-pagina:   250ms; /* entrada de página; la salida dura 150ms */
-  --duracion-ambiente:  90s;  /* deriva del fondo de contornos */
   --duracion-flotar:    12s;  /* balanceo de las anotaciones del hero */
 
   --stagger-titulo:  80ms; /* líneas del h1 */

@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import { Icono } from "@/components/ui/Icono";
-import { Contornos } from "@/components/ui/Contornos";
 import { etapasEstudio } from "@/content/institucional";
 import { diccionario, type Idioma } from "@/idioma";
 
@@ -33,10 +32,8 @@ export function EtapasEstudio({ idioma }: { idioma: Idioma }) {
   const t = diccionario(idioma);
 
   return (
-    <section id="proceso" className="etapas-banda superficie-oscura bg-dark text-ink-invert">
-      <Contornos variante="seccion" className="etapas-contornos" />
-
-      <div className="relative mx-auto w-full max-w-ancho px-6 py-24 md:py-32">
+    <section id="proceso" className="superficie-oscura bg-dark text-ink-invert">
+      <div className="mx-auto w-full max-w-ancho px-6 py-24 md:py-32">
         {/* Título de verdad, no el rótulo en versalitas que había antes.
             Lo que la banda enuncia dejó de ser una categoría —«Estudios
             ambientales»— y es ahora el método, así que se pinta con el

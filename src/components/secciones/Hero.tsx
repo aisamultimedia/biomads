@@ -4,7 +4,6 @@ import { Enlace } from "@/components/ui/Enlace";
 import { Entrada } from "@/components/motion/Entrada";
 import { TituloPorLineas } from "@/components/motion/TituloPorLineas";
 import { VideoFondo } from "./VideoFondo";
-import { Contornos } from "@/components/ui/Contornos";
 import { Cursor } from "@/components/motion/Cursor";
 import { regiones } from "@/content/respaldo";
 import type { CSSProperties } from "react";
@@ -76,12 +75,6 @@ export function Hero({ idioma }: { idioma: Idioma }) {
         textos={{ pausar: t.hero.pausarVideo, reanudar: t.hero.reanudarVideo }}
       />
       <div className="hero-velo" aria-hidden="true" />
-
-      {/* Curvas de nivel sobre el video: el motivo de la casa entra en lo
-          primero que se ve. Muy tenues —es un grabado sobre la imagen— y a
-          la deriva, así que el hero nunca está del todo quieto aunque el
-          video esté en pausa. */}
-      <Contornos className="hero-contornos" />
 
       {/* El contenido se aleja y se desvanece al desplazar: no es un
           adorno, es lo que dice que esta pantalla se deja atrás. Lo lleva

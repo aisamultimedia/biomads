@@ -457,52 +457,6 @@
   }
 
   /* -----------------------------------------------------------------------
-     Fondo de curvas de nivel del hero
-
-     Solo se anima transform. El bucle es continuo, así que va en linear:
-     una curva de aceleración haría latir un movimiento infinito. Se pausa
-     cuando el hero sale de pantalla.
-     ----------------------------------------------------------------------- */
-
-  .fondo-contornos {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    color: var(--color-line);
-  }
-
-  /* Cada capa mide el doble de ancho y lleva el patrón repetido, así que
-     desplazarla la mitad devuelve el dibujo a su punto de partida. */
-  .capa-contornos {
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 200%;
-    height: 100%;
-    animation: deriva-contornos var(--duracion-ambiente) linear infinite;
-    will-change: transform;
-  }
-
-  .capa-contornos > svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  .capa-contornos--rapida {
-    animation-duration: calc(var(--duracion-ambiente) * 0.62);
-    opacity: 0.5;
-  }
-
-  .fondo-contornos[data-pausado] .capa-contornos {
-    animation-play-state: paused;
-  }
-
-  @keyframes deriva-contornos {
-    from { transform: translateX(-50%); }
-    to   { transform: translateX(0); }
-  }
-
-  /* -----------------------------------------------------------------------
      Anotaciones flotantes sobre la fotografía del hero.
      La capa exterior entra (data-entrada="anotacion"); esta, interior,
      flota. Dos capas porque ambas animaciones tocan transform.
@@ -833,7 +787,6 @@
   }
 
   .indicador-carga,
-  .capa-contornos,
   .etiqueta-flotante {
     animation: none !important;
   }
@@ -2169,13 +2122,6 @@
      Hero
      --------------------------------------------------------------------- */
 
-  /* Las curvas sobre el video, muy por debajo del velo: se intuyen en los
-     claros y desaparecen en las sombras. */
-  .hero-contornos {
-    z-index: -1;
-    color: color-mix(in srgb, var(--color-ink-invert) 14%, transparent);
-  }
-
   /* El bloque de texto se inclina hacia el cursor. Las variables las
      publica «Cursor»; sin puntero fino nunca se definen y el translate se
      queda en cero, que es lo que debe pasar con el dedo. */
@@ -2207,15 +2153,6 @@
   /* ---------------------------------------------------------------------
      Método: las cinco etapas se encienden al pasar
      --------------------------------------------------------------------- */
-
-  .etapas-banda {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .etapas-contornos {
-    color: color-mix(in srgb, var(--color-ink-invert) 10%, transparent);
-  }
 
   /* El numeral a tamaño de titular. Antes era una etiqueta de 12 px que no
      ordenaba nada; ahora es lo que lleva el ojo de una etapa a la
@@ -2526,24 +2463,6 @@
   .coordenada--invertida::before,
   .coordenada--invertida::after {
     color: var(--color-accent);
-  }
-
-  /* --- Curvas de nivel de fondo --- */
-
-  .seccion-contornos {
-    overflow: hidden;
-  }
-
-  .seccion-contornos > .mx-auto {
-    position: relative;
-    z-index: 1;
-  }
-
-  .fondo-contornos--seccion {
-    /* Muy por debajo del contraste del texto: es un grabado, no una imagen.
-       Con --color-line al 55 % se intuye y no se lee. */
-    color: color-mix(in srgb, var(--color-line-strong) 55%, transparent);
-    mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
   }
 
   /* --- Las tres cifras de proyectos --- */

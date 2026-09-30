@@ -2,7 +2,6 @@ import { Boton } from "@/components/ui/Boton";
 import { Enlace } from "@/components/ui/Enlace";
 import { Icono } from "@/components/ui/Icono";
 import { Seccion } from "@/components/ui/Seccion";
-import { Contornos } from "@/components/ui/Contornos";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealGroup } from "@/components/motion/RevealGroup";
 import { Cursor } from "@/components/motion/Cursor";
@@ -113,18 +112,9 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
 
       {/* ================================================================
           Servicios: cuatro frentes que se recorren, con todo lo que cubre
-          cada uno a la vista. Las curvas de nivel del fondo son el motivo
-          de la casa —territorio medido— y no una textura cualquiera.
+          cada uno a la vista.
           ================================================================ */}
-      <Seccion
-        id="servicios"
-        alterna
-        className="seccion-contornos"
-        rotulo={t.servicios.rotulo}
-        titulo={t.servicios.titulo}
-      >
-        <Contornos variante="seccion" />
-
+      <Seccion id="servicios" alterna rotulo={t.servicios.rotulo} titulo={t.servicios.titulo}>
         <Servicios
           categorias={categoriasServicio}
           imagenes={fotosServicio}
