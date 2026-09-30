@@ -2154,6 +2154,340 @@
 }
 
 /* =========================================================================
+   Movimiento del rediseño
+
+   Todo lo que se mueve aquí responde a algo: al scroll, al cursor o a un
+   clic. Nada late por su cuenta salvo las curvas de nivel, que son el fondo
+   y por eso van a ritmo de ambiente.
+
+   Regla de la casa, sin excepciones: solo se animan transform, opacity y
+   color. Nada que dispare layout.
+   ========================================================================= */
+
+@layer components {
+  /* ---------------------------------------------------------------------
+     Hero
+     --------------------------------------------------------------------- */
+
+  /* Las curvas sobre el video, muy por debajo del velo: se intuyen en los
+     claros y desaparecen en las sombras. */
+  .hero-contornos {
+    z-index: -1;
+    color: color-mix(in srgb, var(--color-ink-invert) 14%, transparent);
+  }
+
+  /* El bloque de texto se inclina hacia el cursor. Las variables las
+     publica «Cursor»; sin puntero fino nunca se definen y el translate se
+     queda en cero, que es lo que debe pasar con el dedo. */
+  .hero-contenido {
+    translate: var(--iman-x, 0) var(--iman-y, 0);
+    transition: translate var(--duracion-corta) var(--ease-base);
+  }
+
+  /* Y se aleja al desplazar: el contenido sube un poco más rápido que la
+     página y se apaga. Es lo que dice «esta pantalla se deja atrás» sin
+     necesidad de una flecha que lo anuncie. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-contenido {
+        animation: alejar-hero linear both;
+        animation-timeline: view();
+        animation-range: exit-crossing 0% exit-crossing 100%;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-contenido {
+      translate: none;
+      transition: none;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     Método: las cinco etapas se encienden al pasar
+     --------------------------------------------------------------------- */
+
+  .etapas-banda {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .etapas-contornos {
+    color: color-mix(in srgb, var(--color-ink-invert) 10%, transparent);
+  }
+
+  /* El numeral a tamaño de titular. Antes era una etiqueta de 12 px que no
+     ordenaba nada; ahora es lo que lleva el ojo de una etapa a la
+     siguiente. */
+  /* El color de reposo es el encendido, no el apagado: quien pide menos
+     movimiento no ve la animación, y lo que tiene que quedarle es el estado
+     final y legible, no el inicial y atenuado. La animación se define con
+     «from», así que arranca en apagado y termina donde ya estaba. */
+  .etapa-estudio-numero {
+    display: block;
+    font-size: var(--text-2xl);
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .etapa-estudio-nombre {
+    display: block;
+    margin-block-start: var(--spacing-3);
+    font-size: var(--text-lg);
+    color: var(--color-ink-invert);
+  }
+
+  @media (min-width: 768px) {
+    .etapa-estudio-nombre {
+      font-size: var(--text-base);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .etapa-estudio-nombre {
+      font-size: var(--text-lg);
+    }
+  }
+
+  /* Cada etapa se enciende en su tramo del recorrido de la banda: el
+     numeral toma el acento pleno, el nombre pasa a blanco y el círculo se
+     rellena. Van escalonadas por «--indice», así que se encienden en orden
+     de la primera a la quinta mientras la banda cruza la pantalla. Es el
+     relato del método contado con el scroll, sin fijar la sección ni
+     robarle dos pantallas a la página. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .etapa-estudio-numero,
+      .etapa-estudio-icono {
+        animation: encender-etapa linear both;
+        animation-timeline: view();
+        animation-range-start: cover calc(20% + var(--indice) * 8%);
+        animation-range-end: cover calc(34% + var(--indice) * 8%);
+      }
+
+      .etapa-estudio-nombre {
+        animation: encender-nombre linear both;
+        animation-timeline: view();
+        animation-range-start: cover calc(20% + var(--indice) * 8%);
+        animation-range-end: cover calc(34% + var(--indice) * 8%);
+      }
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     Marco institucional
+     --------------------------------------------------------------------- */
+
+  .marco-declaraciones {
+    display: grid;
+    align-items: stretch;
+    gap: var(--spacing-6);
+  }
+
+  @media (min-width: 900px) {
+    .marco-declaraciones {
+      /* Asimétrica: la visión ocupa más porque es la que mira lejos. */
+      grid-template-columns: 1fr 1.15fr;
+    }
+  }
+
+  .marco-declaracion-rotulo {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-4);
+  }
+
+  .marco-declaracion-numero {
+    font-size: var(--text-xl);
+    line-height: 1;
+    color: color-mix(in srgb, var(--color-ocre-claro) 55%, transparent);
+  }
+
+  /* Resplandor que sigue al cursor dentro de la tarjeta ocre. */
+  .tarjeta-institucional {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tarjeta-institucional::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      28rem circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+      color-mix(in srgb, var(--color-ocre-claro) 18%, transparent),
+      transparent 62%
+    );
+    transition: opacity var(--duracion-corta) var(--ease-base);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .tarjeta-institucional:hover::after {
+      opacity: 1;
+    }
+  }
+
+  /* --- Valores --- */
+
+  .valor-caja {
+    position: relative;
+    display: block;
+    padding-block-start: var(--spacing-4);
+  }
+
+  .valor-caja::before {
+    content: "";
+    position: absolute;
+    inset: calc(var(--spacing-4) * -1);
+    opacity: 0;
+    pointer-events: none;
+    border-radius: var(--radius-md);
+    background: radial-gradient(
+      18rem circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+      color-mix(in srgb, var(--color-accent) 14%, transparent),
+      transparent 65%
+    );
+    transition: opacity var(--duracion-corta) var(--ease-base);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .valor:hover .valor-caja::before {
+      opacity: 1;
+    }
+  }
+
+  /* El numeral del valor va al margen, como la anotación de una ficha. */
+  .valor-numero {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    transition: color var(--duracion-micro) var(--ease-base);
+  }
+
+  .valor:hover .valor-numero {
+    color: var(--color-accent-deep);
+  }
+
+  /* El icono se rellena al pasar el cursor, como las insignias de
+     servicios: los dos juegos de iconos del sitio responden igual. */
+  .valor-icono {
+    position: relative;
+  }
+
+  .valor:hover .valor-icono {
+    color: var(--color-accent-deep);
+  }
+
+  /* --- Política --- */
+
+  .politica-titular {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--spacing-2) var(--spacing-4);
+  }
+
+  .politica-normas {
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+  }
+
+  /* Los compromisos entran escalonados al abrir el desplegable. */
+  @media (prefers-reduced-motion: no-preference) {
+    .politica[open] .compromiso {
+      animation: entrada-texto var(--duracion-entrada) var(--ease-base) both;
+      animation-delay: calc(var(--indice) * var(--stagger-grupo));
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     Botones: barrido de acento al pasar el cursor
+     --------------------------------------------------------------------- */
+
+  /* El botón ya sube 2px al hover. Se le añade un barrido que entra por el
+     lado por el que se entra —lo dice «--cursor-x»— y el empuje magnético
+     cuando va envuelto en «Cursor». Todo con transform y opacity. */
+  [data-cursor] > a,
+  [data-cursor] > button {
+    translate: var(--iman-x, 0) var(--iman-y, 0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-cursor] > a,
+    [data-cursor] > button {
+      translate: none;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     Galería: la imagen respira dentro de su marco
+     --------------------------------------------------------------------- */
+
+  /* La foto entra un punto más grande y afloja al llegar a su sitio, ligado
+     al recorrido de la pista. Con el cursor encima se acerca; ya había un
+     hover de escala y ahora además se desplaza hacia el puntero, así que la
+     foto se siente sujeta y no pegada. */
+  .galeria-marco {
+    position: relative;
+  }
+
+  .galeria-marco .galeria-imagen {
+    transition:
+      scale var(--duracion-imagen) var(--ease-base),
+      translate var(--duracion-imagen) var(--ease-base);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .galeria-marco:hover .galeria-imagen {
+      translate: calc((var(--cursor-x, 50%) - 50%) * 0.04)
+        calc((var(--cursor-y, 50%) - 50%) * 0.04);
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     Clientes
+     --------------------------------------------------------------------- */
+
+  /* El logo se levanta y el resto de la banda se apaga: dice cuál se está
+     mirando sin añadir ni un elemento. */
+  @media (hover: hover) and (pointer: fine) {
+    .logo-cliente {
+      transition:
+        translate var(--duracion-micro) var(--ease-base),
+        opacity var(--duracion-micro) var(--ease-base);
+    }
+
+    ul:has(.logo-cliente:hover) .logo-cliente:not(:hover) {
+      opacity: 0.4;
+    }
+  }
+}
+
+@keyframes alejar-hero {
+  to {
+    translate: 0 -12%;
+    opacity: 0;
+  }
+}
+
+@keyframes encender-etapa {
+  from {
+    color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  }
+}
+
+@keyframes encender-nombre {
+  from {
+    color: var(--color-ink-invert-muted);
+  }
+}
+
+/* =========================================================================
    Lenguaje de ficha de campo
 
    Coordenadas, cifras y curvas de nivel: lo que separa a esta empresa de
@@ -2181,6 +2515,17 @@
     content: "]";
     margin-inline-start: 0.35ch;
     color: var(--color-accent-deep);
+  }
+
+  /* Sobre superficie oscura: --accent-deep no se ve contra --dark, así que
+     los corchetes pasan al acento claro y el valor al gris invertido. */
+  .coordenada--invertida {
+    color: var(--color-ink-invert-muted);
+  }
+
+  .coordenada--invertida::before,
+  .coordenada--invertida::after {
+    color: var(--color-accent);
   }
 
   /* --- Curvas de nivel de fondo --- */

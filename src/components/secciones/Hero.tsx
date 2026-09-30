@@ -4,6 +4,8 @@ import { Enlace } from "@/components/ui/Enlace";
 import { Entrada } from "@/components/motion/Entrada";
 import { TituloPorLineas } from "@/components/motion/TituloPorLineas";
 import { VideoFondo } from "./VideoFondo";
+import { Contornos } from "@/components/ui/Contornos";
+import { Cursor } from "@/components/motion/Cursor";
 import { regiones } from "@/content/respaldo";
 import type { CSSProperties } from "react";
 import { diccionario, type Idioma } from "@/idioma";
@@ -47,7 +49,18 @@ export function Hero({ idioma }: { idioma: Idioma }) {
       mono: true,
     },
     { rotulo: t.hero.ficha.constituida, valor: String(empresa.constitucion), mono: true },
-    { rotulo: t.hero.ficha.sede, valor: empresa.sede, mono: false },
+    {
+      rotulo: t.hero.ficha.sede,
+      valor: (
+        <>
+          {empresa.sede}
+          <span className="dato coordenada coordenada--invertida mt-1 block">
+            {empresa.coordenadas}
+          </span>
+        </>
+      ),
+      mono: false,
+    },
     {
       rotulo: t.hero.ficha.regiones,
       valor: regiones.join(` ${t.unidades.y} `),
@@ -64,7 +77,19 @@ export function Hero({ idioma }: { idioma: Idioma }) {
       />
       <div className="hero-velo" aria-hidden="true" />
 
-      <div className="hero-contenido">
+      {/* Curvas de nivel sobre el video: el motivo de la casa entra en lo
+          primero que se ve. Muy tenues —es un grabado sobre la imagen— y a
+          la deriva, así que el hero nunca está del todo quieto aunque el
+          video esté en pausa. */}
+      <Contornos className="hero-contornos" />
+
+      {/* El contenido se aleja y se desvanece al desplazar: no es un
+          adorno, es lo que dice que esta pantalla se deja atrás. Lo lleva
+          `animation-timeline: view()` desde el CSS, sin JavaScript.
+
+          Y reacciona al cursor: el bloque entero se inclina unos píxeles
+          hacia el puntero. Con el dedo no pasa nada, que es lo correcto. */}
+      <Cursor intensidad={10} className="hero-contenido">
         <div className="mx-auto w-full max-w-ancho px-6">
           <Entrada
             as="p"
@@ -125,7 +150,7 @@ export function Hero({ idioma }: { idioma: Idioma }) {
             ))}
           </dl>
         </div>
-      </div>
+      </Cursor>
 
       {/* Enlace, no adorno: dice que hay más abajo y además lleva. */}
       {/* El rótulo va solo para lectores: escrito se leía como una fila
