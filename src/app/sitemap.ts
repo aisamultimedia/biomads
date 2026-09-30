@@ -10,13 +10,14 @@ import { sitioUrl } from "@/lib/site";
  * página en distintas lenguas y no contenido duplicado.
  *
  * La portada es una sola página con todo el recorrido, así que va primero y
- * con la prioridad más alta. Lo único aparte es la política de tratamiento
- * de datos.
+ * con la prioridad más alta. Aparte van la página de proyectos —seis fichas
+ * técnicas con cliente, periodo y la norma bajo la que se ejecutó cada una,
+ * que es el contenido por el que el sitio puede aparecer en una búsqueda
+ * técnica— y la política de tratamiento de datos.
  *
- * Aquí estuvieron `/proyectos`, la ficha de cada proyecto y las dos de
- * servicio. Salieron con sus secciones, por decisión del cliente. Sin
- * entrada en el mapa el buscador deja de pedirlas; las URL ya no existen y
- * responden 404, que es lo que corresponde cuando una página se retira.
+ * Las fichas de cada proyecto y las dos de servicio tuvieron aquí su
+ * entrada y salieron con sus secciones. Las URL ya no existen y responden
+ * 404, que es lo que corresponde cuando una página se retira.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = sitioUrl();
@@ -25,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   /** Rutas del sitio sin el prefijo de idioma, con su prioridad. */
   const rutas: readonly { ruta: string; prioridad: number }[] = [
     { ruta: "", prioridad: 1 },
+    { ruta: "/proyectos", prioridad: 0.8 },
     { ruta: "/privacidad", prioridad: 0.3 },
   ];
 

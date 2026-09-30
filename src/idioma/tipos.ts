@@ -46,6 +46,15 @@ export type ClaveEtapa =
   | "compensacion"
   | "seguimiento";
 
+/** Los seis proyectos con ficha técnica, en el orden del portafolio. */
+export type ClaveProyecto =
+  | "paga"
+  | "sat"
+  | "compensacion-biotica"
+  | "embellecimiento"
+  | "flora-epifita-quimbo"
+  | "fauna-solinter";
+
 /** Las cuatro categorías en que se organizan los servicios. */
 export type ClaveCategoriaServicio =
   | "biodiversidad"
@@ -59,6 +68,8 @@ export type ClaveCliente =
   | "grupo-energia-bogota";
 
 export type ClaveFoto =
+  | "campo-abierto"
+  | "individuos-en-hilera"
   | "cuadrilla-ladera"
   | "mantenimiento-individuo"
   | "control-fitosanitario"
@@ -105,6 +116,8 @@ export type Diccionario = {
     /** Plantilla para las páginas de detalle: "%s — BIOMADS". */
     plantillaTitulo: string;
     descripcionPortada: string;
+    tituloProyectos: string;
+    descripcionProyectos: string;
     tituloPrivacidad: string;
     descripcionPrivacidad: string;
   };
@@ -118,7 +131,7 @@ export type Diccionario = {
     irAlInicio: string;
     pieDePagina: string;
     volverArriba: string;
-    secciones: PorClave<"nosotros" | "servicios" | "contacto">;
+    secciones: PorClave<"nosotros" | "servicios" | "proyectos" | "contacto">;
     /** Rótulo del selector de idioma. */
     idioma: string;
   };
@@ -206,6 +219,52 @@ export type Diccionario = {
           /** Norma o marco que lo respalda. Opcional. */
           readonly nota?: string;
         }[];
+      }
+    >;
+  };
+
+  /**
+   * Proyectos con ficha técnica. La sección del home enseña tres; la página
+   * `/proyectos`, los seis.
+   */
+  proyectos: {
+    /** Rótulo y título de la sección del home. */
+    rotulo: string;
+    titulo: string;
+    entradilla: string;
+    /** Botón que lleva del home a la página. */
+    verTodos: string;
+    /** Enlace de cada tarjeta del home a su ficha en la página. */
+    verFicha: string;
+    /** Rótulo y título de la página, que no repiten los del home. */
+    indice: {
+      rotulo: string;
+      lineasTitulo: readonly string[];
+      entradilla: string;
+      volver: string;
+      /** Cierre de la página. */
+      siguienteTitulo: string;
+      siguienteTexto: string;
+    };
+    /** Los dos estados posibles. */
+    estados: PorClave<"en-ejecucion" | "ejecutado">;
+    /** Rótulos de las filas de la ficha. */
+    ficha: PorClave<"estado" | "cliente" | "periodo" | "sector" | "servicio" | "alcance">;
+    casos: PorClave<
+      ClaveProyecto,
+      {
+        readonly titulo: string;
+        /** Razón social completa. Va en la ficha de la página. */
+        readonly cliente: string;
+        /**
+         * Cómo se nombra en la tarjeta del home, donde la columna mide la
+         * tercera parte y la razón social entera rompía en cuatro líneas.
+         */
+        readonly clienteCorto: string;
+        readonly sector: string;
+        readonly servicio: string;
+        readonly alcance: string;
+        readonly etiquetas: readonly string[];
       }
     >;
   };
@@ -345,12 +404,10 @@ export type Diccionario = {
   /** Textos alternativos. Describen lo que se ve, no lo que se querría ver. */
   fotos: PorClave<ClaveFoto>;
 
-  /**
-   * Conectores que se interpolan con datos estructurales. `meses` vivía
-   * aquí y se fue con las fichas de servicio, que eran lo único que
-   * publicaba una duración.
-   */
+  /** Unidades y conectores que se interpolan con datos estructurales. */
   unidades: {
+    /** Duración contractual de un proyecto: "60 meses". */
+    meses: string;
     /** Conector de listas: "Antioquia y Huila". */
     y: string;
   };

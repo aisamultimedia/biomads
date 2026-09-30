@@ -2,12 +2,15 @@
 
 import type { CSSProperties } from "react";
 import { useSeccionActiva } from "@/hooks/useSeccionActiva";
-import type { Diccionario } from "@/idioma";
+import { useAncla } from "@/hooks/useAncla";
+import type { Diccionario, Idioma } from "@/idioma";
 import { navegacion, type ItemNav } from "@/lib/site";
 
 type Props = {
   /** Rótulos de sección. Es componente de cliente: el texto llega por props. */
   textos: Diccionario["nav"]["secciones"];
+  /** Para resolver el ancla desde fuera de la portada. */
+  idioma: Idioma;
   /** Ítems a mostrar. Por defecto los cuatro de la navegación. */
   items?: readonly ItemNav[];
   orientacion?: "horizontal" | "vertical";
@@ -26,6 +29,7 @@ type Props = {
 
 export function Nav({
   textos,
+  idioma,
   items = navegacion,
   orientacion = "horizontal",
   tamano = "normal",
@@ -34,6 +38,7 @@ export function Nav({
   onNavegar,
 }: Props) {
   const seccionActiva = useSeccionActiva();
+  const ancla = useAncla(idioma);
   const vertical = orientacion === "vertical";
 
   const colorActivo = invertido ? "text-ink-invert" : "text-ink";
@@ -51,7 +56,7 @@ export function Nav({
         const contenido = (
           <>
             <a
-              href={item.destino ?? item.href}
+              href={ancla(item)}
               onClick={onNavegar}
               aria-current={activo ? "true" : undefined}
               className={[

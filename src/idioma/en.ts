@@ -33,6 +33,9 @@ export const en: Diccionario = {
     plantillaTitulo: "%s — BIOMADS",
     descripcionPortada:
       "BIOMADS S.A.S — environmental studies and management from Ibagué, Colombia. Wildlife biodiversity monitoring and follow-up of relocated epiphytic flora, with verifiable records.",
+    tituloProyectos: "Projects",
+    descripcionProyectos:
+      "Six BIOMADS projects with a full record: PAGA and an early-warning system for Autopista Río Magdalena, biotic compensation over 88.54 ha, landscape recovery, epiphytic flora at El Quimbo and wildlife biodiversity for an EIA.",
     tituloPrivacidad: "Personal data policy",
     descripcionPrivacidad:
       "What data the BIOMADS site collects, what it is used for, how long it is kept and how to exercise your rights under Colombia's Law 1581 of 2012.",
@@ -50,6 +53,7 @@ export const en: Diccionario = {
     secciones: {
       nosotros: "About",
       servicios: "Services",
+      proyectos: "Projects",
       contacto: "Contact",
     },
     idioma: "Language",
@@ -202,6 +206,109 @@ export const en: Diccionario = {
     },
   },
 
+  proyectos: {
+    rotulo: "Featured projects",
+    titulo: "Work that makes a difference",
+    entradilla:
+      "Each project is a measure of our commitment to the environment and to the sustainable development of the territories where we work.",
+    verTodos: "See all six projects",
+    verFicha: "See the record",
+    indice: {
+      rotulo: "Projects",
+      lineasTitulo: ["Six projects,", "with the full record"],
+      entradilla:
+        "Client, period, sector, service and scope for each one, with the resolution or decree it was delivered under. We publish what we can substantiate, so there is no project counter or accumulated-years figure here.",
+      volver: "Home",
+      siguienteTitulo: "Have a similar site?",
+      siguienteTexto: "Tell us what it involves and we will tell you how we would approach it.",
+    },
+    estados: {
+      "en-ejecucion": "In progress",
+      ejecutado: "Delivered",
+    },
+    ficha: {
+      estado: "Status",
+      cliente: "Client",
+      periodo: "Period",
+      sector: "Sector",
+      servicio: "Service",
+      alcance: "Project scope",
+    },
+    casos: {
+      paga: {
+        titulo: "Update and preparation of the PAGA",
+        cliente: "Concesionaria Autopista Río Magdalena S.A.S. (ALEATICA)",
+        clienteCorto: "Autopista Río Magdalena",
+        sector: "Road infrastructure (4G concessions)",
+        servicio: "PAGA",
+        alcance:
+          "Update and preparation of the PAGA —Colombia's environmental guideline adaptation plan for road works— for four functional units, under INVIAS Resolution 2335 of 2022.",
+        etiquetas: ["PAGA", "SAT", "Environmental follow-up", "Environmental management"],
+      },
+      sat: {
+        titulo: "Roll-out of the early warning system (SAT)",
+        cliente: "Concesionaria Autopista Río Magdalena S.A.S. (ALEATICA)",
+        clienteCorto: "Autopista Río Magdalena",
+        sector: "Road infrastructure · risk management",
+        servicio: "SAT · hydrometeorological monitoring",
+        alcance:
+          "Automated capture of hydrometeorological data from the GOES-16 and GOES-19 satellites and from IDEAM, Colombia's weather service. Development of the APIs that feed real-time alerts into the project's SCADA system and LED signs, under Decree 2157 of 2017.",
+        etiquetas: ["SAT", "SCADA", "Decree 2157/2017", "Environmental monitoring"],
+      },
+      "compensacion-biotica": {
+        titulo: "Integrated biotic environmental compensation plan",
+        cliente: "Concesionaria Autopista Río Magdalena S.A.S. · Consorcio BioPro",
+        clienteCorto: "Autopista Río Magdalena · BioPro",
+        sector: "Road infrastructure",
+        servicio: "Environmental compensation",
+        alcance:
+          "Delivery and follow-up of the biodiversity loss compensation plan over 88.54 hectares, under ANLA Resolutions 707 of 2016 and 1109 of 2017. Includes the forest protection order with Corantioquia (Tabebuia chrysantha and Hymenaea courbaril), management of relocated epiphytic flora and monitoring of threatened wildlife (striped catfish and river turtle).",
+        etiquetas: [
+          "Environmental compensation",
+          "Biodiversity",
+          "88.54 ha",
+          "Environmental management",
+          "Follow-up",
+        ],
+      },
+      embellecimiento: {
+        titulo: "Landscape recovery and enhancement",
+        cliente: "Concesionaria Autopista Río Magdalena S.A.S.",
+        clienteCorto: "Autopista Río Magdalena",
+        sector: "Road infrastructure",
+        servicio: "Landscape enhancement",
+        alcance:
+          "Delivery of landscape improvement works, floristic enrichment of one hectare and vegetation restoration in operating areas, roundabouts and the zones of influence of the concession's road corridor.",
+        etiquetas: [
+          "Landscape enhancement",
+          "Landscaping",
+          "Environmental management",
+          "Floristic enrichment",
+        ],
+      },
+      "flora-epifita-quimbo": {
+        titulo: "Epiphytic flora maintenance — El Quimbo hydroelectric project",
+        cliente: "Grupo Empresarial Surcolombiano S.A.S.",
+        clienteCorto: "Grupo Empresarial Surcolombiano",
+        sector: "Energy · hydroelectric",
+        servicio: "Flora conservation and management",
+        alcance:
+          "Maintenance, monitoring and technical follow-up of epiphytic flora rescued and relocated in the municipality of Gigante (Huila), within the area of influence of the El Quimbo hydroelectric project.",
+        etiquetas: ["Epiphytic flora", "Environmental management"],
+      },
+      "fauna-solinter": {
+        titulo: "Wildlife biodiversity study for an EIA",
+        cliente: "Soluciones Integrales Internacionales S.A.S. (SOLINTER)",
+        clienteCorto: "SOLINTER",
+        sector: "Rural road infrastructure",
+        servicio: "Environmental consultancy and planning",
+        alcance:
+          "Characterisation and monitoring of wildlife biodiversity for the Environmental Impact Assessment (EIA) of rural roads in Garzón and Gigante (Huila).",
+        etiquetas: ["EIA"],
+      },
+    },
+  },
+
   galeria: {
     rotulo: "In the field",
     titulo: "What the work looks like",
@@ -312,6 +419,10 @@ export const en: Diccionario = {
   privacidad: privacidadEn,
 
   fotos: {
+    "campo-abierto":
+      "Two workers with backpack sprayers treat the green strip between the carriageway and the cut slope of a road, with the earth cut and a truck behind.",
+    "individuos-en-hilera":
+      "Young plants set in rows on ground covered with dry plant material, with the forest edge behind.",
     "cuadrilla-ladera":
       "Two BIOMADS workers climb a slope covered in tall grass in a compensation area, with marker stakes and young planted trees.",
     "mantenimiento-individuo":
@@ -378,6 +489,7 @@ export const en: Diccionario = {
   },
 
   unidades: {
+    meses: "months",
     y: "and",
   },
 };

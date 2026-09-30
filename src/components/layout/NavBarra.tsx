@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useSeccionActiva } from "@/hooks/useSeccionActiva";
-import type { Diccionario } from "@/idioma";
+import { useAncla } from "@/hooks/useAncla";
+import type { Diccionario, Idioma } from "@/idioma";
 import { navegacion } from "@/lib/site";
 
 /**
@@ -43,8 +44,15 @@ const subrayadoHover = [
  * Cuál está activa lo decide el scroll, no la ruta: en una página única la
  * ruta siempre es la misma.
  */
-export function NavBarra({ textos }: { textos: Diccionario["nav"]["secciones"] }) {
+export function NavBarra({
+  textos,
+  idioma,
+}: {
+  textos: Diccionario["nav"]["secciones"];
+  idioma: Idioma;
+}) {
   const seccionActiva = useSeccionActiva();
+  const ancla = useAncla(idioma);
   const listaRef = useRef<HTMLUListElement>(null);
   const [indicador, setIndicador] = useState<{ x: number; ancho: number } | null>(null);
 
@@ -80,7 +88,7 @@ export function NavBarra({ textos }: { textos: Diccionario["nav"]["secciones"] }
                 desplazamiento suave en una navegación que no cambia de
                 página. */}
             <a
-              href={item.destino ?? item.href}
+              href={ancla(item)}
               aria-current={activo ? "true" : undefined}
               /* El color lo pone el tema de la barra, no una clase fija. */
               className={[enlaceBase, activo ? "es-activo" : subrayadoHover].join(" ")}

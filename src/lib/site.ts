@@ -80,14 +80,19 @@ export type ItemNav = {
  * ella. Las fichas siguen existiendo y se alcanzan desde la sección de
  * servicios, que es donde vienen a cuento.
  *
- * «Proyectos» era la cuarta ancla y se retiró junto con su sección, por
- * decisión del cliente. Quitarla de esta lista la quita a la vez de la
- * barra, del menú móvil, del pie y del indicador de sección activa: los
- * cuatro leen de aquí.
+ * «Proyectos» salió de aquí el 25 de septiembre de 2026 con su sección y
+ * volvió el 30, cuando BIOMADS entregó las seis fichas técnicas. El ancla
+ * es la sección del home; las seis fichas viven en /proyectos, a un botón
+ * de distancia.
+ *
+ * Quitar o añadir una entrada aquí la quita o la añade a la vez en la
+ * barra, el menú móvil, el pie y el indicador de sección activa: los
+ * cuatro leen de esta lista.
  */
 export const navegacion: readonly ItemNav[] = [
   { href: "#nosotros", clave: "nosotros" },
   { href: "#servicios", clave: "servicios" },
+  { href: "#proyectos", clave: "proyectos" },
   { href: "#contacto", destino: "#formulario", clave: "contacto" },
 ] as const;
 

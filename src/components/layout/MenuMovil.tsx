@@ -104,6 +104,7 @@ export function MenuMovil({ abierto, onCerrar, idioma }: Props) {
           <nav aria-label={t.nav.principal}>
             <Nav
               textos={t.nav.secciones}
+              idioma={idioma}
               items={navegacion}
               orientacion="vertical"
               tamano="grande"

@@ -64,7 +64,7 @@ export function Footer({ idioma }: { idioma: Idioma }) {
           <nav aria-label={t.nav.pieDePagina}>
             <p className="etiqueta text-ink-invert-muted">{t.pie.seccionesRotulo}</p>
             <div className="mt-6">
-              <Nav textos={t.nav.secciones} orientacion="vertical" invertido />
+              <Nav textos={t.nav.secciones} idioma={idioma} orientacion="vertical" invertido />
             </div>
           </nav>
         </RevealGroup>

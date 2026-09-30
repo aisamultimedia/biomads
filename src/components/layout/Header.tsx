@@ -95,7 +95,7 @@ export function Header({ idioma }: { idioma: Idioma }) {
             {/* Izquierda: navegación en escritorio, logo en móvil */}
             <div className="flex items-center">
               <nav aria-label={t.nav.principal} className="hidden lg:block">
-                <NavBarra textos={t.nav.secciones} />
+                <NavBarra textos={t.nav.secciones} idioma={idioma} />
               </nav>
               {/* Los dos se sirven con el mismo archivo: solo uno se ve,
                   pero con altos distintos el optimizador generaría dos URL y

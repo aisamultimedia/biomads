@@ -21,6 +21,9 @@ export const es: Diccionario = {
     plantillaTitulo: "%s — BIOMADS",
     descripcionPortada:
       "BIOMADS S.A.S — estudios y gestión ambiental desde Ibagué. Monitoreo de biodiversidad de fauna y seguimiento de flora epífita reubicada, con registros verificables.",
+    tituloProyectos: "Proyectos",
+    descripcionProyectos:
+      "Seis proyectos de BIOMADS con ficha técnica: PAGA y sistema de alertas tempranas para Autopista Río Magdalena, compensación biótica sobre 88,54 ha, embellecimiento paisajístico, flora epífita en El Quimbo y biodiversidad de fauna para EIA.",
     tituloPrivacidad: "Política de tratamiento de datos personales",
     descripcionPrivacidad:
       "Qué datos recoge el sitio de BIOMADS, para qué los usa, cuánto tiempo los guarda y cómo ejercer sus derechos según la Ley 1581 de 2012.",
@@ -38,6 +41,7 @@ export const es: Diccionario = {
     secciones: {
       nosotros: "Nosotros",
       servicios: "Servicios",
+      proyectos: "Proyectos",
       contacto: "Contacto",
     },
     idioma: "Idioma",
@@ -211,6 +215,118 @@ export const es: Diccionario = {
     },
   },
 
+  /**
+   * Los seis proyectos, de las fichas que BIOMADS entregó el 30 de
+   * septiembre de 2026. Se corrigieron tres erratas del original —
+   * «Embellicimiento», la «y» que faltaba entre las dos especies en veda y
+   * el separador decimal de 88,54 ha en la etiqueta— y se normalizaron los
+   * estados, que venían en cuatro grafías distintas. Nada más se tocó: las
+   * cifras, las resoluciones y los decretos son los que manda la ficha.
+   */
+  proyectos: {
+    rotulo: "Proyectos destacados",
+    titulo: "Casos que generan impacto",
+    entradilla:
+      "Cada proyecto es una muestra de nuestro compromiso con el medio ambiente y con el desarrollo sostenible de los territorios.",
+    verTodos: "Ver los seis proyectos",
+    verFicha: "Ver la ficha",
+    indice: {
+      rotulo: "Proyectos",
+      lineasTitulo: ["Seis proyectos,", "con su ficha completa"],
+      entradilla:
+        "Cliente, periodo, sector, servicio y alcance de cada uno, con la resolución o el decreto bajo el que se ejecutó. Publicamos lo que podemos sustentar, así que aquí no hay contador de proyectos ni de años acumulados.",
+      volver: "Inicio",
+      siguienteTitulo: "¿Tiene un frente parecido?",
+      siguienteTexto:
+        "Cuéntenos de qué se trata y le decimos cómo lo abordaríamos.",
+    },
+    estados: {
+      "en-ejecucion": "En ejecución",
+      ejecutado: "Ejecutado",
+    },
+    ficha: {
+      estado: "Estado",
+      cliente: "Cliente",
+      periodo: "Periodo",
+      sector: "Sector",
+      servicio: "Servicio",
+      alcance: "Alcance del proyecto",
+    },
+    casos: {
+      paga: {
+        titulo: "Actualización y elaboración del PAGA",
+        cliente: "Concesionaria Autopista Río Magdalena S.A.S. (ALEATICA)",
+        clienteCorto: "Autopista Río Magdalena",
+        sector: "Infraestructura vial (concesiones 4G)",
+        servicio: "PAGA",
+        alcance:
+          "Actualización y elaboración del Plan de Adaptación a la Guía Ambiental (PAGA) para cuatro unidades funcionales, bajo la Resolución INVIAS 2335 de 2022.",
+        etiquetas: ["PAGA", "SAT", "Seguimiento ambiental", "Gestión ambiental"],
+      },
+      sat: {
+        titulo: "Puesta en marcha del Sistema de Alertas Tempranas (SAT)",
+        cliente: "Concesionaria Autopista Río Magdalena S.A.S. (ALEATICA)",
+        clienteCorto: "Autopista Río Magdalena",
+        sector: "Infraestructura vial · gestión del riesgo",
+        servicio: "SAT · monitoreo hidrometeorológico",
+        alcance:
+          "Automatización y captura de datos hidrometeorológicos desde los satélites GOES-16 y GOES-19 y el IDEAM. Generación de las API que integran las alertas en tiempo real al sistema SCADA y a las pantallas LED del proyecto, conforme al Decreto 2157 de 2017.",
+        etiquetas: ["SAT", "SCADA", "Decreto 2157/2017", "Monitoreo ambiental"],
+      },
+      "compensacion-biotica": {
+        titulo: "Plan Integral de Compensación Ambiental Biótica",
+        cliente: "Concesionaria Autopista Río Magdalena S.A.S. · Consorcio BioPro",
+        clienteCorto: "Autopista Río Magdalena · BioPro",
+        sector: "Infraestructura vial",
+        servicio: "Compensaciones ambientales",
+        alcance:
+          "Ejecución y seguimiento del Plan de Compensación por Pérdida de Biodiversidad sobre 88,54 hectáreas, bajo las resoluciones ANLA 707 de 2016 y 1109 de 2017. Incluye la veda forestal con Corantioquia (Tabebuia chrysantha y Hymenaea courbaril), el manejo de flora epífita reubicada y el monitoreo de fauna amenazada (bagre rayado y tortuga de río).",
+        etiquetas: [
+          "Compensación ambiental",
+          "Biodiversidad",
+          "88,54 ha",
+          "Gestión ambiental",
+          "Seguimiento",
+        ],
+      },
+      embellecimiento: {
+        titulo: "Embellecimiento y recuperación paisajística",
+        cliente: "Concesionaria Autopista Río Magdalena S.A.S.",
+        clienteCorto: "Autopista Río Magdalena",
+        sector: "Infraestructura vial",
+        servicio: "Embellecimiento y paisajismo",
+        alcance:
+          "Ejecución de actividades orientadas al mejoramiento paisajístico, el enriquecimiento florístico de una hectárea y la restauración vegetal en áreas operativas, glorietas y zonas de influencia del corredor vial de la concesión.",
+        etiquetas: [
+          "Embellecimiento",
+          "Paisajismo",
+          "Gestión ambiental",
+          "Enriquecimiento florístico",
+        ],
+      },
+      "flora-epifita-quimbo": {
+        titulo: "Mantenimiento de flora epífita — hidroeléctrica El Quimbo",
+        cliente: "Grupo Empresarial Surcolombiano S.A.S.",
+        clienteCorto: "Grupo Empresarial Surcolombiano",
+        sector: "Energía · hidroeléctrico",
+        servicio: "Conservación y manejo de flora",
+        alcance:
+          "Mantenimiento, monitoreo y seguimiento técnico de la flora epífita rescatada y reubicada en el municipio de Gigante (Huila), en el área de influencia del proyecto hidroeléctrico El Quimbo.",
+        etiquetas: ["Flora epífita", "Gestión ambiental"],
+      },
+      "fauna-solinter": {
+        titulo: "Estudio de biodiversidad de fauna para EIA",
+        cliente: "Soluciones Integrales Internacionales S.A.S. (SOLINTER)",
+        clienteCorto: "SOLINTER",
+        sector: "Infraestructura vial terciaria",
+        servicio: "Consultoría y planificación ambiental",
+        alcance:
+          "Caracterización y monitoreo de la biodiversidad de fauna silvestre para la estructuración del Estudio de Impacto Ambiental (EIA) de vías terciarias en Garzón y Gigante (Huila).",
+        etiquetas: ["EIA"],
+      },
+    },
+  },
+
   galeria: {
     rotulo: "En campo",
     titulo: "Así se ve el trabajo",
@@ -337,6 +453,10 @@ export const es: Diccionario = {
   privacidad: privacidadEs,
 
   fotos: {
+    "campo-abierto":
+      "Dos operarios con equipos de aspersión de espalda tratan la franja verde entre la calzada y el talud de una vía, con el corte del terreno y un camión al fondo.",
+    "individuos-en-hilera":
+      "Individuos vegetales jóvenes plantados en hileras sobre terreno cubierto de material vegetal seco, con el borde de bosque al fondo.",
     "cuadrilla-ladera":
       "Dos operarios de BIOMADS ascienden una ladera cubierta de pasto alto en una zona de compensación, con estacas de señalización y árboles jóvenes plantados.",
     "mantenimiento-individuo":
@@ -405,6 +525,7 @@ export const es: Diccionario = {
   },
 
   unidades: {
+    meses: "meses",
     y: "y",
   },
 };

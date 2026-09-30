@@ -13,6 +13,8 @@ import { Galeria } from "@/components/secciones/Galeria";
 import { Hero } from "@/components/secciones/Hero";
 import { MarcoInstitucional } from "@/components/secciones/MarcoInstitucional";
 import { PromesaMarca } from "@/components/secciones/PromesaMarca";
+import { FichaProyecto } from "@/components/secciones/FichaProyecto";
+import { proyectosDestacados } from "@/content/proyectos";
 import { regiones } from "@/content/respaldo";
 import { categoriasServicio } from "@/content/servicios";
 import { diccionario, comoIdioma } from "@/idioma";
@@ -28,15 +30,17 @@ import { fotosNosotros } from "@/content/nosotros";
  * dos servicios con ficha siguen existiendo para quien llegue por buscador o
  * comparta un enlace, pero la visita normal no sale de esta pantalla.
  *
- * La sección de proyectos se retiró por decisión del cliente. Estaba entre
- * servicios y la galería de campo, así que el recorrido cierra ahora
- * servicios → galería → clientes → contacto.
+ * Proyectos se retiró el 25 de septiembre de 2026 y volvió el 30, cuando
+ * BIOMADS entregó seis fichas técnicas donde antes había dos casos con
+ * datos delgados. Vuelve a su sitio de siempre, entre servicios y la
+ * galería: primero qué hacemos, luego dónde lo hemos hecho, luego cómo se
+ * ve. Enseña tres y lleva a /proyectos, que es donde están los seis y donde
+ * el portafolio puede crecer sin alargar la portada.
  *
- * Con una sección menos hubo que recolocar una superficie: servicios pasó
- * de la alterna al papel. La galería y la banda de clientes comparten
- * superficie a propósito —separadas solo por una regla— y proyectos era el
- * bloque de papel que las separaba de servicios; sin él, tres superficies
- * alternas seguidas habrían fundido todo el cierre de la página en una.
+ * Con la sección de vuelta, servicios recupera la superficie alterna que
+ * tuvo que ceder cuando no estaba: proyectos es otra vez el bloque de papel
+ * que separa servicios de la galería, y la galería y la banda de clientes
+ * vuelven a compartir superficie sin que se fundan tres seguidas.
  */
 export default async function Portada({ params }: PageProps<"/[idioma]">) {
   const { idioma: segmento } = await params;
@@ -102,7 +106,7 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
       {/* ================================================================
           Servicios — las cuatro categorías que cubren todo el alcance.
           ================================================================ */}
-      <Seccion id="servicios" rotulo={t.servicios.rotulo} titulo={t.servicios.titulo}>
+      <Seccion id="servicios" alterna rotulo={t.servicios.rotulo} titulo={t.servicios.titulo}>
         {/* items-stretch: el cliente las quiere del mismo tamaño. El hueco
             que eso abría en la tarjeta con menos frentes lo absorbe ahora la
             lista, que reparte el alto sobrante entre sus filas. */}
@@ -127,6 +131,43 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
         <Reveal className="mt-16">
           <Boton href="#contacto" variante="secundario">
             {t.servicios.consultarAlcance}
+          </Boton>
+        </Reveal>
+      </Seccion>
+
+      {/* ================================================================
+          Proyectos destacados: tres fichas y la puerta a las seis.
+          ================================================================ */}
+      <Seccion id="proyectos" rotulo={t.proyectos.rotulo} titulo={t.proyectos.titulo}>
+        <Reveal as="p" className="medida -mt-8 mb-16 text-ink-muted">
+          {t.proyectos.entradilla}
+        </Reveal>
+
+        <RevealGroup
+          as="ul"
+          tipo="panel"
+          /* Tres columnas desde lg y no desde md: a 768 px cada una medía
+             230 px y todo rompía, con tarjetas de 1.600 px de alto. Entre md
+             y lg van a una columna, y ahí el CSS les da la caja en fila
+             —foto a la izquierda— que ya usa la página. */
+          className="grid items-stretch gap-6 lg:auto-rows-fr lg:grid-cols-3"
+        >
+          {proyectosDestacados.map((proyecto) => (
+            <FichaProyecto
+              key={proyecto.slug}
+              proyecto={proyecto}
+              textos={t.proyectos}
+              unidades={t.unidades}
+              fotos={t.fotos}
+              variante="resumen"
+              idioma={idioma}
+            />
+          ))}
+        </RevealGroup>
+
+        <Reveal className="mt-16">
+          <Boton href={`/${idioma}/proyectos`} variante="secundario">
+            {t.proyectos.verTodos}
           </Boton>
         </Reveal>
       </Seccion>
