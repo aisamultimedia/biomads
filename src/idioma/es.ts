@@ -227,7 +227,7 @@ export const es: Diccionario = {
     rotulo: "Proyectos destacados",
     titulo: "Casos que generan impacto",
     entradilla:
-      "Cliente, periodo, sector, alcance y la norma bajo la que se ejecutó. Publicamos lo que podemos sustentar: abra cualquiera y está la ficha entera, sin salir de aquí.",
+      "Proyectos que hemos trabajado, cada uno con su ficha técnica completa. Ábralos aquí mismo, sin salir de la página.",
     cifras: {
       fichas: "Proyectos con ficha",
       hectareas: "Hectáreas en compensación",

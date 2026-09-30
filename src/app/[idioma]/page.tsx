@@ -190,7 +190,7 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
                 <li className="via-directa flex items-start gap-4">
                   <Icono nombre="telefono" className="via-directa-icono mt-1 text-accent-deep" />
                   <span>
-                    <Enlace href={whatsapp} externo className="dato text-xl">
+                    <Enlace href={whatsapp} externo className="dato via-directa-dato">
                       {empresa.telefono}
                     </Enlace>
                     <span className="mt-1 block text-sm text-ink-muted">
@@ -201,7 +201,7 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
                 <li className="via-directa flex items-start gap-4">
                   <Icono nombre="correo" className="via-directa-icono mt-1 text-accent-deep" />
                   <span>
-                    <Enlace href={mailto} externo className="text-xl">
+                    <Enlace href={mailto} externo className="via-directa-dato">
                       {empresa.correo}
                     </Enlace>
                     <span className="mt-1 block text-sm text-ink-muted">

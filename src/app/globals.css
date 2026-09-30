@@ -2480,10 +2480,37 @@
     }
   }
 
+  /* En móvil van apiladas, cada una en su renglón con la cifra a la
+     derecha. En tres columnas no caben: a 360 px cada columna mide 93 px y
+     «88,54» necesita 125, así que las cifras se montaban unas sobre otras y
+     la última se salía de la pantalla —de ahí el scroll horizontal—. */
   .proyectos-cifras {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--spacing-8);
+    grid-template-columns: 1fr;
+  }
+
+  /* Cada cifra es un renglón con su regla. El rótulo encima y el número
+     debajo, que es como caben las tres sin apretar nada.
+
+     El selector apunta al envoltorio que pone RevealGroup, no al div del
+     JSX: el grupo envuelve cada hijo para escalonar su entrada. */
+  .proyectos-cifras > div {
+    padding-block: var(--spacing-4);
+    border-block-start: 1px solid var(--color-line);
+  }
+
+  /* Desde 640 px sí caben las tres en fila, que es como se diseñaron. */
+  @media (min-width: 640px) {
+    .proyectos-cifras {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-8);
+    }
+
+    .proyectos-cifras > div {
+      display: block;
+      padding-block: 0;
+      border-block-start: 0;
+    }
   }
 
   @media (min-width: 900px) {
@@ -2497,10 +2524,16 @@
      que los numerales del método y del índice, no un widget de estadísticas
      traído de otra plantilla. */
   .proyectos-cifra {
-    margin-block-start: var(--spacing-2);
-    font-size: var(--text-3xl);
+    font-size: var(--text-2xl);
     line-height: 1;
     color: var(--color-accent-deep);
+  }
+
+  @media (min-width: 640px) {
+    .proyectos-cifra {
+      margin-block-start: var(--spacing-2);
+      font-size: var(--text-3xl);
+    }
   }
 
   /* --- Nosotros: el texto se queda, las fotos pasan --- */
@@ -2589,12 +2622,39 @@
      lista se lee como un índice y no como un menú. */
   .servicio-nombre {
     flex: 1;
+    /* min-width:0 para que el nombre pueda encoger dentro del flex: sin
+       ello su ancho mínimo es el de la palabra más larga y empuja a la
+       insignia fuera de la pantalla. */
+    min-width: 0;
     font-family: var(--font-titulo);
     font-size: var(--text-xl);
     font-weight: var(--peso-titulo);
     line-height: 1.15;
+    overflow-wrap: break-word;
     color: var(--color-ink);
     transition: color var(--duracion-micro) var(--ease-base);
+  }
+
+  /* Por debajo de 400 px no caben «Sostenibilidad» y la insignia a la vez:
+     a --text-xl la palabra mide 176 px y la fila deja 156. Se aprieta todo
+     un escalón en vez de partir el titular. */
+  @media (max-width: 399px) {
+    .servicio-disparador {
+      gap: var(--spacing-4);
+    }
+
+    .servicio-nombre {
+      font-size: var(--text-lg);
+    }
+
+    .servicio-insignia {
+      width: var(--spacing-10);
+      height: var(--spacing-10);
+    }
+
+    .servicio-frente {
+      padding-inline-start: 0;
+    }
   }
 
   @media (min-width: 768px) {
@@ -2832,18 +2892,38 @@
   .proyecto-disparador {
     position: relative;
     display: flex;
-    align-items: center;
-    gap: var(--spacing-6);
+    /* Arriba y no al centro hasta que hay sitio: con el título en tres
+       líneas, centrar dejaba el numeral a mitad del segundo renglón y
+       empujaba el signo hasta la esquina, justo encima del botón de volver
+       arriba. */
+    align-items: flex-start;
+    gap: var(--spacing-4);
     width: 100%;
     padding-block: var(--spacing-8);
     text-align: start;
   }
 
+  @media (min-width: 768px) {
+    .proyecto-disparador {
+      align-items: center;
+      gap: var(--spacing-6);
+    }
+  }
+
   .proyecto-numero {
     flex: none;
+    /* Baja lo justo para sentarse en la primera línea del título, que es
+       más alta que él. */
+    margin-block-start: var(--spacing-1);
     font-size: var(--text-sm);
     color: var(--color-ink-muted);
     transition: color var(--duracion-micro) var(--ease-base);
+  }
+
+  @media (min-width: 768px) {
+    .proyecto-numero {
+      margin-block-start: 0;
+    }
   }
 
   .proyecto-caja[data-abierto] .proyecto-numero,
@@ -2894,6 +2974,10 @@
     font-size: var(--text-xl);
     font-weight: var(--peso-titulo);
     line-height: 1.15;
+    /* Red de seguridad: «Embellecimiento» mide 189 px a este cuerpo y en un
+       móvil de 360 se salía de su columna. Partir una palabra en un titular
+       es feo, pero menos que desbordar la pantalla. */
+    overflow-wrap: break-word;
     color: var(--color-ink);
   }
 
@@ -2974,8 +3058,9 @@
     display: grid;
     place-items: center;
     flex: none;
-    width: var(--spacing-12);
-    height: var(--spacing-12);
+    /* 40 px en móvil: los 48 se comían el ancho que necesita el título. */
+    width: var(--spacing-10);
+    height: var(--spacing-10);
     border: 1px solid var(--color-line-strong);
     border-radius: var(--radius-pill);
     color: var(--color-ink);
@@ -2983,6 +3068,13 @@
       border-color var(--duracion-micro) var(--ease-base),
       background-color var(--duracion-micro) var(--ease-base),
       color var(--duracion-micro) var(--ease-base);
+  }
+
+  @media (min-width: 768px) {
+    .proyecto-signo {
+      width: var(--spacing-12);
+      height: var(--spacing-12);
+    }
   }
 
   .proyecto-signo::before,
@@ -3254,6 +3346,22 @@
   .valor:hover .valor-icono {
     translate: 0 -4px;
     rotate: -8deg;
+  }
+
+  /* Correo y teléfono, en contacto y en el pie.
+     «gerencia@biomads.com» no tiene por dónde partirse: a --text-xl mide
+     300 px y, con el icono y el margen delante, empujaba el documento a
+     364 px en un móvil de 360. De ahí venía el scroll horizontal. Baja de
+     cuerpo hasta que hay sitio, y por si acaso se le permite romper. */
+  .via-directa-dato {
+    font-size: var(--text-lg);
+    overflow-wrap: break-word;
+  }
+
+  @media (min-width: 400px) {
+    .via-directa-dato {
+      font-size: var(--text-xl);
+    }
   }
 
   .via-directa-icono {

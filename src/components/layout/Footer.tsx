@@ -41,7 +41,7 @@ export function Footer({ idioma }: { idioma: Idioma }) {
             <ul className="mt-6 flex flex-col gap-4">
               <li className="flex items-center gap-4">
                 <Icono nombre="correo" className="text-accent" />
-                <Enlace href={mailto} externo className="text-xl">
+                <Enlace href={mailto} externo className="via-directa-dato">
                   {empresa.correo}
                 </Enlace>
               </li>
@@ -51,7 +51,7 @@ export function Footer({ idioma }: { idioma: Idioma }) {
                   línea y el número se lee entero. */}
               <li className="flex flex-wrap items-center gap-x-4 gap-y-1">
                 <Icono nombre="telefono" className="text-accent" />
-                <Enlace href={whatsapp} externo className="dato text-xl">
+                <Enlace href={whatsapp} externo className="dato via-directa-dato">
                   {empresa.telefono}
                 </Enlace>
                 <span className="text-sm text-ink-invert-muted">
