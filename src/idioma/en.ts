@@ -209,13 +209,6 @@ export const en: Diccionario = {
   proyectos: {
     rotulo: "Featured projects",
     titulo: "Work that makes a difference",
-    entradilla:
-      "Projects we have delivered, each with its full technical record.",
-    cifras: {
-      fichas: "Projects on record",
-      hectareas: "Hectares in compensation",
-      desde: "First contract",
-    },
     estados: {
       "en-ejecucion": "In progress",
       ejecutado: "Delivered",

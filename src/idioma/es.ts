@@ -226,13 +226,6 @@ export const es: Diccionario = {
   proyectos: {
     rotulo: "Proyectos destacados",
     titulo: "Casos que generan impacto",
-    entradilla:
-      "Proyectos que hemos trabajado, cada uno con su ficha técnica completa.",
-    cifras: {
-      fichas: "Proyectos con ficha",
-      hectareas: "Hectáreas en compensación",
-      desde: "Primer contrato",
-    },
     estados: {
       "en-ejecucion": "En ejecución",
       ejecutado: "Ejecutado",

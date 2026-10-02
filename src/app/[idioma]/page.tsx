@@ -3,7 +3,6 @@ import { Enlace } from "@/components/ui/Enlace";
 import { Icono } from "@/components/ui/Icono";
 import { Seccion } from "@/components/ui/Seccion";
 import { Reveal } from "@/components/motion/Reveal";
-import { RevealGroup } from "@/components/motion/RevealGroup";
 import { Cursor } from "@/components/motion/Cursor";
 import { Clientes } from "@/components/secciones/Clientes";
 import { EtapasEstudio } from "@/components/secciones/EtapasEstudio";
@@ -48,15 +47,6 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
   const { idioma: segmento } = await params;
   const idioma = comoIdioma(segmento);
   const t = diccionario(idioma);
-
-  const cifras = [
-    {
-      valor: String(proyectos.length).padStart(2, "0"),
-      rotulo: t.proyectos.cifras.fichas,
-    },
-    { valor: "88,54", rotulo: t.proyectos.cifras.hectareas },
-    { valor: String(empresa.constitucion), rotulo: t.proyectos.cifras.desde },
-  ];
 
   return (
     <>
@@ -134,26 +124,10 @@ export default async function Portada({ params }: PageProps<"/[idioma]">) {
       {/* ================================================================
           Proyectos: las seis fichas técnicas, enteras y en su sitio.
           ================================================================ */}
+      {/* Sin entradilla ni cifras por decisión del cliente: el rótulo y el
+          título ya dicen de qué va, y el índice se explica solo. */}
       <Seccion id="proyectos" rotulo={t.proyectos.rotulo} titulo={t.proyectos.titulo}>
-        <div className="proyectos-cabecera">
-          <Reveal as="p" className="medida text-ink-muted">
-            {t.proyectos.entradilla}
-          </Reveal>
-
-          {/* Tres cifras, las tres comprobables en las fichas que hay justo
-              debajo. Ni una más: el sitio no lleva contador de años
-              acumulados ni de proyectos totales. */}
-          <RevealGroup as="dl" tipo="panel" className="proyectos-cifras">
-            {cifras.map((cifra) => (
-              <div key={cifra.rotulo}>
-                <dt className="etiqueta text-ink-muted">{cifra.rotulo}</dt>
-                <dd className="dato proyectos-cifra">{cifra.valor}</dd>
-              </div>
-            ))}
-          </RevealGroup>
-        </div>
-
-        <Reveal className="mt-16">
+        <Reveal>
           <Proyectos
             proyectos={proyectos}
             textos={t.proyectos}

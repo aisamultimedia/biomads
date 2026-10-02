@@ -231,14 +231,6 @@ export type Diccionario = {
     /** Rótulo y título de la sección del home. */
     rotulo: string;
     titulo: string;
-    entradilla: string;
-    /**
-     * Las tres cifras del encabezado. Las tres se comprueban en las fichas
-     * que van justo debajo: no hay contador de años acumulados ni de
-     * proyectos totales, que es lo que el sitio lleva diciendo desde el
-     * principio que no publica.
-     */
-    cifras: PorClave<"fichas" | "hectareas" | "desde">;
     /** Los dos estados posibles. */
     estados: PorClave<"en-ejecucion" | "ejecutado">;
     /** Rótulos de las filas de la ficha. */

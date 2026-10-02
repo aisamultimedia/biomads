@@ -2427,10 +2427,9 @@
 /* =========================================================================
    Lenguaje de ficha de campo
 
-   Coordenadas, cifras y curvas de nivel: lo que separa a esta empresa de
-   cualquier consultora con una hoja en el logo es que mide territorio, y el
-   sitio lo dice con el vocabulario de una libreta de campo en vez de con
-   más verde.
+   De aquí salieron las curvas de nivel y las tres cifras de proyectos, las
+   dos por decisión del cliente. Queda la coordenada, que es lo que dice que
+   esta empresa mide territorio sin recurrir a otra hoja verde.
    ========================================================================= */
 
 @layer components {
@@ -2463,77 +2462,6 @@
   .coordenada--invertida::before,
   .coordenada--invertida::after {
     color: var(--color-accent);
-  }
-
-  /* --- Las tres cifras de proyectos --- */
-
-  .proyectos-cabecera {
-    display: grid;
-    gap: var(--spacing-12);
-  }
-
-  @media (min-width: 900px) {
-    .proyectos-cabecera {
-      grid-template-columns: 1fr auto;
-      align-items: end;
-      gap: var(--spacing-16);
-    }
-  }
-
-  /* En móvil van apiladas, cada una en su renglón con la cifra a la
-     derecha. En tres columnas no caben: a 360 px cada columna mide 93 px y
-     «88,54» necesita 125, así que las cifras se montaban unas sobre otras y
-     la última se salía de la pantalla —de ahí el scroll horizontal—. */
-  .proyectos-cifras {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  /* Cada cifra es un renglón con su regla. El rótulo encima y el número
-     debajo, que es como caben las tres sin apretar nada.
-
-     El selector apunta al envoltorio que pone RevealGroup, no al div del
-     JSX: el grupo envuelve cada hijo para escalonar su entrada. */
-  .proyectos-cifras > div {
-    padding-block: var(--spacing-4);
-    border-block-start: 1px solid var(--color-line);
-  }
-
-  /* Desde 640 px sí caben las tres en fila, que es como se diseñaron. */
-  @media (min-width: 640px) {
-    .proyectos-cifras {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--spacing-8);
-    }
-
-    .proyectos-cifras > div {
-      display: block;
-      padding-block: 0;
-      border-block-start: 0;
-    }
-  }
-
-  @media (min-width: 900px) {
-    .proyectos-cifras {
-      gap: var(--spacing-12);
-      text-align: end;
-    }
-  }
-
-  /* La cifra a tamaño de titular y en la monoespaciada: es el mismo motivo
-     que los numerales del método y del índice, no un widget de estadísticas
-     traído de otra plantilla. */
-  .proyectos-cifra {
-    font-size: var(--text-2xl);
-    line-height: 1;
-    color: var(--color-accent-deep);
-  }
-
-  @media (min-width: 640px) {
-    .proyectos-cifra {
-      margin-block-start: var(--spacing-2);
-      font-size: var(--text-3xl);
-    }
   }
 
   /* --- Nosotros: el texto se queda, las fotos pasan --- */
@@ -3002,6 +2930,22 @@
     height: 3px;
     border-radius: var(--radius-pill);
     background-color: var(--color-line-strong);
+  }
+
+  /* En pantalla estrecha el cliente y el periodo no caben en la misma
+     línea, y al envolver el punto separador se quedaba colgando al final
+     de la primera. Ahí van apilados y sin punto, que es lo que separa dos
+     renglones. */
+  @media (max-width: 639px) {
+    .proyecto-resumen {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-1);
+    }
+
+    .proyecto-punto {
+      display: none;
+    }
   }
 
   /* Estado: píldora de contorno, y en acento cuando el contrato sigue
